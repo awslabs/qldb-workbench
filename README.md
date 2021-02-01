@@ -1,16 +1,9 @@
-## My Project
+# An Experimental Visual Shell for QLDB
 
-TODO: Fill this README out!
+## Developing for contributors
 
-Be sure to:
+To run the shell use:
 
-* Change the title in this README
-* Edit your repository description on GitHub
-
-## Security
-
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
-
-## License
-
-This project is licensed under the Apache-2.0 License.
+```
+npm run start
+```
