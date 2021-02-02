@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "module": "system",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
-    "outFile": "build/index.js",
-    "sourceMap": true
+    "sourceMap": true,
+    "outDir": "build/src",
+    "jsx": "react"
   },
   "include": [
     "src/**/*"
