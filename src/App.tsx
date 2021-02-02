@@ -12,7 +12,7 @@ const Composer = () => {
         text.current = e.target.value;
     };
 
-    return <ContentEditable html={text.current} onChange={handleChange} style={EDITOR_STYLE} />
+    return <div><ContentEditable html={text.current} onChange={handleChange} style={EDITOR_STYLE} /></div>
 }
 
 const Results = () => {
