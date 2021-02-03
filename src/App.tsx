@@ -5,7 +5,7 @@ import {listLedgers} from "./ledger";
 import {openLedger} from "./session";
 import Navigator from "./Navigator";
 import Results from "./Results";
-import Composer from "./Composer";
+import {Composer} from "./Composer";
 import StatusBar from "./StatusBar";
 import AWS = require("aws-sdk");
 
@@ -18,6 +18,13 @@ export enum Color {
     DARKGRAY = "#f5f5f5",
     LIGHTGRAY = "#fafafa",
 }
+
+export enum Theme {
+    LIGHT, DARK
+}
+
+export let CurrentTheme: Theme = Theme.LIGHT
+export function toggleTheme() { CurrentTheme == Theme.LIGHT ? CurrentTheme = Theme.DARK : CurrentTheme = Theme.LIGHT }
 
 const Detail = ({ ledgers }: { ledgers: string[]}) => {
     const [queryStats, setQueryStats] = React.useState(undefined);
