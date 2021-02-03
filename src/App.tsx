@@ -29,6 +29,7 @@ export function toggleTheme() { CurrentTheme == Theme.LIGHT ? CurrentTheme = The
 const Detail = ({ ledgers }: { ledgers: string[]}) => {
     const [queryStats, setQueryStats] = React.useState(undefined);
     const [resultsText, setResultsText] = React.useState("");
+    const [selectedTab, setSelectedTab] = React.useState("results");
     const ledger = React.useRef(null);
 
     const executeText = async (text: string) => {
@@ -43,9 +44,15 @@ const Detail = ({ ledgers }: { ledgers: string[]}) => {
         <Composer executeText={executeText} />
         <div style={{width: "100%", height: "100%", display: "flex", flexDirection: "column"}}>
             <Results resultsText={resultsText}/>
-            <StatusBar queryStats={queryStats} ledgers={ledgers} ledger={ledger.current} setLedger={l => {
-                ledger.current = l;
-            }}/>
+            <StatusBar
+                queryStats={queryStats}
+                ledgers={ledgers}
+                ledger={ledger.current}
+                setLedger={l => {
+                    ledger.current = l;
+                }}
+                selectedTab={selectedTab}
+                setSelectedTab={setSelectedTab}/>
         </div>
     </SplitPane>;
 };

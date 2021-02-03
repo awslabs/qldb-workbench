@@ -24,8 +24,8 @@ export default ({ ledgers } : { ledgers: string[] }) => {
             defaultExpandIcon={<ChevronRightIcon />}
           >
             { ledgers.map((ledger) => {
-                return <TreeItem nodeId={"ledger-" + ledger} label={ledger}>
-                    <TreeItem nodeId={"ledger-" + ledger + "-tables"} label="Tables" />
+                return <TreeItem key={"ledger-" + ledger} nodeId={"ledger-" + ledger} label={ledger}>
+                    <TreeItem key={"ledger-" + ledger + "-tables"} nodeId={"ledger-" + ledger + "-tables"} label="Tables" />
                 </TreeItem>
             })}
           </TreeView>

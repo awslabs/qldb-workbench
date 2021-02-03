@@ -5,8 +5,9 @@ import {Tab, Tabs} from "@material-ui/core";
 import HistoryIcon from '@material-ui/icons/History';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 
-export default({ ledgers, ledger, setLedger, queryStats }: { ledgers: string[], ledger: string, setLedger: (ledger: string) => void, queryStats?: QueryStats}) => {
-    const [selectedTab, setSelectedTab] = React.useState("current");
+type Props = { ledgers: string[], ledger: string, setLedger: (ledger: string) => void, queryStats?: QueryStats, selectedTab: string, setSelectedTab: (selectedTab: string) => void };
+
+export default({ ledgers, ledger, setLedger, queryStats, selectedTab, setSelectedTab }: Props) => {
     return <div className="status-bar">
         <span className="status-item" style={{ width: "300px" }}>
             <Select
@@ -28,12 +29,12 @@ export default({ ledgers, ledger, setLedger, queryStats }: { ledgers: string[], 
                 indicatorColor="primary"
                 textColor="primary"
                 value={selectedTab}
-                defaultValue="current"
+                defaultValue="results"
                 onChange={(e, value) => {
                     setSelectedTab(value);
                 }}
             >
-            <Tab icon={<ReceiptIcon />} value="current" />
+            <Tab icon={<ReceiptIcon />} value="results" />
             <Tab icon={<HistoryIcon />} value="history" />
           </Tabs>
         </span>
