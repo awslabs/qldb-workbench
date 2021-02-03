@@ -10,7 +10,10 @@ export default({ ledgers, ledger, setLedger, queryStats }: { ledgers: string[], 
                 value={ledger ? { label: ledger, value: ledger } : { label: "Choose a ledger...", value: "Choose a ledger" }}
                 options={ ledgers.map(l => { return { label: l, value: l} }) }
                 menuPlacement="top"
-                onChange={o => setLedger(o.value)}
+                onChange={o => {
+                    console.log("o", o);
+                    setLedger(o.value);
+                }}
             />
         </span>
         {queryStats

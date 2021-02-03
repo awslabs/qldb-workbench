@@ -22,20 +22,23 @@ export enum Color {
 const Detail = ({ ledgers }: { ledgers: string[]}) => {
     const [queryStats, setQueryStats] = React.useState(undefined);
     const [resultsText, setResultsText] = React.useState("");
-    const [ledger, setLedger] = React.useState(null);
+    const ledger = React.useRef(null);
 
+    const executeText = async (text: string) => {
+        const result = await openLedger(ledger.current).execute(text);
+        setQueryStats({
+            consumedIOs: result.getConsumedIOs(),
+            timingInformation: result.getTimingInformation(),
+        });
+        setResultsText(JSON.stringify(result.getResultList()));
+    };
     return <SplitPane split="horizontal" size="80%">
-        <Composer executeText={async (text) => {
-            const result = await openLedger(ledger).execute(text);
-            setQueryStats({
-                consumedIOs: result.getConsumedIOs(),
-                timingInformation: result.getTimingInformation(),
-            });
-            setResultsText(JSON.stringify(result.getResultList()));
-        }}/>
+        <Composer executeText={executeText} />
         <div style={{width: "100%", height: "100%", display: "flex", flexDirection: "column"}}>
             <Results resultsText={resultsText}/>
-            <StatusBar queryStats={queryStats} ledgers={ledgers} ledger={ledger} setLedger={setLedger}/>
+            <StatusBar queryStats={queryStats} ledgers={ledgers} ledger={ledger.current} setLedger={l => {
+                ledger.current = l;
+            }}/>
         </div>
     </SplitPane>;
 };
