@@ -33,6 +33,9 @@
   },
   "homepage": "https://github.com/alpian/qldb-quark#readme",
   "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "amazon-qldb-driver-nodejs": "^2.1.1",
     "aws-sdk": "^2.834.0",
     "electron": "^11.2.1",
