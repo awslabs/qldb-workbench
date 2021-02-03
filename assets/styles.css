@@ -57,6 +57,7 @@ body {
   margin-bottom: -4px;
   margin-left: auto;
   padding: 2px;
+  cursor: pointer;
 }
 
 .action-button:hover {
