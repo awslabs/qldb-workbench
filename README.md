@@ -2,6 +2,12 @@
 
 ## Developing for contributors
 
+To get started, run:
+
+```
+npm install
+```
+
 To run the shell during development use:
 
 ```

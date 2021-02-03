@@ -7,8 +7,9 @@ import * as path from "path";
 import {listLedgers} from "./ledger";
 import {openLedger, QueryStats} from "./session";
 import AWS = require("aws-sdk");
+import Navigator from "./Navigator";
 
-AWS.config.update({region:'us-east-1'});
+AWS.config.update({region:"us-east-1"});
 
 const EDITOR_STYLE = {padding: "1px", width: "100%", height: "100%", overflow: "scroll", fontFamily: "Courier New", fontSize: "10pt"};
 
@@ -67,10 +68,28 @@ const Results = ({ resultsText }: { resultsText: string }) => {
     return <ContentEditable html={resultsText} onChange={() => {}} style={Object.assign({ backgroundColor: Color.LIGHTGRAY, flex: 1 }, EDITOR_STYLE)} />;
 }
 
-const App = () => {
+const Detail = ({ ledgers }: { ledgers: string[]}) => {
     const [queryStats, setQueryStats] = React.useState(undefined);
     const [resultsText, setResultsText] = React.useState("");
     const [ledger, setLedger] = React.useState(null);
+
+    return <SplitPane split="horizontal" size="80%">
+        <Composer executeText={async (text) => {
+            const result = await openLedger(ledger).execute(text);
+            setQueryStats({
+                consumedIOs: result.getConsumedIOs(),
+                timingInformation: result.getTimingInformation(),
+            });
+            setResultsText(JSON.stringify(result.getResultList()));
+        }}/>
+        <div style={{width: "100%", height: "100%", display: "flex", flexDirection: "column"}}>
+            <Results resultsText={resultsText}/>
+            <StatusBar queryStats={queryStats} ledgers={ledgers} ledger={ledger} setLedger={setLedger}/>
+        </div>
+    </SplitPane>;
+};
+
+const App = () => {
     const [ledgers, setLedgers] = React.useState([]);
     React.useEffect(() => {
         const fetchLedgers = async () => {
@@ -78,22 +97,12 @@ const App = () => {
         };
         fetchLedgers();
     }, []);
-    return <>
-        <SplitPane split="horizontal" size="80%">
-            <Composer executeText={async (text) => {
-                const result = await openLedger(ledger).execute(text);
-                setQueryStats({
-                    consumedIOs: result.getConsumedIOs(),
-                    timingInformation: result.getTimingInformation(),
-                });
-                setResultsText(JSON.stringify(result.getResultList()));
-            }}/>
-            <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
-                <Results resultsText={resultsText} />
-                <StatusBar queryStats={queryStats} ledgers={ledgers} ledger={ledger} setLedger={setLedger}/>
-            </div>
-        </SplitPane>
-    </>;
+
+
+    return <SplitPane split={"vertical"} size="20%">
+        <Navigator />
+        <Detail ledgers={ledgers}/>
+    </SplitPane>;
 };
 
 ReactDOM.render(<App />, document.getElementById("main"));
