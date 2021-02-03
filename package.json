@@ -13,9 +13,12 @@
   },
   "watch": {
     "build": {
-      "patterns": ["src", "assets"],
-      "extensions": "ts,tsx,html,scss",
-      "delay": 1000,
+      "patterns": [
+        "src",
+        "assets"
+      ],
+      "extensions": "ts,tsx,html,css",
+      "delay": 500,
       "runOnChangeOnly": true
     }
   },
@@ -38,12 +41,14 @@
     "react": "^17.0.1",
     "react-contenteditable": "^3.3.5",
     "react-dom": "^17.0.1",
+    "react-select": "^4.0.2",
     "react-split-pane": "^0.1.92",
     "save": "^2.4.0"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "@types/react-select": "^4.0.12",
     "concurrently": "^5.3.0",
     "electron-is-dev": "^1.2.0",
     "electron-reload": "^1.5.0",

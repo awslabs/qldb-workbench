@@ -1,6 +1,5 @@
 import { app, BrowserWindow } from "electron";
 import * as electronIsDev from "electron-is-dev";
-import * as path from "path";
 
 require("electron-reload")(__dirname);
 

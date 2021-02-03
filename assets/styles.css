@@ -42,3 +42,35 @@ body {
 .Resizer.disabled:hover {
   border-color: transparent;
 }
+
+.action-bar {
+  display: inline-flex;
+  padding-top: 2px;
+  padding-bottom: 1px;
+  padding-right: 5px;
+  background-color: #f5f5f5;
+}
+
+.action-button {
+  display: inline-block;
+  margin-top: auto;
+  margin-bottom: -4px;
+  margin-left: auto;
+  padding: 2px;
+}
+
+.action-button:hover {
+  background-color: #d1d1d1;
+}
+
+.status-bar {
+  display: flex;
+  flex-direction: row-reverse;
+  font-family: "arial", serif;
+  font-size: 9pt;
+  padding: 2px;
+}
+
+.status-item {
+  margin-left: auto;
+}
