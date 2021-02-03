@@ -1,15 +1,13 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import SplitPane from "react-split-pane";
-import Select from "react-select";
-import ContentEditable, {ContentEditableEvent} from "react-contenteditable";
-import * as path from "path";
 import {listLedgers} from "./ledger";
-import {openLedger, QueryStats} from "./session";
-import AWS = require("aws-sdk");
+import {openLedger} from "./session";
 import Navigator from "./Navigator";
 import Results from "./Results";
 import Composer from "./Composer";
+import StatusBar from "./StatusBar";
+import AWS = require("aws-sdk");
 
 AWS.config.update({region:"us-east-1"});
 
@@ -19,23 +17,6 @@ export enum Color {
     GREEN = "green",
     DARKGRAY = "#f5f5f5",
     LIGHTGRAY = "#fafafa",
-}
-
-const StatusBar = ({ ledgers, ledger, setLedger, queryStats }: { ledgers: string[], ledger: string, setLedger: (ledger: string) => void, queryStats?: QueryStats}) => {
-    return <div className="status-bar">
-        <span className="status-item" style={{ width: "300px" }}>
-            <Select
-                width="300px"
-                value={ledger ? { label: ledger, value: ledger } : { label: "Choose a ledger...", value: "Choose a ledger" }}
-                options={ ledgers.map(l => { return { label: l, value: l} }) }
-                menuPlacement="top"
-                onChange={o => setLedger(o.value)}
-            />
-        </span>
-        {queryStats
-            ? <span className="status-item">Read IOs: {queryStats.consumedIOs.getReadIOs()}; Time: {queryStats.timingInformation.getProcessingTimeMilliseconds()}ms</span>
-            : <></>}
-    </div>;
 }
 
 const Detail = ({ ledgers }: { ledgers: string[]}) => {
