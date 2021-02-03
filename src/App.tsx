@@ -5,8 +5,8 @@ import Select from "react-select";
 import ContentEditable, {ContentEditableEvent} from "react-contenteditable";
 import * as path from "path";
 import {listLedgers} from "./ledger";
+import {openLedger, QueryStats} from "./session";
 import AWS = require("aws-sdk");
-import {openLedger} from "./session";
 
 AWS.config.update({region:'us-east-1'});
 
@@ -31,7 +31,7 @@ const ActionBar = ({ executeButtonClicked }: { executeButtonClicked: () => void}
     </span>;
 }
 
-const StatusBar = ({ ledgers, ledger, setLedger }: { ledgers: string[], ledger: string, setLedger: (ledger: string) => void}) => {
+const StatusBar = ({ ledgers, ledger, setLedger, queryStats }: { ledgers: string[], ledger: string, setLedger: (ledger: string) => void, queryStats?: QueryStats}) => {
     return <div className="status-bar">
         <span className="status-item" style={{ width: "300px" }}>
             <Select
@@ -42,6 +42,9 @@ const StatusBar = ({ ledgers, ledger, setLedger }: { ledgers: string[], ledger: 
                 onChange={o => setLedger(o.value)}
             />
         </span>
+        {queryStats
+            ? <span className="status-item">Read IOs: {queryStats.consumedIOs.getReadIOs()}; Time: {queryStats.timingInformation.getProcessingTimeMilliseconds()}ms</span>
+            : <></>}
     </div>;
 }
 
@@ -65,6 +68,7 @@ const Results = ({ resultsText }: { resultsText: string }) => {
 }
 
 const App = () => {
+    const [queryStats, setQueryStats] = React.useState(undefined);
     const [resultsText, setResultsText] = React.useState("");
     const [ledger, setLedger] = React.useState(null);
     const [ledgers, setLedgers] = React.useState([]);
@@ -78,11 +82,15 @@ const App = () => {
         <SplitPane split="horizontal" size="80%">
             <Composer executeText={async (text) => {
                 const result = await openLedger(ledger).execute(text);
+                setQueryStats({
+                    consumedIOs: result.getConsumedIOs(),
+                    timingInformation: result.getTimingInformation(),
+                });
                 setResultsText(JSON.stringify(result.getResultList()));
             }}/>
             <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
                 <Results resultsText={resultsText} />
-                <StatusBar ledgers={ledgers} ledger={ledger} setLedger={setLedger}/>
+                <StatusBar queryStats={queryStats} ledgers={ledgers} ledger={ledger} setLedger={setLedger}/>
             </div>
         </SplitPane>
     </>;

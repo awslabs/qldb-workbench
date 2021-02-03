@@ -1,7 +1,18 @@
-import {QldbDriver, Result, RetryConfig, TransactionExecutor} from "amazon-qldb-driver-nodejs";
+import {
+    IOUsage,
+    QldbDriver,
+    Result,
+    RetryConfig,
+    TimingInformation,
+    TransactionExecutor
+} from "amazon-qldb-driver-nodejs";
 import {ClientConfiguration} from "aws-sdk/clients/acm";
 import {Agent} from "https";
 
+export interface QueryStats {
+    consumedIOs: IOUsage,
+    timingInformation: TimingInformation,
+}
 
 export const executeStatement = (driver: QldbDriver) => async (statement: string): Promise<Result> => {
     return await driver.executeLambda(async (txn: TransactionExecutor) => {
