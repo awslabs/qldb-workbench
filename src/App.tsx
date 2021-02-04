@@ -53,15 +53,15 @@ const Detail = ({ ledgers }: { ledgers: string[]}) => {
         setResultsText(JSON.stringify(result));
     }
 
-    const executeText = async (text: string) => {
-        const result = await openLedger(ledger.current).execute(text);
+    const executeStatement = async () => {
+        const result = await openLedger(ledger.current).execute(composerText.current);
         const queryStats = {
             consumedIOs: result.getConsumedIOs(),
             timingInformation: result.getTimingInformation(),
         };
         setQueryStats(flattenQueryStats(queryStats));
         updateResultText(result.getResultList());
-        recordHistory(text, result.getResultList(), queryStats, setHistory)
+        recordHistory(composerText.current, result.getResultList(), queryStats, setHistory)
     };
 
     const historyEntrySelected = (entry: QueryHistoryEntry) => {
@@ -72,7 +72,7 @@ const Detail = ({ ledgers }: { ledgers: string[]}) => {
     }
 
     return <SplitPane split="horizontal" size="80%">
-        <Composer composerText={composerText.current} setComposerText={setComposerText} executeText={executeText} />
+        <Composer composerText={composerText.current} setComposerText={setComposerText} executeStatement={executeStatement} />
         <div style={{width: "100%", height: "100%", display: "flex", flexDirection: "column"}}>
             { selectedTab === TabType.RESULTS
                 ? <Results resultsText={resultsText}/>

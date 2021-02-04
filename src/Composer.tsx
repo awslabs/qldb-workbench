@@ -4,7 +4,7 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-sql"
 import "ace-builds/src-noconflict/theme-dracula"
 
-export const Composer = ({composerText, setComposerText, executeText}: { composerText: string, executeText: (text: string) => void, setComposerText: (text: string) => void }) => {
+export const Composer = ({composerText, setComposerText, executeStatement}: { composerText: string, executeStatement: () => void, setComposerText: (text: string) => void }) => {
     const COMPOSER_STYLE = {
         padding: "1px",
         width: "100%",
@@ -16,7 +16,7 @@ export const Composer = ({composerText, setComposerText, executeText}: { compose
     const executeCode = {
         name: "executeCode",
         bindKey: {win: 'Ctrl-E', mac: 'Command-E'},
-        exec: () => { executeText(composerText) },
+        exec: () => { executeStatement() },
         readOnly: true
     };
     return <div style={{width: "100%", display: "flex", flexDirection: "column"}} id={"composer"}>
@@ -30,7 +30,7 @@ export const Composer = ({composerText, setComposerText, executeText}: { compose
             value={composerText}
         />
         <ActionBar executeButtonClicked={() => {
-            executeText(composerText);
+            executeStatement();
         }}/>
     </div>
 }
