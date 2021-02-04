@@ -5,6 +5,8 @@ import HistoryIcon from '@material-ui/icons/History';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import {TabType} from "./App";
 import {QueryStats} from "./query-history";
+import {addCompleterForUserTables} from "./Composer";
+import {getLedgerMetaData} from "./ledger";
 
 type Props = { ledgers: string[], ledger: string, setLedger: (ledger: string) => void, queryStats?: QueryStats, selectedTab: string, setSelectedTab: (selectedTab: TabType) => void };
 
@@ -19,6 +21,7 @@ export default({ ledgers, ledger, setLedger, queryStats, selectedTab, setSelecte
                 onChange={o => {
                     console.log("o", o);
                     setLedger(o.value);
+                    getLedgerMetaData(o.value).then(e => addCompleterForUserTables(e.tables.map(q => q.name)))
                 }}
             />
         </span>

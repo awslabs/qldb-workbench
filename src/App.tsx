@@ -10,7 +10,6 @@ import StatusBar from "./StatusBar";
 import History from "./History";
 import {flattenQueryStats, loadHistory, QueryHistoryEntry, QueryStats, recordHistory} from "./query-history";
 import AWS = require("aws-sdk");
-import {Result} from "amazon-qldb-driver-nodejs";
 import {Value} from "ion-js/dist/commonjs/es6/dom";
 
 AWS.config.update({region:"us-east-1"});
