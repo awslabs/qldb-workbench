@@ -71,7 +71,7 @@ const Detail = ({ ledgers }: { ledgers: string[]}) => {
         setComposerText(entry.text);
     }
 
-    return <SplitPane split="horizontal" size="80%">
+    return <SplitPane split="horizontal" size="50%">
         <Composer composerText={composerText.current} setComposerText={setComposerText} executeStatement={executeStatement} />
         <div style={{width: "100%", height: "100%", display: "flex", flexDirection: "column"}}>
             { selectedTab === TabType.RESULTS
