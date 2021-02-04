@@ -4,8 +4,9 @@ import Select from "react-select";
 import {Tab, Tabs} from "@material-ui/core";
 import HistoryIcon from '@material-ui/icons/History';
 import ReceiptIcon from '@material-ui/icons/Receipt';
+import {TabType} from "./App";
 
-type Props = { ledgers: string[], ledger: string, setLedger: (ledger: string) => void, queryStats?: QueryStats, selectedTab: string, setSelectedTab: (selectedTab: string) => void };
+type Props = { ledgers: string[], ledger: string, setLedger: (ledger: string) => void, queryStats?: QueryStats, selectedTab: string, setSelectedTab: (selectedTab: TabType) => void };
 
 export default({ ledgers, ledger, setLedger, queryStats, selectedTab, setSelectedTab }: Props) => {
     return <div className="status-bar">

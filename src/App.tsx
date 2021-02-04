@@ -7,6 +7,7 @@ import Navigator from "./Navigator";
 import Results from "./Results";
 import {Composer} from "./Composer";
 import StatusBar from "./StatusBar";
+import History from "./History";
 import AWS = require("aws-sdk");
 
 AWS.config.update({region:"us-east-1"});
@@ -26,10 +27,15 @@ export enum Theme {
 export let CurrentTheme: Theme = Theme.LIGHT
 export function toggleTheme() { CurrentTheme == Theme.LIGHT ? CurrentTheme = Theme.DARK : CurrentTheme = Theme.LIGHT }
 
+export enum TabType {
+    RESULTS = "results",
+    HISTORY = "results"
+}
+
 const Detail = ({ ledgers }: { ledgers: string[]}) => {
     const [queryStats, setQueryStats] = React.useState(undefined);
     const [resultsText, setResultsText] = React.useState("");
-    const [selectedTab, setSelectedTab] = React.useState("results");
+    const [selectedTab, setSelectedTab] = React.useState(TabType.RESULTS);
     const ledger = React.useRef(null);
 
     const executeText = async (text: string) => {
@@ -43,7 +49,10 @@ const Detail = ({ ledgers }: { ledgers: string[]}) => {
     return <SplitPane split="horizontal" size="80%">
         <Composer executeText={executeText} />
         <div style={{width: "100%", height: "100%", display: "flex", flexDirection: "column"}}>
-            <Results resultsText={resultsText}/>
+            { selectedTab === TabType.RESULTS
+                ? <Results resultsText={resultsText}/>
+                : <History />
+            }
             <StatusBar
                 queryStats={queryStats}
                 ledgers={ledgers}

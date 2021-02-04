@@ -76,3 +76,8 @@ body {
 .status-item {
   padding-right: 2px;
 }
+
+.query-history .MuiTypography-body2 {
+  font-family: "Courier New", serif;
+  font-size: 8pt;
+}
