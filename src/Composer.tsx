@@ -5,9 +5,11 @@ import "ace-builds/src-noconflict/mode-sql"
 import "ace-builds/src-noconflict/theme-textmate"
 import "ace-builds/src-noconflict/ext-language_tools"
 import ace from "ace-builds/src-noconflict/ace";
+import PartiQLMode from "./mode/PartiQLMode";
 
 export class Composer extends React.Component<{ composerText: string, executeStatement: () => void, setComposerText: (text: string) => void }> {
     componentDidMount() {
+        updatePartiqlMode()
         initDefaultCompleters()
     }
 
@@ -33,7 +35,7 @@ export class Composer extends React.Component<{ composerText: string, executeSta
         return <div style={{width: "100%", display: "flex", flexDirection: "column"}} id={"composer"}>
             <AceEditor
                 name={"aceEditor"}
-                mode={"sql"}
+                mode={"sql"} // Just to initialize.. Once loaded it will be updated to PartiQL
                 theme={CurrentTheme == Theme.LIGHT ? "textmate" : "dracula"}
                 style={COMPOSER_STYLE}
                 onChange={setComposerText}
@@ -66,6 +68,11 @@ const GoSvg = ({color}: { color: Color }) =>
     </svg>;
 
 let defaultCompleters: any[] = []
+
+function updatePartiqlMode() {
+    const partiQLMode = new PartiQLMode()
+    ace.edit("aceEditor").getSession().setMode(partiQLMode)
+}
 
 function initDefaultCompleters() {
     const editor = ace.edit("aceEditor")
