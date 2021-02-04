@@ -90,7 +90,7 @@ const tableNameCompleter = (names: string[], meta: string = "TableName") => {
     }
 }
 
-export function addCompleterForUserTables(names: string[], meta: string = "TableName") {
+export function addCompleterForUserTables(names: string[]) {
     const editor = ace.edit("aceEditor")
-    editor.completers = [...defaultCompleters, tableNameCompleter(names)]
+    editor.completers = [...defaultCompleters, tableNameCompleter(names), tableNameCompleter(names.map(name => `_ql_committed_${name}`), "TableMetadata")]
 }
