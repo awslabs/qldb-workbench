@@ -6,6 +6,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import TreeItem from '@material-ui/lab/TreeItem';
 import { Box, IconButton, Tooltip } from "@material-ui/core";
 import { ToggleButton } from "@material-ui/lab";
@@ -55,7 +57,7 @@ export default ({ ledgerNames }: { ledgerNames: string[] }) => {
                         setShowInactive(!showInactive);
                     }}
                 >
-                    <DeleteOutlineIcon />
+                    {showInactive ? <VisibilityIcon /> : <VisibilityOffIcon />}
                 </ToggleButton>
             </Tooltip>
 
