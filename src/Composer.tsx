@@ -43,7 +43,6 @@ export class Composer extends React.Component<{ composerText: string, executeSta
                 value={composerText}
                 enableBasicAutocompletion={true}
                 enableLiveAutocompletion={true}
-                enableSnippets={true}
             />
             <ActionBar executeButtonClicked={() => {
                 executeStatement();
