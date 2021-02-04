@@ -1,4 +1,5 @@
 import { QLDB } from "aws-sdk";
+import { LedgerSummary } from "aws-sdk/clients/qldb";
 import { openLedger } from "./session";
 
 /**
@@ -10,18 +11,29 @@ export async function listLedgers() {
     return ledgers.Ledgers.filter(l => l.State === "ACTIVE").map(l => l.Name);
 }
 
-export async function getLedgerMetaData(ledger: string) {
-    const result = await openLedger(ledger).execute("SELECT * FROM information_schema.user_tables")
+export async function getLedgerMetaData(ledgerName: string): Promise<LedgerInfo> {
+    const ledger: LedgerInfo = await new QLDB().describeLedger({Name: ledgerName}).promise()
+    const result = await openLedger(ledgerName).execute("SELECT * FROM information_schema.user_tables")
     const tables: TableInfo[] = JSON.parse(JSON.stringify(result.getResultList()));
-    return {
-        name: ledger,
-        tables: tables
-    }
+
+    ledger.tables = tables
+
+    return ledger
+}
+
+export interface LedgerInfo extends LedgerSummary {
+    tables?: TableInfo[]
 }
 
 export interface TableInfo {
     name: string;
     tableId: string;
     status: string;
-    indexes: any[]
+    indexes: IndexInfo[]
+}
+
+export interface IndexInfo {
+    expr: string
+    indexId: string
+    status: string
 }
