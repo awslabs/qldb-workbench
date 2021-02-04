@@ -13,7 +13,7 @@ export interface QueryHistoryEntry {
     queryStats: QueryStats
 }
 
-type SetHistoryFn = (value: (((prevState: QueryHistoryEntry[]) => QueryHistoryEntry[]) | QueryHistoryEntry[])) => void;
+export type SetHistoryFn = (value: (((prevState: QueryHistoryEntry[]) => QueryHistoryEntry[]) | QueryHistoryEntry[])) => void;
 
 export function loadHistory(setHistory: SetHistoryFn) {
     readline.createInterface(fs.createReadStream(HISTORY_FILE)).on("line", l => {
@@ -28,9 +28,17 @@ export function flattenQueryStats(queryStats: { timingInformation: TimingInforma
     };
 }
 
-export function recordHistory(text: string, result: Value[], queryStats: { timingInformation: TimingInformation; consumedIOs: IOUsage }, setHistory: SetHistoryFn) {
-    const historyEntry = { text, result, queryStats: flattenQueryStats(queryStats)
-    };
+function append(historyEntry: { result: Value[]; queryStats: { timingInformation: { processingTimeMilliseconds: number }; consumedIOs: { readIOs: number } }; text: string }) {
     fs.appendFileSync(HISTORY_FILE, JSON.stringify(historyEntry) + "\n");
+}
+
+export function recordHistory(text: string, result: Value[], queryStats: { timingInformation: TimingInformation; consumedIOs: IOUsage }, setHistory: SetHistoryFn) {
+    const historyEntry = { text, result, queryStats: flattenQueryStats(queryStats) };
+    append(historyEntry);
     setHistory(history => [...history, historyEntry]);
+}
+
+export function replaceHistory(history: QueryHistoryEntry[]) {
+    fs.truncateSync(HISTORY_FILE);
+    history.forEach(append);
 }

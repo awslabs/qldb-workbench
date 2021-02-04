@@ -76,7 +76,7 @@ const Detail = ({ ledgers }: { ledgers: string[]}) => {
         <div style={{width: "100%", height: "100%", display: "flex", flexDirection: "column"}}>
             { selectedTab === TabType.RESULTS
                 ? <Results resultsText={resultsText}/>
-                : <History history={history} historyEntrySelected={historyEntrySelected}/>
+                : <History history={history} setHistory={setHistory} historyEntrySelected={historyEntrySelected}/>
             }
             <StatusBar
                 queryStats={queryStats}

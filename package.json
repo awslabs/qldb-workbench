@@ -42,12 +42,13 @@
     "ion-js": "^4.1.0",
     "jsbi": "^3.1.4",
     "react": "^17.0.1",
+    "react-ace": "^9.3.0",
     "react-contenteditable": "^3.3.5",
     "react-dom": "^17.0.1",
     "react-select": "^4.0.2",
     "react-split-pane": "^0.1.92",
     "save": "^2.4.0",
-    "react-ace": "^9.3.0"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
