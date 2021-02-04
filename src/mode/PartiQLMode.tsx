@@ -8,7 +8,7 @@ export class PartiQLHighlightRules extends ace.acequire(
         var keywords = (
             "select|insert|update|delete|from|where|and|or|group|by|order|limit|offset|having|as|case|" +
             "when|then|else|end|type|left|right|join|on|outer|desc|asc|union|create|table|primary|key|if|" +
-            "foreign|not|references|default|null|inner|cross|natural|database|drop|grant|history"
+            "foreign|not|references|default|null|inner|cross|natural|database|drop|grant|history|undrop"
         );
 
         var builtinConstants = (
