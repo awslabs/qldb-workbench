@@ -9,8 +9,10 @@ import {Composer} from "./Composer";
 import StatusBar from "./StatusBar";
 import History from "./History";
 import {flattenQueryStats, loadHistory, QueryHistoryEntry, QueryStats, recordHistory} from "./query-history";
-import AWS = require("aws-sdk");
 import {Value} from "ion-js/dist/commonjs/es6/dom";
+import {Snackbar} from "@material-ui/core";
+import {Alert} from "@material-ui/lab";
+import AWS = require("aws-sdk");
 
 AWS.config.update({region:"us-east-1"});
 
@@ -39,6 +41,10 @@ const Detail = ({ ledgers }: { ledgers: string[]}) => {
     const [resultsText, setResultsText] = React.useState("");
     const [selectedTab, setSelectedTab] = React.useState(TabType.RESULTS);
     const [history, setHistory] = React.useState([] as QueryHistoryEntry[]);
+    const [errorMsg, setErrorMsg] = React.useState("")
+    const [successBarOpen, setSuccessBarOpen] = React.useState(false);
+    const [errorBarOpen, setErrorBarOpen] = React.useState(false);
+
     const composerText = React.useRef(null);
     const ledger = React.useRef(null);
 
@@ -53,14 +59,22 @@ const Detail = ({ ledgers }: { ledgers: string[]}) => {
     }
 
     const executeStatement = async () => {
-        const result = await openLedger(ledger.current).execute(composerText.current);
-        const queryStats = {
-            consumedIOs: result.getConsumedIOs(),
-            timingInformation: result.getTimingInformation(),
-        };
-        setQueryStats(flattenQueryStats(queryStats));
-        updateResultText(result.getResultList());
-        recordHistory(composerText.current, result.getResultList(), queryStats, setHistory)
+        try {
+            setErrorMsg("")
+            const result = await openLedger(ledger.current).execute(composerText.current);
+            const queryStats = {
+                consumedIOs: result.getConsumedIOs(),
+                timingInformation: result.getTimingInformation(),
+            };
+            setQueryStats(flattenQueryStats(queryStats));
+            updateResultText(result.getResultList());
+            recordHistory(composerText.current, result.getResultList(), queryStats, setHistory)
+            setSuccessBarOpen(true)
+        } catch (e) {
+            setErrorMsg(e.toLocaleString())
+            setResultsText("")
+            setErrorBarOpen(true)
+        }
     };
 
     const historyEntrySelected = (entry: QueryHistoryEntry) => {
@@ -70,11 +84,27 @@ const Detail = ({ ledgers }: { ledgers: string[]}) => {
         setComposerText(entry.text);
     }
 
+    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSuccessBarOpen(false);
+        setErrorBarOpen(false)
+    };
+
     return <SplitPane split="horizontal" size="50%">
         <Composer composerText={composerText.current} setComposerText={setComposerText} executeStatement={executeStatement} />
         <div style={{width: "100%", height: "100%", display: "flex", flexDirection: "column"}}>
+
+            <Snackbar open={successBarOpen} autoHideDuration={2000} onClose={handleClose}>
+                <Alert severity="success" onClose={handleClose}>Request successful!</Alert>
+            </Snackbar>
+            <Snackbar open={errorBarOpen} autoHideDuration={2000} onClose={handleClose}>
+                <Alert severity="error" onClose={handleClose}>Woah! What did you do?</Alert>
+            </Snackbar>
+
             { selectedTab === TabType.RESULTS
-                ? <Results resultsText={resultsText}/>
+                ? <Results resultsText={resultsText} queryStats={queryStats} errorMsg={errorMsg}/>
                 : <History history={history} setHistory={setHistory} historyEntrySelected={historyEntrySelected}/>
             }
             <StatusBar

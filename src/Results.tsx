@@ -19,6 +19,9 @@ import {
 } from "@material-ui/core";
 import TableChartIcon from '@material-ui/icons/TableChart';
 import CodeIcon from '@material-ui/icons/Code';
+import {QueryStats} from "./query-history";
+import CheckCircleTwoToneIcon from '@material-ui/icons/CheckCircleTwoTone';
+import CancelTwoToneIcon from '@material-ui/icons/CancelTwoTone';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -43,10 +46,16 @@ const useStyles = makeStyles((theme) => ({
     },
     tableHeadContent: {
         fontWeight: theme.typography.fontWeightBold
+    },
+    successInfo: {
+        color: "green"
+    },
+    errorInfo: {
+        color: "red"
     }
 }));
 
-export default ({ resultsText }: { resultsText: string }) => {
+export default ({ resultsText, queryStats, errorMsg }: { resultsText: string, queryStats: QueryStats, errorMsg: string }) => {
     const classes = useStyles();
     const [viewType, setViewType] = React.useState("ion");
     const queryResult = resultsText ? JSON.parse(resultsText) : []
@@ -58,6 +67,12 @@ export default ({ resultsText }: { resultsText: string }) => {
         resultView = prepareIonView(queryResult)
     }
 
+    let statusView
+    if (errorMsg == "") {
+        statusView = queryStats ? <div className={classes.successInfo}><CheckCircleTwoToneIcon /> Read IOs: {queryStats.consumedIOs.readIOs} Time: {queryStats.timingInformation.processingTimeMilliseconds}</div> : <></>
+    } else {
+        statusView = <div className={classes.errorInfo}><CancelTwoToneIcon /> {errorMsg}</div>
+    }
     return <Paper style={{backgroundColor: Color.DARKGRAY, flex: 1, width: "100%", height: "100%"}}>
         <div style={{backgroundColor: Color.LIGHTGRAY, display: "flex", flexDirection: "row-reverse"}}>
             <BottomNavigation
@@ -65,14 +80,13 @@ export default ({ resultsText }: { resultsText: string }) => {
                 onChange={(event, newValue) => {
                     setViewType(newValue);
                 }}
-                showLabels
                 className={classes.navigation}
                 style={{alignSelf: "flex-end"}}
             >
-                <BottomNavigationAction value="table" label="Table" icon={<TableChartIcon />} />
                 <BottomNavigationAction value="ion" label="Ion" icon={<CodeIcon />} />
+                <BottomNavigationAction value="table" label="Table" icon={<TableChartIcon />} />
             </BottomNavigation>
-            <Typography className={classes.heading} style={{flex: 1}}>Results</Typography>
+            <span style={{flex: 1}}>{statusView}</span>
         </div>
         { resultView }
 
