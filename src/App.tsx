@@ -102,7 +102,7 @@ const App = () => {
 
 
     return <SplitPane split={"vertical"} size="20%">
-        <Navigator ledgers={ledgers}/>
+        <Navigator ledgerNames={ledgers}/>
         <Detail ledgers={ledgers}/>
     </SplitPane>;
 };

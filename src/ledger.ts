@@ -12,9 +12,16 @@ export async function listLedgers() {
 
 export async function getLedgerMetaData(ledger: string) {
     const result = await openLedger(ledger).execute("SELECT * FROM information_schema.user_tables")
-    const tables = JSON.parse(JSON.stringify(result.getResultList()));
+    const tables: TableInfo[] = JSON.parse(JSON.stringify(result.getResultList()));
     return {
         name: ledger,
         tables: tables
     }
+}
+
+export interface TableInfo {
+    name: string;
+    tableId: string;
+    status: string;
+    indexes: any[]
 }
