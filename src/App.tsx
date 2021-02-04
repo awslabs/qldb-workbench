@@ -8,6 +8,7 @@ import Results from "./Results";
 import {Composer} from "./Composer";
 import StatusBar from "./StatusBar";
 import History from "./History";
+import {loadHistory, QueryHistoryEntry, recordHistory} from "./query-history";
 import AWS = require("aws-sdk");
 
 AWS.config.update({region:"us-east-1"});
@@ -36,22 +37,27 @@ const Detail = ({ ledgers }: { ledgers: string[]}) => {
     const [queryStats, setQueryStats] = React.useState(undefined);
     const [resultsText, setResultsText] = React.useState("");
     const [selectedTab, setSelectedTab] = React.useState(TabType.RESULTS);
+    const [history, setHistory] = React.useState([] as QueryHistoryEntry[]);
     const ledger = React.useRef(null);
+
+    React.useEffect(() => loadHistory(setHistory), []);
 
     const executeText = async (text: string) => {
         const result = await openLedger(ledger.current).execute(text);
-        setQueryStats({
+        const queryStats = {
             consumedIOs: result.getConsumedIOs(),
             timingInformation: result.getTimingInformation(),
-        });
+        };
+        setQueryStats(queryStats);
         setResultsText(JSON.stringify(result.getResultList()));
+        recordHistory(text, result.getResultList(), queryStats, setHistory)
     };
     return <SplitPane split="horizontal" size="80%">
         <Composer executeText={executeText} />
         <div style={{width: "100%", height: "100%", display: "flex", flexDirection: "column"}}>
             { selectedTab === TabType.RESULTS
                 ? <Results resultsText={resultsText}/>
-                : <History />
+                : <History history={history} />
             }
             <StatusBar
                 queryStats={queryStats}
