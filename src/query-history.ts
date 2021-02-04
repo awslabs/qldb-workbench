@@ -5,10 +5,12 @@ import * as readline from "readline";
 
 const HISTORY_FILE = ".qldb-quark-history";
 
+export type QueryStats = { timingInformation: { processingTimeMilliseconds: number }; consumedIOs: { readIOs: number } };
+
 export interface QueryHistoryEntry {
     text: string;
     result: Value[];
-    queryStats: { timingInformation: { processingTimeMilliseconds: number }; consumedIOs: { readIOs: number } }
+    queryStats: QueryStats
 }
 
 type SetHistoryFn = (value: (((prevState: QueryHistoryEntry[]) => QueryHistoryEntry[]) | QueryHistoryEntry[])) => void;
@@ -19,11 +21,15 @@ export function loadHistory(setHistory: SetHistoryFn) {
     });
 }
 
+export function flattenQueryStats(queryStats: { timingInformation: TimingInformation; consumedIOs: IOUsage }) {
+    return {
+        consumedIOs: {readIOs: queryStats.consumedIOs.getReadIOs()},
+        timingInformation: {processingTimeMilliseconds: queryStats.timingInformation.getProcessingTimeMilliseconds()},
+    };
+}
+
 export function recordHistory(text: string, result: Value[], queryStats: { timingInformation: TimingInformation; consumedIOs: IOUsage }, setHistory: SetHistoryFn) {
-    const historyEntry = { text, result, queryStats: {
-            consumedIOs: { readIOs: queryStats.consumedIOs.getReadIOs() },
-            timingInformation: { processingTimeMilliseconds: queryStats.timingInformation.getProcessingTimeMilliseconds() },
-        }
+    const historyEntry = { text, result, queryStats: flattenQueryStats(queryStats)
     };
     fs.appendFileSync(HISTORY_FILE, JSON.stringify(historyEntry) + "\n");
     setHistory(history => [...history, historyEntry]);

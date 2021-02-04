@@ -4,9 +4,7 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-sql"
 import "ace-builds/src-noconflict/theme-dracula"
 
-export const Composer = ({executeText}: { executeText: (text: string) => void }) => {
-    const text = React.useRef("");
-
+export const Composer = ({composerText, setComposerText, executeText}: { composerText: string, executeText: (text: string) => void, setComposerText: (text: string) => void }) => {
     const COMPOSER_STYLE = {
         padding: "1px",
         width: "100%",
@@ -15,21 +13,24 @@ export const Composer = ({executeText}: { executeText: (text: string) => void })
         fontSize: "12pt"
     };
 
-    const handleChange = (composerText: string) => {
-        text.current = composerText;
-    };
-
     const executeCode = {
         name: "executeCode",
         bindKey: {win: 'Ctrl-E', mac: 'Command-E'},
-        exec: () => { executeText(text.current) },
+        exec: () => { executeText(composerText) },
         readOnly: true
     };
     return <div style={{width: "100%", display: "flex", flexDirection: "column"}} id={"composer"}>
-        <AceEditor name={"editor"} mode={"sql"} theme={CurrentTheme == Theme.LIGHT ? "" : "dracula"}
-                   style={COMPOSER_STYLE} onChange={handleChange} commands={[executeCode]}/>
+        <AceEditor
+            name={"editor"}
+            mode={"sql"}
+            theme={CurrentTheme == Theme.LIGHT ? "" : "dracula"}
+            style={COMPOSER_STYLE}
+            onChange={setComposerText}
+            commands={[executeCode]}
+            value={composerText}
+        />
         <ActionBar executeButtonClicked={() => {
-            executeText(text.current);
+            executeText(composerText);
         }}/>
     </div>
 }

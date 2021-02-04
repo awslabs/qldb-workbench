@@ -8,8 +8,10 @@ import Results from "./Results";
 import {Composer} from "./Composer";
 import StatusBar from "./StatusBar";
 import History from "./History";
-import {loadHistory, QueryHistoryEntry, recordHistory} from "./query-history";
+import {flattenQueryStats, loadHistory, QueryHistoryEntry, QueryStats, recordHistory} from "./query-history";
 import AWS = require("aws-sdk");
+import {Result} from "amazon-qldb-driver-nodejs";
+import {Value} from "ion-js/dist/commonjs/es6/dom";
 
 AWS.config.update({region:"us-east-1"});
 
@@ -34,13 +36,22 @@ export enum TabType {
 }
 
 const Detail = ({ ledgers }: { ledgers: string[]}) => {
-    const [queryStats, setQueryStats] = React.useState(undefined);
+    const [queryStats, setQueryStats] = React.useState(undefined as QueryStats);
     const [resultsText, setResultsText] = React.useState("");
     const [selectedTab, setSelectedTab] = React.useState(TabType.RESULTS);
     const [history, setHistory] = React.useState([] as QueryHistoryEntry[]);
+    const composerText = React.useRef(null);
     const ledger = React.useRef(null);
 
     React.useEffect(() => loadHistory(setHistory), []);
+
+    function setComposerText(text: string) {
+        composerText.current = text;
+    }
+
+    function updateResultText(result: Value[]) {
+        setResultsText(JSON.stringify(result));
+    }
 
     const executeText = async (text: string) => {
         const result = await openLedger(ledger.current).execute(text);
@@ -48,16 +59,24 @@ const Detail = ({ ledgers }: { ledgers: string[]}) => {
             consumedIOs: result.getConsumedIOs(),
             timingInformation: result.getTimingInformation(),
         };
-        setQueryStats(queryStats);
-        setResultsText(JSON.stringify(result.getResultList()));
+        setQueryStats(flattenQueryStats(queryStats));
+        updateResultText(result.getResultList());
         recordHistory(text, result.getResultList(), queryStats, setHistory)
     };
+
+    const historyEntrySelected = (entry: QueryHistoryEntry) => {
+        setSelectedTab(TabType.RESULTS);
+        updateResultText(entry.result);
+        setQueryStats(entry.queryStats);
+        setComposerText(entry.text);
+    }
+
     return <SplitPane split="horizontal" size="80%">
-        <Composer executeText={executeText} />
+        <Composer composerText={composerText.current} setComposerText={setComposerText} executeText={executeText} />
         <div style={{width: "100%", height: "100%", display: "flex", flexDirection: "column"}}>
             { selectedTab === TabType.RESULTS
                 ? <Results resultsText={resultsText}/>
-                : <History history={history} />
+                : <History history={history} historyEntrySelected={historyEntrySelected}/>
             }
             <StatusBar
                 queryStats={queryStats}
