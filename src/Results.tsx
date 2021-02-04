@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Color} from "./App";
+import {Color, RESULT_BOX_STYLE, RESULT_INTERNAL_CONTAINER_STYLE} from "./App";
 import {makeStyles} from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -48,10 +48,10 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: theme.typography.fontWeightBold
     },
     successInfo: {
-        color: "green"
+        color: Color.GREEN
     },
     errorInfo: {
-        color: "red"
+        color: Color.RED
     }
 }));
 
@@ -73,7 +73,7 @@ export default ({ resultsText, queryStats, errorMsg }: { resultsText: string, qu
     } else {
         statusView = <div className={classes.errorInfo}><CancelTwoToneIcon /> {errorMsg}</div>
     }
-    return <Paper style={{backgroundColor: Color.DARKGRAY, flex: 1, width: "100%", height: "100%"}}>
+    return <div style={RESULT_BOX_STYLE}>
         <div style={{backgroundColor: Color.LIGHTGRAY, display: "flex", flexDirection: "row-reverse"}}>
             <BottomNavigation
                 value={viewType}
@@ -88,9 +88,10 @@ export default ({ resultsText, queryStats, errorMsg }: { resultsText: string, qu
             </BottomNavigation>
             <span style={{flex: 1}}>{statusView}</span>
         </div>
-        { resultView }
-
-    </Paper>
+        <div style={RESULT_INTERNAL_CONTAINER_STYLE}>
+            { resultView }
+        </div>
+    </div>
 }
 
 function prepareIonView(queryResult: []) {
@@ -112,31 +113,27 @@ function prepareIonView(queryResult: []) {
             </Accordion>
         )
     }
-    return <div style={{maxHeight: 300, overflow: "scroll"}}>
-        { items }
-    </div>
+    return <div>{ items }</div>
 }
 
 function prepareTableView(queryResult: []) {
     const classes = useStyles();
     const headers = findAllHeaders(queryResult)
 
-    return <div style={{maxHeight: 300, overflow: "scroll"}}>
-        <TableContainer component={Paper}>
-            <Table className={classes.table} size="small" aria-label="Results table">
-                <TableHead>
-                    <TableRow>
-                        {headers.map((header) => <TableCell>
-                            <Typography className={classes.tableHeadContent}>{header}</Typography>
-                        </TableCell>)}
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {queryResult.map((result) => prepareTableContentRow(result, headers))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    </div>
+    return <TableContainer component={Paper}>
+        <Table className={classes.table} size="small" aria-label="Results table">
+            <TableHead>
+                <TableRow>
+                    {headers.map((header) => <TableCell>
+                        <Typography className={classes.tableHeadContent}>{header}</Typography>
+                    </TableCell>)}
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {queryResult.map((result) => prepareTableContentRow(result, headers))}
+            </TableBody>
+        </Table>
+    </TableContainer>
 
 }
 
