@@ -6,7 +6,7 @@ import "ace-builds/src-noconflict/theme-textmate"
 import "ace-builds/src-noconflict/ext-language_tools"
 import ace from "ace-builds/src-noconflict/ace";
 import PartiQLMode, {defaultSnippets, Snippets} from "./mode/PartiQLMode";
-import {Button} from "@material-ui/core";
+import {Button, Divider} from "@material-ui/core";
 
 export class Composer extends React.Component<{ composerText: string, executeStatement: (text: string) => void, setComposerText: (text: string) => void }> {
     componentDidMount() {
@@ -52,6 +52,7 @@ export class Composer extends React.Component<{ composerText: string, executeSta
                 enableLiveAutocompletion={true}
                 enableSnippets={true}
             />
+            <Divider/>
             <ActionBar executeButtonClicked={() => {
                 executeSelection();
             }}/>
