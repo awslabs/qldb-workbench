@@ -146,12 +146,7 @@ const Detail = ({ ledgers, activeLedger }: { ledgers: string[], activeLedger: st
                 : <History history={history} setHistory={setHistory} historyEntrySelected={historyEntrySelected}/>
             }
             <StatusBar
-                queryStats={queryStats}
-                ledgers={ledgers}
                 ledger={ledger.current}
-                setLedger={l => {
-                    ledger.current = l;
-                }}
                 selectedTab={selectedTab}
                 setSelectedTab={setSelectedTab}/>
         </div>

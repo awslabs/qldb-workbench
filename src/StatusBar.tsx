@@ -1,23 +1,16 @@
-import * as React from "react";
-import Select from "react-select";
-import { Box, Tab, Tabs } from "@material-ui/core";
+import {Tab, Tabs} from "@material-ui/core";
 import HistoryIcon from '@material-ui/icons/History';
 import ReceiptIcon from '@material-ui/icons/Receipt';
-import { TabType } from "./App";
-import { QueryStats } from "./query-history";
-import { addCompleterForUserTables } from "./Composer";
-import { getLedgerMetaData } from "./ledger";
+import * as React from "react";
+import {TabType} from "./App";
 
-type Props = { ledgers: string[], ledger: string, setLedger: (ledger: string) => void, queryStats?: QueryStats, selectedTab: string, setSelectedTab: (selectedTab: TabType) => void };
+type Props = { ledger: string, selectedTab: string, setSelectedTab: (selectedTab: TabType) => void };
 
-export default ({ ledgers, ledger, setLedger, queryStats, selectedTab, setSelectedTab }: Props) => {
+export default ({ ledger, selectedTab, setSelectedTab }: Props) => {
     return <div className="status-bar">
         <span className="status-item" style={{ width: "300px" }}>
             {"Active ledger: " + ledger}
         </span>
-        {queryStats
-            ? <span className="status-item">Read IOs: {queryStats.consumedIOs.readIOs}; Time: {queryStats.timingInformation.processingTimeMilliseconds}ms</span>
-            : <></>}
         <span className="status-item" style={{ flex: 1 }}>
             <Tabs
                 indicatorColor="primary"

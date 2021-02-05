@@ -64,7 +64,7 @@ body {
 .status-bar {
   display: flex;
   flex-direction: row-reverse;
-  font-family: "arial", serif;
+  font-family: "Roboto";
   font-size: 9pt;
   padding: 2px;
   align-items: center;
