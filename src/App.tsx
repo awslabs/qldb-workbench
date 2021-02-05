@@ -99,7 +99,7 @@ const Detail = ({ ledgers, activeLedger }: { ledgers: string[], activeLedger: st
         try {
             setErrorMsg("")
             const result = await openLedger(ledger.current).execute(composerText.current);
-            console.log(JSON.stringify(result))
+            // console.log(JSON.stringify(result))
             const queryStats = {
                 consumedIOs: result.reduce((acc, res) => acc.concat(res.getConsumedIOs()), []),
                 timingInformation: result.reduce((acc, res) => acc.concat(res.getTimingInformation()), []),
@@ -165,7 +165,7 @@ const App = () => {
     }, []);
 
     React.useEffect(() => {
-        getLedgerMetaData(activeLedger).then(l => addCompleterForUserTables(l.tables.map(q => q.name)))
+        getLedgerMetaData(activeLedger).then(l => addCompleterForUserTables(l.tables.filter(t => t.status == "ACTIVE").map(t => t.name)))
     }, [activeLedger])
 
 

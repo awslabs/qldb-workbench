@@ -1,6 +1,6 @@
 import * as React from "react";
-import { createStyles, fade, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
-import { getLedgerMetaData, TableInfo, LedgerInfo } from "./ledger";
+import {createStyles, fade, makeStyles, Theme, withStyles} from '@material-ui/core/styles';
+import {getLedgerMetaData, LedgerInfo, TableInfo} from "./ledger";
 import TreeView from '@material-ui/lab/TreeView';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
@@ -9,11 +9,10 @@ import IndeterminateCheckBoxOutlinedIcon from '@material-ui/icons/IndeterminateC
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
-import {Box, IconButton, Tooltip, Typography} from "@material-ui/core";
-import { ToggleButton } from "@material-ui/lab";
-import { Toolbar } from "@material-ui/core";
-
+import TreeItem, {TreeItemProps} from '@material-ui/lab/TreeItem';
+import {Box, IconButton, Toolbar, Tooltip} from "@material-ui/core";
+import {ToggleButton} from "@material-ui/lab";
+import {addCompleterForUserTables} from "./Composer";
 
 const useStyles = makeStyles((theme) => ({
     treeView: {
@@ -35,7 +34,7 @@ export default ({ ledgerNames, setActiveLedger }: { ledgerNames: string[], setAc
     const classes = useStyles();
     const [forceRefresh, setForceRefresh] = React.useState(false)
     const [showInactive, setShowInactive] = React.useState(false)
-
+    const [localActiveLedger, setLocalActiveLedger] = React.useState("") // Keeping local copy to update table name completers on refresh.
 
     function ledgerTreeItem(ledger: LedgerInfo): JSX.Element {
         const key = "ledger-" + ledger.Name;
@@ -53,15 +52,17 @@ export default ({ ledgerNames, setActiveLedger }: { ledgerNames: string[], setAc
         setForceRefresh(false)
         console.log("Ledger names:", ledgerNames)
         Promise.all(ledgerNames.map(async (ledger) => {
-            const m = await getLedgerMetaData(ledger)
-            console.log("Loaded metadata", m)
-            return m
+            // console.log("Loaded metadata", m)
+            return await getLedgerMetaData(ledger)
         }))
             .then(l => {
                 console.log(l)
                 setLedgers(l);
+                if (localActiveLedger != "") {
+                    addCompleterForUserTables(l.find(e => e.Name == localActiveLedger).tables.filter(t => t.status == "ACTIVE").map(t => t.name))
+                }
             })
-    }, [ledgerNames, forceRefresh, showInactive])
+    }, [ledgerNames, forceRefresh, showInactive, localActiveLedger])
 
     return (
         <Box className={classes.panelBox}>
@@ -90,7 +91,9 @@ export default ({ ledgerNames, setActiveLedger }: { ledgerNames: string[], setAc
                 onNodeSelect={(event: object, value: string) => {
 
                     if (value.startsWith("ledger-")) {
-                        setActiveLedger(value.substring(7))
+                        const ledger = value.substring(7);
+                        setActiveLedger(ledger)
+                        setLocalActiveLedger(ledger)
                     }
                 }}
             >
