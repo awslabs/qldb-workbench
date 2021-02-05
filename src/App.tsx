@@ -87,6 +87,11 @@ const Detail = ({ ledgers, activeLedger }: { ledgers: string[], activeLedger: st
     ledger.current = activeLedger
     React.useEffect(() => loadHistory(setHistory), []);
 
+    React.useEffect(() => {
+        setQueryStats(null)
+        setErrorMsg("")
+    }, [activeLedger])
+
     function setComposerText(text: string) {
         composerText.current = text;
     }
