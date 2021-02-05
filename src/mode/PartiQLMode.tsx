@@ -23,7 +23,7 @@ export class PartiQLHighlightRules extends ace.acequire(
             "space|sql|sqlcode|sqlerror|sqlstate|string|struct|substring|symbol|system_user|table|temporary|then|" +
             "time|timezone_hour|timezone_minute|to|to_string|to_timestamp|trailing|transaction|translate|" +
             "translation|trim|tuple|txid|undrop|union|unique|unknown|unpivot|update|upper|usage|user|using|" +
-            "utcnow|value|values|varying|view|when|whenever|where|with|work|write|year|zone"
+            "utcnow|value|values|varying|view|when|whenever|where|with|work|write|year|zone|history"
         );
 
         var builtinConstants = (
@@ -114,5 +114,8 @@ export const defaultSnippets: Snippets[] = [
             "   <<\n" +
             "       {${2:data}}\n" +
             "   >>\n"
+    }, {
+        name: "sby*",
+        snippet: "select * from ${1:table} by ${2:r_id}\n"
     }
 ]
