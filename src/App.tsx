@@ -15,7 +15,6 @@ import {Alert} from "@material-ui/lab";
 import AWS = require("aws-sdk");
 
 
-AWS.config.update({region:"us-east-1"});
 
 export enum Theme {
     LIGHT, DARK
@@ -161,22 +160,19 @@ const Detail = ({ ledgers, activeLedger }: { ledgers: string[], activeLedger: st
 const App = () => {
     const [ledgers, setLedgers] = React.useState([]);
     const [activeLedger, setActiveLedger] = React.useState("")
+    const [region, setRegion] = React.useState("us-east-1")
 
     React.useEffect(() => {
+        AWS.config.update({region: region});
         const fetchLedgers = async () => {
             setLedgers(await listLedgers())
         };
         fetchLedgers();
-    }, []);
-
-    React.useEffect(() => {
-        getLedgerMetaData(activeLedger).then(l => addCompleterForUserTables(l.tables.filter(t => t.status == "ACTIVE").map(t => t.name)))
-    }, [activeLedger])
-
+    }, [region]);
 
     return <MuiThemeProvider theme={theme}>
         <SplitPane split={"vertical"} size="20%">
-            <Navigator ledgerNames={ledgers} setActiveLedger={setActiveLedger}/>
+            <Navigator ledgerNames={ledgers} setActiveLedger={setActiveLedger} setRegion={setRegion}/>
             <Detail ledgers={ledgers} activeLedger={activeLedger}/>
         </SplitPane>
     </MuiThemeProvider>;

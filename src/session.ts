@@ -21,7 +21,6 @@ export function openLedger(ledgerName: string) {
         maxSockets: maxConcurrentTransactions
     });
     const serviceConfigurationOptions: ClientConfiguration = {
-        region: "us-east-1",
         httpOptions: {
             agent: agentForQldb
         }

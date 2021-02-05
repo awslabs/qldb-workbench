@@ -12,6 +12,7 @@ export async function listLedgers() {
 }
 
 export async function getLedgerMetaData(ledgerName: string): Promise<LedgerInfo> {
+    if (!ledgerName) return nullLedger
     const ledger: LedgerInfo = await new QLDB().describeLedger({Name: ledgerName}).promise()
     const result = await openLedger(ledgerName).execute("SELECT * FROM information_schema.user_tables")
     const tables: TableInfo[] = JSON.parse(JSON.stringify(result[0].getResultList())); // There should be only 1 result.
@@ -19,6 +20,12 @@ export async function getLedgerMetaData(ledgerName: string): Promise<LedgerInfo>
     ledger.tables = tables
 
     return ledger
+}
+
+const nullLedger: LedgerInfo = {
+    Name: "<NONE>",
+    State: "INACTIVE",
+    tables: []
 }
 
 export interface LedgerInfo extends LedgerSummary {
