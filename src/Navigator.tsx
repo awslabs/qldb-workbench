@@ -1,6 +1,6 @@
 import * as React from "react";
-import { createStyles, fade, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
-import { getLedgerMetaData, LedgerInfo, TableInfo } from "./ledger";
+import {createStyles, fade, makeStyles, Theme, withStyles} from '@material-ui/core/styles';
+import {getLedgerMetaData, LedgerInfo, TableInfo} from "./ledger";
 import TreeView from '@material-ui/lab/TreeView';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
@@ -9,15 +9,15 @@ import IndeterminateCheckBoxOutlinedIcon from '@material-ui/icons/IndeterminateC
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
-import { Box, IconButton, InputLabel, MenuItem, Select, Tooltip } from "@material-ui/core";
-import { ToggleButton } from "@material-ui/lab";
-import { addCompleterForUserTables } from "./Composer";
-import { Toolbar } from "@material-ui/core";
+import TreeItem, {TreeItemProps} from '@material-ui/lab/TreeItem';
+import {AppBar, Box, IconButton, InputLabel, MenuItem, Select, Toolbar, Tooltip, Typography} from "@material-ui/core";
+import {ToggleButton} from "@material-ui/lab";
+import {addCompleterForUserTables} from "./Composer";
 
 const useStyles = makeStyles((theme) => ({
     treeView: {
         height: "100%",
+        paddingTop: "5px",
         flexGrow: 1,
         maxWidth: 400,
         marginLeft: 5,
@@ -120,33 +120,41 @@ export default ({ ledgerNames, setActiveLedger, setRegion }: { ledgerNames: stri
 
     return (
         <Box className={classes.panelBox}>
-            <Toolbar>
-                <Tooltip title="Refresh">
-                    <IconButton onClick={() => setForceRefresh(true)}>
-                        <RefreshIcon />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip title="Show inactive items">
-                    <ToggleButton
-                        value="showInactive"
-                        selected={showInactive}
-                        style={{ border: "none" }}
-                        onChange={() => setShowInactive(!showInactive)}
-                    >
-                        {showInactive ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                    </ToggleButton>
-                </Tooltip>
-                <InputLabel id="region-select-label"></InputLabel>
-                <Select
-                    labelId="region-select-label"
-                    id="region-select"
-                    value={localRegion}
-                    onChange={handleRegionChange}
-                >
-                    {qldbRegions.map(r => <MenuItem value={r}>{r}</MenuItem>)}
+            <AppBar position="relative">
+                <Toolbar variant="dense" style={{ paddingRight: "0px", paddingLeft: "5px" }}>
+                    <img src="../assets/amazon-qldb.png" alt="QLDB" height="50" width="50" style={{ paddingRight: "2px" }}/>
+                    <Typography variant="h6">
+                        QLDB
+                    </Typography>
+                    <div style={{ marginLeft: "auto" }}>
+                            <Tooltip title="Refresh">
+                                <IconButton onClick={() => setForceRefresh(true)}>
+                                    <RefreshIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Show inactive items">
+                                <ToggleButton
+                                    value="showInactive"
+                                    selected={showInactive}
+                                    style={{ border: "none" }}
+                                    onChange={() => setShowInactive(!showInactive)}
+                                >
+                                    {showInactive ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                </ToggleButton>
+                            </Tooltip>
+                            <InputLabel id="region-select-label"></InputLabel>
+                            <Select
+                                labelId="region-select-label"
+                                id="region-select"
+                                value={localRegion}
+                                onChange={handleRegionChange}
+                            >
+                                {qldbRegions.map(r => <MenuItem value={r}>{r}</MenuItem>)}
 
-                </Select>
-            </Toolbar>
+                            </Select>
+                    </div>
+                </Toolbar>
+            </AppBar>
             <TreeView
                 className={classes.treeView}
                 defaultCollapseIcon={<IndeterminateCheckBoxOutlinedIcon />}
