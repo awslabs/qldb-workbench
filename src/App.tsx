@@ -80,7 +80,7 @@ const Detail = ({ ledgers, activeLedger }: { ledgers: string[], activeLedger: st
     const [successBarOpen, setSuccessBarOpen] = React.useState(false);
     const [errorBarOpen, setErrorBarOpen] = React.useState(false);
 
-    const composerText = React.useRef(null);
+    const composerText = React.useRef("");
     const ledger = React.useRef(null);
 
     ledger.current = activeLedger
@@ -123,7 +123,7 @@ const Detail = ({ ledgers, activeLedger }: { ledgers: string[], activeLedger: st
         setSelectedTab(TabType.RESULTS);
         updateResultText(entry.result);
         setQueryStats(entry.queryStats);
-        setComposerText(entry.text);
+        setComposerText(composerText.current + "\n\n" + entry.text);
     }
 
     const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
