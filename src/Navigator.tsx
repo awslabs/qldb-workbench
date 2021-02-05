@@ -126,32 +126,33 @@ export default ({ ledgerNames, setActiveLedger, setRegion }: { ledgerNames: stri
                     <Typography variant="h6">
                         QLDB
                     </Typography>
-                    <div style={{ marginLeft: "auto" }}>
-                            <Tooltip title="Refresh">
-                                <IconButton onClick={() => setForceRefresh(true)}>
-                                    <RefreshIcon />
-                                </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Show inactive items">
-                                <ToggleButton
-                                    value="showInactive"
-                                    selected={showInactive}
-                                    style={{ border: "none" }}
-                                    onChange={() => setShowInactive(!showInactive)}
-                                >
-                                    {showInactive ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                                </ToggleButton>
-                            </Tooltip>
-                            <InputLabel id="region-select-label"></InputLabel>
-                            <Select
-                                labelId="region-select-label"
-                                id="region-select"
-                                value={localRegion}
-                                onChange={handleRegionChange}
-                            >
-                                {qldbRegions.map(r => <MenuItem value={r}>{r}</MenuItem>)}
+                    <Select
+                        labelId="region-select-label"
+                        id="region-select"
+                        value={localRegion}
+                        onChange={handleRegionChange}
+                        style={{ paddingLeft: "10px" }}
+                    >
+                        {qldbRegions.map(r => <MenuItem value={r}>{r}</MenuItem>)}
 
-                            </Select>
+                    </Select>
+                    <div style={{ marginLeft: "auto" }}>
+                        <Tooltip title="Refresh">
+                            <IconButton onClick={() => setForceRefresh(true)}>
+                                <RefreshIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Show inactive items">
+                            <ToggleButton
+                                value="showInactive"
+                                selected={showInactive}
+                                style={{ border: "none" }}
+                                onChange={() => setShowInactive(!showInactive)}
+                            >
+                                {showInactive ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                            </ToggleButton>
+                        </Tooltip>
+                        <InputLabel id="region-select-label"></InputLabel>
                     </div>
                 </Toolbar>
             </AppBar>

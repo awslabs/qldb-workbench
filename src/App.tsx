@@ -171,7 +171,7 @@ const App = () => {
     }, [region]);
 
     return <MuiThemeProvider theme={theme}>
-        <SplitPane split={"vertical"} size="20%">
+        <SplitPane split={"vertical"} size="30%">
             <Navigator ledgerNames={ledgers} setActiveLedger={setActiveLedger} setRegion={setRegion}/>
             <Detail ledgers={ledgers} activeLedger={activeLedger}/>
         </SplitPane>
