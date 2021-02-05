@@ -5,7 +5,7 @@ import "ace-builds/src-noconflict/mode-sql"
 import "ace-builds/src-noconflict/theme-textmate"
 import "ace-builds/src-noconflict/ext-language_tools"
 import ace from "ace-builds/src-noconflict/ace";
-import PartiQLMode from "./mode/PartiQLMode";
+import PartiQLMode, {defaultSnippets, Snippets} from "./mode/PartiQLMode";
 import {Button} from "@material-ui/core";
 
 export class Composer extends React.Component<{ composerText: string, executeStatement: () => void, setComposerText: (text: string) => void }> {
@@ -36,7 +36,7 @@ export class Composer extends React.Component<{ composerText: string, executeSta
         return <div style={{width: "100%", display: "flex", flexDirection: "column"}} id={"composer"}>
             <AceEditor
                 name={"aceEditor"}
-                mode={"sql"} // Just to initialize.. Once loaded it will be updated to PartiQL
+                mode={"text"} // Just to initialize.. Once loaded it will be updated to PartiQL
                 theme={CurrentTheme == Theme.LIGHT ? "textmate" : "dracula"}
                 style={COMPOSER_STYLE}
                 onChange={setComposerText}
@@ -44,6 +44,7 @@ export class Composer extends React.Component<{ composerText: string, executeSta
                 value={composerText}
                 enableBasicAutocompletion={true}
                 enableLiveAutocompletion={true}
+                enableSnippets={true}
             />
             <ActionBar executeButtonClicked={() => {
                 executeStatement();
@@ -77,15 +78,21 @@ function updatePartiqlMode() {
 function initDefaultCompleters() {
     const editor = ace.edit("aceEditor")
     let systemTables = ["information_schema.user_tables"];
-    defaultCompleters = [...editor.completers, tableNameCompleter(systemTables, "SystemTables")]
+    defaultCompleters = [...editor.completers, tableNameCompleter(systemTables, "SystemTables"), snippetCompleter(defaultSnippets)]
+}
+
+const snippetCompleter = (snippets: Snippets[]) => {
+    return {
+        getCompletions: function (editor: any, session: any, pos: any, prefix: any, callback: any) {
+            callback(null, snippets.map(snippet => ({caption: snippet.name, snippet: snippet.snippet, meta: "Snippet"})));
+        }
+    }
 }
 
 const tableNameCompleter = (names: string[], meta: string = "TableName") => {
     return {
         getCompletions: function (editor: any, session: any, pos: any, prefix: any, callback: any) {
-            callback(null, names.map(function (name) {
-                return {caption: name, value: name, meta: meta};
-            }));
+            callback(null, names.map(name => ({caption: name, value: name, meta: meta})));
         }
     }
 }
