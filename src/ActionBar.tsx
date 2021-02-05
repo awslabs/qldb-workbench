@@ -10,6 +10,6 @@ const GoSvg = ({ color }: { color: Color }) =>
 
 export default  ({ executeButtonClicked }: { executeButtonClicked: () => void}) => {
     return <span className="action-bar">
-        <span className="action-button" onClick={executeButtonClicked}><GoSvg color={Color.GREEN} /></span>
+        <span className="action-button" onClick={executeButtonClicked}><GoSvg color={Color.WHITE} /></span>
     </span>;
 }

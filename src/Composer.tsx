@@ -6,6 +6,7 @@ import "ace-builds/src-noconflict/theme-textmate"
 import "ace-builds/src-noconflict/ext-language_tools"
 import ace from "ace-builds/src-noconflict/ace";
 import PartiQLMode from "./mode/PartiQLMode";
+import {Button} from "@material-ui/core";
 
 export class Composer extends React.Component<{ composerText: string, executeStatement: () => void, setComposerText: (text: string) => void }> {
     componentDidMount() {
@@ -53,8 +54,8 @@ export class Composer extends React.Component<{ composerText: string, executeSta
 
 const ActionBar = ({executeButtonClicked}: { executeButtonClicked: () => void }) => {
     return <span className="action-bar">
-        <span className="action-button" onClick={executeButtonClicked}><GoSvg color={Color.GREEN}/></span>
-    </span>;
+        <Button variant="contained" color="primary" onClick={executeButtonClicked}><GoSvg color={Color.WHITE}/> &nbsp; Run</Button>
+    </span>
 }
 
 const GoSvg = ({color}: { color: Color }) =>

@@ -66,7 +66,7 @@ const theme = createMuiTheme({
 });
 
 export enum Color {
-    GREEN = "#1d8102",
+    WHITE = "#ffffff",
 }
 
 export const RESULT_BOX_STYLE = {width: "100%", height: "100%", overflow: "scroll", fontSize: "10pt", flex: 1, backgroundColor: theme.palette.background.default};
