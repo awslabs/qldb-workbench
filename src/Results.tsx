@@ -1,14 +1,8 @@
-import * as React from "react";
-import {RESULT_BOX_STYLE, RESULT_INTERNAL_CONTAINER_STYLE} from "./App";
-import {makeStyles} from '@material-ui/core/styles';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import Typography from '@material-ui/core/Typography';
 import {
     BottomNavigation,
     BottomNavigationAction,
     Grid,
+    IconButton,
     Paper,
     Table,
     TableBody,
@@ -17,17 +11,27 @@ import {
     TableHead,
     TableRow
 } from "@material-ui/core";
-import TableChartIcon from '@material-ui/icons/TableChart';
-import CodeIcon from '@material-ui/icons/Code';
-import {QueryStats} from "./query-history";
-import CheckCircleTwoToneIcon from '@material-ui/icons/CheckCircleTwoTone';
-import CancelTwoToneIcon from '@material-ui/icons/CancelTwoTone';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import {makeStyles} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
+import CancelTwoToneIcon from '@material-ui/icons/CancelTwoTone';
+import CheckCircleTwoToneIcon from '@material-ui/icons/CheckCircleTwoTone';
 import CloudDoneTwoToneIcon from '@material-ui/icons/CloudDoneTwoTone';
 import CloudOffTwoToneIcon from '@material-ui/icons/CloudOffTwoTone';
-import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
+import CodeIcon from '@material-ui/icons/Code';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import TableChartIcon from '@material-ui/icons/TableChart';
+import * as React from "react";
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+import {Light as SyntaxHighlighter} from "react-syntax-highlighter";
 import json from 'react-syntax-highlighter/dist/cjs/languages/hljs/json';
-import { githubGist } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import {githubGist} from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import {RESULT_BOX_STYLE, RESULT_INTERNAL_CONTAINER_STYLE} from "./App";
+import {QueryStats} from "./query-history";
+
 
 SyntaxHighlighter.registerLanguage('json', json);
 
@@ -158,6 +162,8 @@ function prepareIonView(queryResult: []) {
     const classes = useStyles();
     const items = []
     for (const i in queryResult) {
+        const nonPrettyResult = JSON.stringify(queryResult[i], undefined)
+        const prettyResult = JSON.stringify(queryResult[i], undefined, 2)
         items.push(
             <Accordion key={"result-" + i}>
                 <AccordionSummary
@@ -167,13 +173,20 @@ function prepareIonView(queryResult: []) {
                     IconButtonProps={{size: "small"}}
                 >
                     <div className={classes.headingAccordion}>
-                        {JSON.stringify(queryResult[i], undefined)}
+                        {nonPrettyResult}
                     </div>
                 </AccordionSummary>
                 <AccordionDetails>
                     <SyntaxHighlighter language="json" style={githubGist} showLineNumbers={true}>
-                        { JSON.stringify(queryResult[i], undefined, 2) }
+                        { prettyResult }
                     </SyntaxHighlighter>
+                    <CopyToClipboard text={prettyResult}>
+                        <label htmlFor="icon-button-file">
+                            <IconButton color="secondary" aria-label="copy" component="span">
+                                <FileCopyIcon />
+                            </IconButton>
+                        </label>
+                    </CopyToClipboard>
                 </AccordionDetails>
             </Accordion>
         )
