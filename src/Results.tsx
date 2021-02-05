@@ -5,10 +5,10 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {
     BottomNavigation,
     BottomNavigationAction,
+    Grid,
     Paper,
     Table,
     TableBody,
@@ -22,24 +22,23 @@ import CodeIcon from '@material-ui/icons/Code';
 import {QueryStats} from "./query-history";
 import CheckCircleTwoToneIcon from '@material-ui/icons/CheckCircleTwoTone';
 import CancelTwoToneIcon from '@material-ui/icons/CancelTwoTone';
+import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
 
 
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
     },
-    heading: {
-        fontSize: '20px',
-        fontWeight: theme.typography.fontWeightBold,
-    },
     headingAccordion: {
-        fontSize: '12pt',
-        fontWeight: theme.typography.fontWeightRegular,
-        fontFamily: "Monaco"
+        fontFamily: "Courier New",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        maxWidth: "35em",
+        whiteSpace: "nowrap"
     },
     navigation: {
-        width: 200,
-        backgroundColor: Color.DARKGRAY
+        backgroundColor: Color.DARKGRAY,
+        alignSelf: "flex-end",
     },
     table: {
         minWidth: 650,
@@ -48,10 +47,16 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: theme.typography.fontWeightBold
     },
     successInfo: {
-        color: Color.GREEN
+        color: Color.GREEN,
+        width: '100%',
+        height: '100%',
+        padding: '20px',
     },
     errorInfo: {
-        color: Color.RED
+        color: Color.RED,
+        width: '100%',
+        height: '100%',
+        padding: '20px',
     }
 }));
 
@@ -60,31 +65,46 @@ export default ({ resultsText, queryStats, errorMsg }: { resultsText: string, qu
     const [viewType, setViewType] = React.useState("ion");
     const queryResult = resultsText ? JSON.parse(resultsText) : []
 
-    let resultView
-    if (viewType == "table") {
-        resultView = prepareTableView(queryResult)
-    } else {
-        resultView = prepareIonView(queryResult)
-    }
+    const resultView = (viewType == "table") ? prepareTableView(queryResult) : prepareIonView(queryResult)
 
     let statusView
     if (errorMsg == "") {
-        statusView = queryStats ? <div className={classes.successInfo}><CheckCircleTwoToneIcon /> Read IOs: {queryStats.consumedIOs.readIOs} Time: {queryStats.timingInformation.processingTimeMilliseconds}</div> : <></>
+        statusView = queryStats
+            ? <Grid className={classes.successInfo}
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="center"
+                >
+                    <Grid><CheckCircleTwoToneIcon /></Grid>
+                    <Grid> Read IOs: {queryStats.consumedIOs.readIOs} Time: {queryStats.timingInformation.processingTimeMilliseconds} ms</Grid>
+                </Grid>
+            : <></>
     } else {
-        statusView = <div className={classes.errorInfo}><CancelTwoToneIcon /> {errorMsg}</div>
+        statusView = <Grid className={classes.errorInfo}
+                           container
+                           direction="row"
+                           justify="flex-start"
+                           alignItems="center"
+                           spacing={1}
+                    >
+                        <Grid item><CancelTwoToneIcon /></Grid>
+                        <Grid item xs={11}> {errorMsg}</Grid>
+                    </Grid>
     }
+
     return <div style={RESULT_BOX_STYLE}>
-        <div style={{backgroundColor: Color.LIGHTGRAY, display: "flex", flexDirection: "row-reverse"}}>
+        <div style={{backgroundColor: Color.DARKGRAY, display: "flex", flexDirection: "row-reverse"}}>
             <BottomNavigation
                 value={viewType}
                 onChange={(event, newValue) => {
                     setViewType(newValue);
                 }}
+                showLabels
                 className={classes.navigation}
-                style={{alignSelf: "flex-end"}}
             >
-                <BottomNavigationAction value="ion" label="Ion" icon={<CodeIcon />} />
-                <BottomNavigationAction value="table" label="Table" icon={<TableChartIcon />} />
+                <BottomNavigationAction value="ion" label="" icon={<CodeIcon />} />
+                <BottomNavigationAction value="table" label="" icon={<TableChartIcon />} />
             </BottomNavigation>
             <span style={{flex: 1}}>{statusView}</span>
         </div>
@@ -100,9 +120,14 @@ function prepareIonView(queryResult: []) {
     for (const i in queryResult) {
         items.push(
             <Accordion key={"result-" + i}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={"result-panel-content-" + i} id={"result-panel-header-" + i}>
-                    <div style={{overflow: "hidden", textOverflow: "ellipsis", maxWidth: "35em"}}>
-                        <Typography className={classes.headingAccordion} noWrap>{JSON.stringify(queryResult[i], undefined)}</Typography>
+                <AccordionSummary
+                    expandIcon={<AddCircleTwoToneIcon />}
+                    aria-controls={"result-panel-content-" + i}
+                    id={"result-panel-header-" + i}
+                    IconButtonProps={{size: "small"}}
+                >
+                    <div className={classes.headingAccordion}>
+                        {JSON.stringify(queryResult[i], undefined)}
                     </div>
                 </AccordionSummary>
                 <AccordionDetails>
