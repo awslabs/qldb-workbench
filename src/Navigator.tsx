@@ -9,6 +9,7 @@ import IndeterminateCheckBoxOutlinedIcon from '@material-ui/icons/IndeterminateC
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
 import { AppBar, Box, IconButton, InputLabel, MenuItem, Select, Toolbar, Tooltip, Typography } from "@material-ui/core";
 import { ToggleButton } from "@material-ui/lab";
@@ -78,7 +79,16 @@ export default ({ ledgerNames, setActiveLedger, setRegion }: { ledgerNames: stri
             label={t.name}
             className={isActive ? classes.noStrikeThrough : classes.strikeThrough}
             icon={<ListAltIcon color={isActive ? "inherit" : "disabled"} />}
-        />
+        >
+            {t.indexes.map(i =>
+                <StyledTreeItem
+                    key={i.indexId}
+                    nodeId={i.indexId}
+                    label={i.expr}
+                    icon={<KeyboardArrowRightIcon />}
+                />
+            )}
+        </StyledTreeItem>
     }
 
     const handleRegionChange = (event: React.ChangeEvent<{ value: unknown }>) => {
