@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import SplitPane from "react-split-pane";
-import {listLedgers} from "./ledger";
+import {getLedgerMetaData, listLedgers} from "./ledger";
 import {openLedger} from "./session";
 import Navigator from "./Navigator";
 import Results from "./Results";
@@ -13,6 +13,7 @@ import {Value} from "ion-js/dist/commonjs/es6/dom";
 import {Snackbar} from "@material-ui/core";
 import {Alert} from "@material-ui/lab";
 import AWS = require("aws-sdk");
+import {addCompleterForUserTables} from "./Composer";
 
 AWS.config.update({region:"us-east-1"});
 
@@ -38,7 +39,7 @@ export enum TabType {
     HISTORY = "history"
 }
 
-const Detail = ({ ledgers }: { ledgers: string[]}) => {
+const Detail = ({ ledgers, activeLedger }: { ledgers: string[], activeLedger: string}) => {
     const [queryStats, setQueryStats] = React.useState(undefined as QueryStats);
     const [resultsText, setResultsText] = React.useState("");
     const [selectedTab, setSelectedTab] = React.useState(TabType.RESULTS);
@@ -50,6 +51,7 @@ const Detail = ({ ledgers }: { ledgers: string[]}) => {
     const composerText = React.useRef(null);
     const ledger = React.useRef(null);
 
+    ledger.current = activeLedger
     React.useEffect(() => loadHistory(setHistory), []);
 
     function setComposerText(text: string) {
@@ -124,6 +126,8 @@ const Detail = ({ ledgers }: { ledgers: string[]}) => {
 
 const App = () => {
     const [ledgers, setLedgers] = React.useState([]);
+    const [activeLedger, setActiveLedger] = React.useState("")
+
     React.useEffect(() => {
         const fetchLedgers = async () => {
             setLedgers(await listLedgers())
@@ -131,10 +135,14 @@ const App = () => {
         fetchLedgers();
     }, []);
 
+    React.useEffect(() => {
+        getLedgerMetaData(activeLedger).then(l => addCompleterForUserTables(l.tables.map(q => q.name)))
+    }, [activeLedger])
+
 
     return <SplitPane split={"vertical"} size="20%">
-        <Navigator ledgerNames={ledgers}/>
-        <Detail ledgers={ledgers}/>
+        <Navigator ledgerNames={ledgers} setActiveLedger={setActiveLedger}/>
+        <Detail ledgers={ledgers} activeLedger={activeLedger}/>
     </SplitPane>;
 };
 

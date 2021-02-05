@@ -1,29 +1,19 @@
 import * as React from "react";
 import Select from "react-select";
-import {Tab, Tabs} from "@material-ui/core";
+import { Box, Tab, Tabs } from "@material-ui/core";
 import HistoryIcon from '@material-ui/icons/History';
 import ReceiptIcon from '@material-ui/icons/Receipt';
-import {TabType} from "./App";
-import {QueryStats} from "./query-history";
-import {addCompleterForUserTables} from "./Composer";
-import {getLedgerMetaData} from "./ledger";
+import { TabType } from "./App";
+import { QueryStats } from "./query-history";
+import { addCompleterForUserTables } from "./Composer";
+import { getLedgerMetaData } from "./ledger";
 
 type Props = { ledgers: string[], ledger: string, setLedger: (ledger: string) => void, queryStats?: QueryStats, selectedTab: string, setSelectedTab: (selectedTab: TabType) => void };
 
-export default({ ledgers, ledger, setLedger, queryStats, selectedTab, setSelectedTab }: Props) => {
+export default ({ ledgers, ledger, setLedger, queryStats, selectedTab, setSelectedTab }: Props) => {
     return <div className="status-bar">
         <span className="status-item" style={{ width: "300px" }}>
-            <Select
-                width="300px"
-                value={ledger ? { label: ledger, value: ledger } : { label: "Choose a ledger...", value: "Choose a ledger" }}
-                options={ ledgers.map(l => { return { label: l, value: l} }) }
-                menuPlacement="top"
-                onChange={o => {
-                    console.log("o", o);
-                    setLedger(o.value);
-                    getLedgerMetaData(o.value).then(e => addCompleterForUserTables(e.tables.map(q => q.name)))
-                }}
-            />
+            {"Active ledger: " + ledger}
         </span>
         {queryStats
             ? <span className="status-item">Read IOs: {queryStats.consumedIOs.readIOs}; Time: {queryStats.timingInformation.processingTimeMilliseconds}ms</span>
@@ -38,9 +28,9 @@ export default({ ledgers, ledger, setLedger, queryStats, selectedTab, setSelecte
                     setSelectedTab(value);
                 }}
             >
-            <Tab icon={<ReceiptIcon />} value="results" />
-            <Tab icon={<HistoryIcon />} value="history" />
-          </Tabs>
+                <Tab icon={<ReceiptIcon />} value="results" />
+                <Tab icon={<HistoryIcon />} value="history" />
+            </Tabs>
         </span>
     </div>;
 }
