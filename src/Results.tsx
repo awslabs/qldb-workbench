@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Color, RESULT_BOX_STYLE, RESULT_INTERNAL_CONTAINER_STYLE} from "./App";
+import {RESULT_BOX_STYLE, RESULT_INTERNAL_CONTAINER_STYLE} from "./App";
 import {makeStyles} from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -23,6 +23,9 @@ import {QueryStats} from "./query-history";
 import CheckCircleTwoToneIcon from '@material-ui/icons/CheckCircleTwoTone';
 import CancelTwoToneIcon from '@material-ui/icons/CancelTwoTone';
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
+import LinkIcon from '@material-ui/icons/Link';
+import CloudDoneTwoToneIcon from '@material-ui/icons/CloudDoneTwoTone';
+import CloudOffTwoToneIcon from '@material-ui/icons/CloudOffTwoTone';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -37,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
         whiteSpace: "nowrap"
     },
     navigation: {
-        backgroundColor: Color.DARKGRAY,
+        backgroundColor: theme.palette.background.default,
         alignSelf: "flex-end",
     },
     table: {
@@ -47,25 +50,38 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: theme.typography.fontWeightBold
     },
     successInfo: {
-        color: Color.GREEN,
+        color: theme.palette.success.main,
         width: '100%',
         height: '100%',
         padding: '20px',
     },
     errorInfo: {
-        color: Color.RED,
+        color: theme.palette.error.main,
         width: '100%',
         height: '100%',
         padding: '20px',
+    },
+    normalInfo: {
+        color: theme.palette.primary.main,
+        width: '100%',
+        height: '100%',
+        padding: '20px',
+    },
+    resultInfoPan: {
+        backgroundColor: theme.palette.background.default,
+        display: "flex",
+        flexDirection: "row-reverse"
     }
 }));
 
-export default ({ resultsText, queryStats, errorMsg }: { resultsText: string, queryStats: QueryStats, errorMsg: string }) => {
+export default ({ resultsText, activeLedger, queryStats, errorMsg }: { resultsText: string, activeLedger: string, queryStats: QueryStats, errorMsg: string }) => {
     const classes = useStyles();
     const [viewType, setViewType] = React.useState("ion");
     const queryResult = resultsText ? JSON.parse(resultsText) : []
 
     const resultView = (viewType == "table") ? prepareTableView(queryResult) : prepareIonView(queryResult)
+    const connectedTo = activeLedger ? "Connected to " + activeLedger : "No active ledger"
+    const connectedToIcon = activeLedger ? <CloudDoneTwoToneIcon /> : <CloudOffTwoToneIcon />
 
     let statusView
     if (errorMsg == "") {
@@ -84,7 +100,18 @@ export default ({ resultsText, queryStats, errorMsg }: { resultsText: string, qu
                     </Typography>
                 </Grid>
             </Grid>
-            : <></>
+            : <Grid
+                className={classes.normalInfo}
+                container
+                direction="row"
+                justify="flex-start"
+                alignItems="center"
+            >
+                <Grid>{connectedToIcon}</Grid>
+                <Grid style={{paddingLeft: '10px'}}>
+                    <Typography variant={"body2"}>{connectedTo}</Typography>
+                </Grid>
+            </Grid>
     } else {
         statusView = <Grid
             className={classes.errorInfo}
@@ -104,7 +131,7 @@ export default ({ resultsText, queryStats, errorMsg }: { resultsText: string, qu
     }
 
     return <div style={RESULT_BOX_STYLE}>
-        <div style={{backgroundColor: Color.DARKGRAY, display: "flex", flexDirection: "row-reverse"}}>
+        <div className={classes.resultInfoPan}>
             <BottomNavigation
                 value={viewType}
                 onChange={(event, newValue) => {

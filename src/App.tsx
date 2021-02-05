@@ -5,24 +5,17 @@ import {getLedgerMetaData, listLedgers} from "./ledger";
 import {openLedger} from "./session";
 import Navigator from "./Navigator";
 import Results from "./Results";
-import {Composer} from "./Composer";
+import {addCompleterForUserTables, Composer} from "./Composer";
 import StatusBar from "./StatusBar";
 import History from "./History";
 import {flattenQueryStats, loadHistory, QueryHistoryEntry, QueryStats, recordHistory} from "./query-history";
 import {Value} from "ion-js/dist/commonjs/es6/dom";
-import {Snackbar} from "@material-ui/core";
+import {createMuiTheme, MuiThemeProvider, Snackbar} from "@material-ui/core";
 import {Alert} from "@material-ui/lab";
 import AWS = require("aws-sdk");
-import {addCompleterForUserTables} from "./Composer";
+
 
 AWS.config.update({region:"us-east-1"});
-
-export enum Color {
-    GREEN = "green",
-    RED = "red",
-    DARKGRAY = "#f5f5f5",
-    LIGHTGRAY = "#fafafa",
-}
 
 export enum Theme {
     LIGHT, DARK
@@ -31,13 +24,53 @@ export enum Theme {
 export let CurrentTheme: Theme = Theme.LIGHT
 export function toggleTheme() { CurrentTheme == Theme.LIGHT ? CurrentTheme = Theme.DARK : CurrentTheme = Theme.LIGHT }
 
-export const RESULT_BOX_STYLE = {width: "100%", height: "100%", overflow: "scroll", fontSize: "10pt", flex: 1, backgroundColor: Color.DARKGRAY};
-export const RESULT_INTERNAL_CONTAINER_STYLE = {width: "100%", maxHeight: 300, overflow: "scroll", flex: 1};
-
 export enum TabType {
     RESULTS = "results",
     HISTORY = "history"
 }
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: "#ec7211",
+        },
+        secondary: {
+            main: "#545b64",
+        },
+        text: {
+            primary: "#545b64",
+            secondary: "#687078",
+            disabled: "#aab7b8",
+        },
+        error: {
+            main: "#d13212",
+        },
+        success: {
+            main: "#1d8102",
+        },
+        background: {
+            default: "#f2f3f3",
+        },
+        grey: {
+            50: "#fafafa",
+            100: "#f2f3f3",
+            200: "#eaeded",
+            300: "#d5dbdb",
+            400: "#aab7b8",
+            500: "#879596",
+            600: "#687078",
+            700: "#545b64",
+            900: "#16191f",
+        }
+    },
+});
+
+export enum Color {
+    GREEN = "#1d8102",
+}
+
+export const RESULT_BOX_STYLE = {width: "100%", height: "100%", overflow: "scroll", fontSize: "10pt", flex: 1, backgroundColor: theme.palette.background.default};
+export const RESULT_INTERNAL_CONTAINER_STYLE = {width: "100%", maxHeight: 300, overflow: "auto", flex: 1, backgroundColor: theme.palette.background.default};
 
 const Detail = ({ ledgers, activeLedger }: { ledgers: string[], activeLedger: string}) => {
     const [queryStats, setQueryStats] = React.useState(undefined as QueryStats);
@@ -109,7 +142,7 @@ const Detail = ({ ledgers, activeLedger }: { ledgers: string[], activeLedger: st
             </Snackbar>
 
             { selectedTab === TabType.RESULTS
-                ? <Results resultsText={resultsText} queryStats={queryStats} errorMsg={errorMsg}/>
+                ? <Results resultsText={resultsText} activeLedger={activeLedger} queryStats={queryStats} errorMsg={errorMsg}/>
                 : <History history={history} setHistory={setHistory} historyEntrySelected={historyEntrySelected}/>
             }
             <StatusBar
@@ -141,10 +174,12 @@ const App = () => {
     }, [activeLedger])
 
 
-    return <SplitPane split={"vertical"} size="20%">
-        <Navigator ledgerNames={ledgers} setActiveLedger={setActiveLedger}/>
-        <Detail ledgers={ledgers} activeLedger={activeLedger}/>
-    </SplitPane>;
+    return <MuiThemeProvider theme={theme}>
+        <SplitPane split={"vertical"} size="20%">
+            <Navigator ledgerNames={ledgers} setActiveLedger={setActiveLedger}/>
+            <Detail ledgers={ledgers} activeLedger={activeLedger}/>
+        </SplitPane>
+    </MuiThemeProvider>;
 };
 
 ReactDOM.render(<App />, document.getElementById("main"));

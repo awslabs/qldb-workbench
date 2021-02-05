@@ -10,20 +10,25 @@ import ListAltIcon from '@material-ui/icons/ListAlt';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
-import { Box, IconButton, Tooltip } from "@material-ui/core";
+import {Box, IconButton, Tooltip, Typography} from "@material-ui/core";
 import { ToggleButton } from "@material-ui/lab";
 import { Toolbar } from "@material-ui/core";
 
 
-
-const useStyles = makeStyles({
-    root: {
-        height: 240,
+const useStyles = makeStyles((theme) => ({
+    treeView: {
+        height: "100%",
         flexGrow: 1,
         maxWidth: 400,
         marginLeft: 5,
+        color: theme.palette.text.secondary,
     },
-});
+    panelBox: {
+        height: "100%",
+        width: "100%",
+        backgroundColor: theme.palette.grey[300],
+    }
+}));
 
 export default ({ ledgerNames, setActiveLedger }: { ledgerNames: string[], setActiveLedger: (ledger: string) => void }) => {
     const [ledgers, setLedgers] = React.useState<LedgerInfo[]>([])
@@ -59,7 +64,7 @@ export default ({ ledgerNames, setActiveLedger }: { ledgerNames: string[], setAc
     }, [ledgerNames, forceRefresh, showInactive])
 
     return (
-        <Box>
+        <Box className={classes.panelBox}>
             <Toolbar>
                 <Tooltip title="Refresh">
                     <IconButton onClick={() => setForceRefresh(true)}>
@@ -70,16 +75,15 @@ export default ({ ledgerNames, setActiveLedger }: { ledgerNames: string[], setAc
                     <ToggleButton
                         value="showInactive"
                         selected={showInactive}
-                        onChange={() => {
-                            setShowInactive(!showInactive);
-                        }}
+                        style={{border: "none"}}
+                        onChange={() => setShowInactive(!showInactive)}
                     >
                         {showInactive ? <VisibilityIcon /> : <VisibilityOffIcon />}
                     </ToggleButton>
                 </Tooltip>
             </Toolbar>
             <TreeView
-                className={classes.root}
+                className={classes.treeView}
                 defaultCollapseIcon={<IndeterminateCheckBoxOutlinedIcon />}
                 defaultExpandIcon={<AddBoxOutlinedIcon />}
                 defaultEndIcon={<CheckBoxOutlineBlankIcon />}
@@ -95,7 +99,6 @@ export default ({ ledgerNames, setActiveLedger }: { ledgerNames: string[], setAc
         </Box>
     );
 };
-
 
 function tableTreeItem(t: TableInfo): JSX.Element {
     const isActive = t.status == "ACTIVE"
