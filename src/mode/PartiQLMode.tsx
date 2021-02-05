@@ -117,5 +117,8 @@ export const defaultSnippets: Snippets[] = [
     }, {
         name: "sby*",
         snippet: "select * from ${1:table} by ${2:r_id}\n"
+    }, {
+        name: "cin",
+        snippet: "create index on ${1:table} (${2:field})\n"
     }
 ]
