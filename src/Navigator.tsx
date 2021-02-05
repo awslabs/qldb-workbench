@@ -1,6 +1,6 @@
 import * as React from "react";
-import {createStyles, fade, makeStyles, Theme, withStyles} from '@material-ui/core/styles';
-import {getLedgerMetaData, LedgerInfo, TableInfo} from "./ledger";
+import { createStyles, fade, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
+import { getLedgerMetaData, LedgerInfo, TableInfo } from "./ledger";
 import TreeView from '@material-ui/lab/TreeView';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
@@ -9,10 +9,10 @@ import IndeterminateCheckBoxOutlinedIcon from '@material-ui/icons/IndeterminateC
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import TreeItem, {TreeItemProps} from '@material-ui/lab/TreeItem';
-import {AppBar, Box, IconButton, InputLabel, MenuItem, Select, Toolbar, Tooltip, Typography} from "@material-ui/core";
-import {ToggleButton} from "@material-ui/lab";
-import {addCompleterForUserTables} from "./Composer";
+import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
+import { AppBar, Box, IconButton, InputLabel, MenuItem, Select, Toolbar, Tooltip, Typography } from "@material-ui/core";
+import { ToggleButton } from "@material-ui/lab";
+import { addCompleterForUserTables } from "./Composer";
 
 const useStyles = makeStyles((theme) => ({
     treeView: {
@@ -83,7 +83,7 @@ export default ({ ledgerNames, setActiveLedger, setRegion }: { ledgerNames: stri
 
     const handleRegionChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setLocalRegion(event.target.value as string);
-      };
+    };
 
     React.useEffect(() => {
         setForceRefresh(false)
@@ -110,7 +110,6 @@ export default ({ ledgerNames, setActiveLedger, setRegion }: { ledgerNames: stri
             }
         )
 
-
     }, [localActiveLedger, refreshActive])
 
     React.useEffect(() => {
@@ -122,7 +121,7 @@ export default ({ ledgerNames, setActiveLedger, setRegion }: { ledgerNames: stri
         <Box className={classes.panelBox}>
             <AppBar position="relative">
                 <Toolbar variant="dense" style={{ paddingRight: "0px", paddingLeft: "5px" }}>
-                    <img src="../assets/amazon-qldb.png" alt="QLDB" height="50" width="50" style={{ paddingRight: "2px" }}/>
+                    <img src="../assets/amazon-qldb.png" alt="QLDB" height="50" width="50" style={{ paddingRight: "2px" }} />
                     <Typography variant="h6">
                         QLDB
                     </Typography>
@@ -133,7 +132,7 @@ export default ({ ledgerNames, setActiveLedger, setRegion }: { ledgerNames: stri
                         onChange={handleRegionChange}
                         style={{ paddingLeft: "10px" }}
                     >
-                        {qldbRegions.map(r => <MenuItem value={r}>{r}</MenuItem>)}
+                        {qldbRegions.map(r => <MenuItem key={r} value={r}>{r}</MenuItem>)}
 
                     </Select>
                     <div style={{ marginLeft: "auto" }}>
@@ -174,8 +173,6 @@ export default ({ ledgerNames, setActiveLedger, setRegion }: { ledgerNames: stri
         </Box>
     );
 };
-
-
 
 const StyledTreeItem = withStyles((theme: Theme) =>
     createStyles({
