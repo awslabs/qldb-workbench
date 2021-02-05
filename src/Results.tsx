@@ -70,27 +70,37 @@ export default ({ resultsText, queryStats, errorMsg }: { resultsText: string, qu
     let statusView
     if (errorMsg == "") {
         statusView = queryStats
-            ? <Grid className={classes.successInfo}
-                    container
-                    direction="row"
-                    justify="flex-start"
-                    alignItems="center"
-                >
-                    <Grid><CheckCircleTwoToneIcon /></Grid>
-                    <Grid> Read IOs: {queryStats.consumedIOs.readIOs} Time: {queryStats.timingInformation.processingTimeMilliseconds} ms</Grid>
+            ? <Grid
+                className={classes.successInfo}
+                container
+                direction="row"
+                justify="flex-start"
+                alignItems="center"
+            >
+                <Grid><CheckCircleTwoToneIcon /></Grid>
+                <Grid style={{paddingLeft: '10px'}}>
+                    <Typography variant={"body2"}>
+                        <b>Read IOs:</b> {queryStats.consumedIOs.readIOs} <b>Time:</b> {queryStats.timingInformation.processingTimeMilliseconds} ms
+                    </Typography>
                 </Grid>
+            </Grid>
             : <></>
     } else {
-        statusView = <Grid className={classes.errorInfo}
-                           container
-                           direction="row"
-                           justify="flex-start"
-                           alignItems="center"
-                           spacing={1}
-                    >
-                        <Grid item><CancelTwoToneIcon /></Grid>
-                        <Grid item xs={11}> {errorMsg}</Grid>
-                    </Grid>
+        statusView = <Grid
+            className={classes.errorInfo}
+            container
+            direction="row"
+            justify="flex-start"
+            alignItems="center"
+            spacing={1}
+        >
+            <Grid item><CancelTwoToneIcon /></Grid>
+            <Grid item style={{paddingLeft: '10px'}} xs={11}>
+                <Typography variant={"body2"}>
+                    {errorMsg}
+                </Typography>
+            </Grid>
+        </Grid>
     }
 
     return <div style={RESULT_BOX_STYLE}>

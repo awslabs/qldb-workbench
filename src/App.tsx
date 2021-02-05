@@ -30,7 +30,6 @@ export enum Theme {
 export let CurrentTheme: Theme = Theme.LIGHT
 export function toggleTheme() { CurrentTheme == Theme.LIGHT ? CurrentTheme = Theme.DARK : CurrentTheme = Theme.LIGHT }
 
-export const EDITOR_STYLE = {padding: "1px", width: "100%", height: "100%", overflow: "scroll", fontFamily: "Courier New", fontSize: "10pt"};
 export const RESULT_BOX_STYLE = {width: "100%", height: "100%", overflow: "scroll", fontSize: "10pt", flex: 1, backgroundColor: Color.DARKGRAY};
 export const RESULT_INTERNAL_CONTAINER_STYLE = {width: "100%", maxHeight: 300, overflow: "scroll", flex: 1};
 
