@@ -66,13 +66,14 @@ const Detail = ({ ledgers, activeLedger }: { ledgers: string[], activeLedger: st
         try {
             setErrorMsg("")
             const result = await openLedger(ledger.current).execute(composerText.current);
+            console.log(JSON.stringify(result))
             const queryStats = {
-                consumedIOs: result.getConsumedIOs(),
-                timingInformation: result.getTimingInformation(),
+                consumedIOs: result.reduce((acc, res) => acc.concat(res.getConsumedIOs()), []),
+                timingInformation: result.reduce((acc, res) => acc.concat(res.getTimingInformation()), []),
             };
             setQueryStats(flattenQueryStats(queryStats));
-            updateResultText(result.getResultList());
-            recordHistory(composerText.current, result.getResultList(), queryStats, setHistory)
+            updateResultText(result.reduce((acc, res) => acc.concat(res.getResultList()), []));
+            recordHistory(composerText.current, result.reduce((acc, res) => acc.concat(res.getResultList()), []), queryStats, setHistory)
             setSuccessBarOpen(true)
         } catch (e) {
             setErrorMsg(e.toLocaleString())

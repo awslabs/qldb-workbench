@@ -14,7 +14,7 @@ export async function listLedgers() {
 export async function getLedgerMetaData(ledgerName: string): Promise<LedgerInfo> {
     const ledger: LedgerInfo = await new QLDB().describeLedger({Name: ledgerName}).promise()
     const result = await openLedger(ledgerName).execute("SELECT * FROM information_schema.user_tables")
-    const tables: TableInfo[] = JSON.parse(JSON.stringify(result.getResultList()));
+    const tables: TableInfo[] = JSON.parse(JSON.stringify(result[0].getResultList())); // There should be only 1 result.
 
     ledger.tables = tables
 

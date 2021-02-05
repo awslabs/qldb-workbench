@@ -2,10 +2,11 @@ import {QldbDriver, Result, RetryConfig, TransactionExecutor} from "amazon-qldb-
 import {ClientConfiguration} from "aws-sdk/clients/acm";
 import {Agent} from "https";
 
+const SEPARATOR = ";"
 
-export const executeStatement = (driver: QldbDriver) => async (statement: string): Promise<Result> => {
+export const executeStatement = (driver: QldbDriver) => async (statement: string): Promise<Result[]> => {
     return await driver.executeLambda(async (txn: TransactionExecutor) => {
-        return await txn.execute(statement);
+        return Promise.all(statement.split(SEPARATOR).map(async st => txn.execute(st)))
     });
 }
 

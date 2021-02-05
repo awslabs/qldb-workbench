@@ -21,10 +21,10 @@ export function loadHistory(setHistory: SetHistoryFn) {
     });
 }
 
-export function flattenQueryStats(queryStats: { timingInformation: TimingInformation; consumedIOs: IOUsage }) {
+export function flattenQueryStats(queryStats: { timingInformation: TimingInformation[]; consumedIOs: IOUsage[] }) {
     return {
-        consumedIOs: {readIOs: queryStats.consumedIOs.getReadIOs()},
-        timingInformation: {processingTimeMilliseconds: queryStats.timingInformation.getProcessingTimeMilliseconds()},
+        consumedIOs: {readIOs: queryStats.consumedIOs.reduce((acc, io) => acc + io.getReadIOs(), 0)},
+        timingInformation: {processingTimeMilliseconds: queryStats.timingInformation.reduce((acc, timeInfo) => acc + timeInfo.getProcessingTimeMilliseconds(), 0)},
     };
 }
 
@@ -32,7 +32,7 @@ function append(historyEntry: { result: Value[]; queryStats: { timingInformation
     fs.appendFileSync(HISTORY_FILE, JSON.stringify(historyEntry) + "\n");
 }
 
-export function recordHistory(text: string, result: Value[], queryStats: { timingInformation: TimingInformation; consumedIOs: IOUsage }, setHistory: SetHistoryFn) {
+export function recordHistory(text: string, result: Value[], queryStats: { timingInformation: TimingInformation[]; consumedIOs: IOUsage[] }, setHistory: SetHistoryFn) {
     const historyEntry = { text, result, queryStats: flattenQueryStats(queryStats) };
     append(historyEntry);
     setHistory(history => [...history, historyEntry]);
