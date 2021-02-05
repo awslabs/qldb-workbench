@@ -38,8 +38,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const qldbRegions = [
-    "us-east-2",
     "us-east-1",
+    "us-east-2",
     "us-west-2",
     "ap-northeast-2",
     "ap-southeast-1",
