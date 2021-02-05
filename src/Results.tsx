@@ -23,10 +23,13 @@ import {QueryStats} from "./query-history";
 import CheckCircleTwoToneIcon from '@material-ui/icons/CheckCircleTwoTone';
 import CancelTwoToneIcon from '@material-ui/icons/CancelTwoTone';
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
-import LinkIcon from '@material-ui/icons/Link';
 import CloudDoneTwoToneIcon from '@material-ui/icons/CloudDoneTwoTone';
 import CloudOffTwoToneIcon from '@material-ui/icons/CloudOffTwoTone';
+import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
+import json from 'react-syntax-highlighter/dist/cjs/languages/hljs/json';
+import { githubGist } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 
+SyntaxHighlighter.registerLanguage('json', json);
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -168,9 +171,9 @@ function prepareIonView(queryResult: []) {
                     </div>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <pre>
+                    <SyntaxHighlighter language="json" style={githubGist} showLineNumbers={true}>
                         { JSON.stringify(queryResult[i], undefined, 2) }
-                    </pre>
+                    </SyntaxHighlighter>
                 </AccordionDetails>
             </Accordion>
         )
