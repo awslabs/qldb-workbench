@@ -95,10 +95,10 @@ const Detail = ({ ledgers, activeLedger }: { ledgers: string[], activeLedger: st
         setResultsText(JSON.stringify(result));
     }
 
-    const executeStatement = async () => {
+    const executeStatement = async (text: string) => {
         try {
             setErrorMsg("")
-            const result = await openLedger(ledger.current).execute(composerText.current);
+            const result = await openLedger(ledger.current).execute(text);
             // console.log(JSON.stringify(result))
             const queryStats = {
                 consumedIOs: result.reduce((acc, res) => acc.concat(res.getConsumedIOs()), []),
@@ -106,7 +106,7 @@ const Detail = ({ ledgers, activeLedger }: { ledgers: string[], activeLedger: st
             };
             setQueryStats(flattenQueryStats(queryStats));
             updateResultText(result.reduce((acc, res) => acc.concat(res.getResultList()), []));
-            recordHistory(composerText.current, result.reduce((acc, res) => acc.concat(res.getResultList()), []), queryStats, setHistory)
+            recordHistory(text, result.reduce((acc, res) => acc.concat(res.getResultList()), []), queryStats, setHistory)
             setSuccessBarOpen(true)
         } catch (e) {
             setErrorMsg(e.toLocaleString())

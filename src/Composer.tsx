@@ -8,14 +8,14 @@ import ace from "ace-builds/src-noconflict/ace";
 import PartiQLMode, {defaultSnippets, Snippets} from "./mode/PartiQLMode";
 import {Button} from "@material-ui/core";
 
-export class Composer extends React.Component<{ composerText: string, executeStatement: () => void, setComposerText: (text: string) => void }> {
+export class Composer extends React.Component<{ composerText: string, executeStatement: (text: string) => void, setComposerText: (text: string) => void }> {
     componentDidMount() {
         updatePartiqlMode()
         initDefaultCompleters()
     }
 
     render() {
-        let {composerText, setComposerText, executeStatement} = this.props;
+        const {composerText, setComposerText, executeStatement} = this.props;
         const COMPOSER_STYLE = {
             padding: "1px",
             width: "100%",
@@ -24,11 +24,17 @@ export class Composer extends React.Component<{ composerText: string, executeSta
             fontSize: "12pt"
         };
 
+        function executeSelection() {
+            const editor = ace.edit("aceEditor");
+            const selectedText = editor.getSelectedText();
+            executeStatement(selectedText === "" ? editor.getValue() : selectedText);
+        }
+
         const executeCode = {
             name: "executeCode",
             bindKey: {win: 'Ctrl-E', mac: 'Command-E'},
             exec: () => {
-                executeStatement()
+                executeSelection();
             },
             readOnly: true
         };
@@ -47,7 +53,7 @@ export class Composer extends React.Component<{ composerText: string, executeSta
                 enableSnippets={true}
             />
             <ActionBar executeButtonClicked={() => {
-                executeStatement();
+                executeSelection();
             }}/>
         </div>
     }
