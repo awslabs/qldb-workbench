@@ -2,7 +2,7 @@
   "name": "qldb-quark",
   "version": "1.0.0",
   "description": "A cross-platform visual shell for QLDB",
-  "main": "index.js",
+  "main": "build/src/index.js",
   "scripts": {
     "compile": "tsc",
     "bundleAssets": "cp -a assets build",
@@ -53,7 +53,9 @@
     "react-spring": "^8.0.27s",
     "react-syntax-highlighter": "^15.4.3",
     "save": "^2.4.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "react-js-pull-to-refresh": "^1.2.2",
+    "notistack": "^1.0.3"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
