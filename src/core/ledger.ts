@@ -1,6 +1,6 @@
 import {QLDB} from "aws-sdk";
-import {LedgerSummary} from "aws-sdk/clients/qldb";
-import {openLedger} from "./session";
+import {CreateLedgerRequest, LedgerSummary} from "aws-sdk/clients/qldb";
+import {openLedger, sessionEndpointValue} from "./session";
 import {ClientConfiguration} from "aws-sdk/clients/acm";
 import {qldbRegions} from "./AppBar";
 import {OptionsObject, SnackbarKey, SnackbarMessage} from "notistack";
@@ -36,12 +36,52 @@ export async function listLedgers(enqueueSnackbar: (message: SnackbarMessage, op
             const errorMessage = "No ledgers found.";
             enqueueSnackbar(errorMessage, { variant: "warning" })
         }
-        return ledgers.Ledgers.filter(l => l.State === "ACTIVE").map(l => l.Name);
+        return ledgers.Ledgers.filter(l => (l.State === "ACTIVE")).map(l => l.Name);
     } catch (e) {
         const errorMessage = frontendEndpointValue ? "Error while fetching ledgers.\nMake sure frontend endpoint override is correct." : "Error while fetching ledgers.";
         enqueueSnackbar(errorMessage, {variant: "error"})
         console.log(e)
         return []
+    }
+}
+
+export async function createLedger(name: string, deletionProtection: boolean = false, tags?: {[key: string]: string},
+                                   enqueueSnackbar?: (message: SnackbarMessage, options?: OptionsObject) => SnackbarKey) {
+    let request: CreateLedgerRequest = {
+        Name: name,
+        DeletionProtection: deletionProtection,
+        PermissionsMode: "ALLOW_ALL",
+        Tags: tags
+    };
+    try {
+        let ledgerArn
+        if (frontendEndpointValue) {
+            const serviceConfigurationOptions: ClientConfiguration = {
+                endpoint: frontendEndpointValue,
+            };
+            ledgerArn = await new QLDB(serviceConfigurationOptions).createLedger(request).promise().then(response => response.Arn);
+        } else {
+            ledgerArn = await new QLDB().createLedger(request).promise().then(response => response.Arn);
+        }
+        enqueueSnackbar(`Ledger with arn: ${ledgerArn} successfully created.`, {variant: "success"})
+    } catch (e) {
+        enqueueSnackbar(e.toLocaleString(), {variant: "error"})
+    }
+}
+
+export async function deleteLedger(name: string, enqueueSnackbar: (message: SnackbarMessage, options?: OptionsObject) => SnackbarKey) {
+    try {
+        if (frontendEndpointValue) {
+            const serviceConfigurationOptions: ClientConfiguration = {
+                endpoint: frontendEndpointValue,
+            };
+            await new QLDB(serviceConfigurationOptions).deleteLedger({Name: name}).promise();
+        } else {
+            await new QLDB().deleteLedger({Name:name}).promise();
+        }
+        enqueueSnackbar(`Ledger with name: ${name} successfully deleted.`, {variant: "success"})
+    } catch (e) {
+        enqueueSnackbar(e.toLocaleString(), {variant: "error"})
     }
 }
 
@@ -56,11 +96,12 @@ export async function getLedgerMetaData(ledgerName: string, enqueueSnackbar?: (m
     } else {
         ledger = await new QLDB().describeLedger({Name: ledgerName}).promise();
     }
-    const result = await openLedger(ledgerName, enqueueSnackbar).execute("SELECT * FROM information_schema.user_tables")
-    const tables: TableInfo[] = JSON.parse(JSON.stringify(result[0].getResultList())); // There should be only 1 result.
-
-    ledger.tables = tables
-
+    let result = await openLedger(ledgerName).execute("SELECT * FROM information_schema.user_tables")
+        .catch(() => {
+            const errorMessage = `Unable to execute query on ledger. ${frontendEndpointValue || sessionEndpointValue ? "Make sure you have set session endpoint correctly." : ""}`
+            enqueueSnackbar && enqueueSnackbar(errorMessage, {variant: "error"})
+        }); // There should be only 1 result.
+    ledger.tables = JSON.parse(JSON.stringify(result[0].getResultList()))
     return ledger
 }
 

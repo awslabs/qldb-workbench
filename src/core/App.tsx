@@ -14,6 +14,7 @@ import SplitPane from "react-split-pane";
 import Results, {execute} from "./Results";
 import Paper from '@material-ui/core/Paper';
 import { SnackbarProvider} from 'notistack';
+import {ConfirmProvider} from "material-ui-confirm";
 
 export const drawerWidth = "20%";
 export const splitPaneWidth = "80%";
@@ -88,13 +89,14 @@ const App = () => {
     return (
         <SnackbarProvider maxSnack={3}>
         <ThemeProvider theme={darkTheme}>
-            <div className={classes.root}>
+            <ConfirmProvider>
+                <div className={classes.root}>
                 <CssBaseline />
                 <AppBar region={activeRegion} setRegion={setActiveRegion} darkState={darkState} setDarkState={setDarkState} showInactive={showInactive} setShowInactive={setShowInactive} setForceRefresh={setForceRefresh}/>
                 <Drawer className={classes.drawer} variant="permanent" classes={{ paper: classes.drawerPaper }}>
                     <Toolbar />
                     <div className={classes.drawerContainer}>
-                        <DrawerItems activeRegion={activeRegion} setActiveLedger={setActiveLedger} showInactive={showInactive} forceRefresh={forceRefresh} setForceRefresh={setForceRefresh}/>
+                        <DrawerItems activeRegion={activeRegion} setActiveLedger={setActiveLedger} showInactive={showInactive} forceRefresh={forceRefresh} setForceRefresh={setForceRefresh} activeLedger={activeLedgerState}/>
                     </div>
                 </Drawer>
                 <main className={classes.content}>
@@ -110,6 +112,7 @@ const App = () => {
                     </Paper>
                 </main>
             </div>
+            </ConfirmProvider>
         </ThemeProvider>
         </SnackbarProvider>
     );

@@ -79,7 +79,8 @@ export const qldbRegions: Region[] = [
     {name: "Asia Pacific (Sydney)", region: "ap-southeast-2"},
     {name: "Asia Pacific (Tokyo)", region: "ap-northeast-1"},
     {name: "Europe (Frankfurt)", region: "eu-central-1"},
-    {name: "Europe (Ireland)", region: "eu-west-1"}
+    {name: "Europe (Ireland)", region: "eu-west-1"},
+    {name: "Europe (London)", region: "eu-west-2"}
 ]
 
 export default ({region, setRegion, darkState, setDarkState, showInactive, setShowInactive, setForceRefresh}:
@@ -163,7 +164,7 @@ export default ({region, setRegion, darkState, setDarkState, showInactive, setSh
         const theme = useTheme();
         const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
         return (
-            <Dialog fullScreen={fullScreen} open={dialogOpen} onClose={handleMenuClose}
+            <Dialog fullScreen={fullScreen} open={dialogOpen} onClose={handleDialogClose}
                     aria-labelledby={"Form-dialog-title"}>
                 <DialogTitle id={"Form-dialog-title"}>Configuration</DialogTitle>
                 <DialogContent>

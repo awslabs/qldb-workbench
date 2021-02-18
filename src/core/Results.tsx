@@ -115,11 +115,7 @@ function prepareQueryStatsView(queryStats: QueryStats) {
     )
 }
 
-function prepareErrorView(error: string) {
-    return (
-        error && <Alert variant={"filled"} severity="error">{error}</Alert>
-    )
-}
+const prepareErrorView = (error: string) => error && <Alert variant={"filled"} severity="error">{error}</Alert>;
 
 function prepareIonView(queryResult: [], darkState: boolean) {
     const classes = useStyles();

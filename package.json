@@ -55,7 +55,8 @@
     "save": "^2.4.0",
     "uuid": "^8.3.2",
     "react-js-pull-to-refresh": "^1.2.2",
-    "notistack": "^1.0.3"
+    "notistack": "^1.0.3",
+    "material-ui-confirm": "^2.1.1"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
