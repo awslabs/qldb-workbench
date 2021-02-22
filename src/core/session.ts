@@ -25,7 +25,7 @@ export function openLedger(ledgerName: string) {
 
     const getServiceConfig = () => sessionEndpointValue ? {
             httpOptions: {agent: agentForQldb,},
-            endpoint: sessionEndpointValue
+            endpoint: sessionEndpointValue,
         } :
         {httpOptions: {agent: agentForQldb}};
 

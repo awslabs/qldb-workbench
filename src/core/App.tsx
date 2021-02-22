@@ -1,20 +1,22 @@
 import * as React from "react";
-import { createStyles, Theme, makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import {createMuiTheme, createStyles, makeStyles, Theme, ThemeProvider} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 import DrawerItems from "./DrawerItems";
 import AppBar from "./AppBar";
 import * as ReactDOM from "react-dom";
-import AWS = require("aws-sdk");
-import {deepOrange, deepPurple, lightBlue, lightGreen, orange} from "@material-ui/core/colors";
+import {deepOrange, deepPurple, lightBlue, orange} from "@material-ui/core/colors";
 import {Composer} from "./Composer";
 import {QueryHistoryEntry, QueryStats} from "./query-history";
 import SplitPane from "react-split-pane";
 import Results, {execute} from "./Results";
 import Paper from '@material-ui/core/Paper';
-import { SnackbarProvider} from 'notistack';
+import {SnackbarProvider} from 'notistack';
 import {ConfirmProvider} from "material-ui-confirm";
+import * as logplease from "logplease";
+import AWS = require("aws-sdk");
+import * as fs from "fs";
 
 export const drawerWidth = "20%";
 export const splitPaneWidth = "80%";
@@ -55,6 +57,15 @@ const App = () => {
     const [forceRefresh, setForceRefresh] = React.useState(false)
 
     AWS.config.update({region: activeRegion});
+    logplease.setLogLevel("DEBUG");
+    AWS.config.logger = {
+        log: (...messages: any[]) => {
+            const data = `${new Date().toISOString()}: ${messages[0]}\n`;
+            console.log(data);
+            fs.appendFileSync(".qldb-quark.log",data);
+        }
+    };
+
 
     const [darkState, setDarkState] = React.useState(false);
     const palletType = darkState ? "dark" : "light";
