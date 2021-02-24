@@ -101,7 +101,6 @@ export async function getLedgerMetaData(ledgerName: string, enqueueSnackbar?: (m
         const result = await openLedger(ledgerName).execute("SELECT * FROM information_schema.user_tables");
         ledger.tables = JSON.parse(JSON.stringify(result[0].getResultList()))
     } catch (e) {
-        console.log(e);
         const errorMessage = `Unable to execute query on ledger ${ledgerName}. ${frontendEndpointValue || sessionEndpointValue ? "Make sure you have set session endpoint correctly." : ""}. ${e}`
         enqueueSnackbar && enqueueSnackbar(errorMessage, {variant: "error"});
     }
