@@ -120,9 +120,9 @@ const prepareErrorView = (error: string) => error && <Alert variant={"filled"} s
 function prepareIonView(queryResult: [], darkState: boolean) {
     const classes = useStyles();
     return <div>{
-        queryResult.map(i => {
-            const nonPrettyResult = JSON.stringify(queryResult[i], undefined);
-            const prettyResult = JSON.stringify(queryResult[i], undefined, 2);
+        queryResult.map((r, i) => {
+            const nonPrettyResult = JSON.stringify(r, undefined);
+            const prettyResult = JSON.stringify(r, undefined, 2);
             return <Accordion key={"result-" + i}>
                 <AccordionSummary
             aria-controls={"result-panel-content-" + i}
