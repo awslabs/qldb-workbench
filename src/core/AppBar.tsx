@@ -109,9 +109,15 @@ export default ({region, setRegion, darkState, setDarkState, showInactive, setSh
     const handleDialogClose = () => setDialogOpen(false)
 
     const handleConfigUpdate = () => {
-        setFrontendEndpoint(frontendEndpoint.current.value, setRegion, enqueueSnackbar)
-        setSessionEndpoint(sessionEndpoint.current.value)
-        awsAccessKey.current.value && awsSecretKey.current.value && awsSessionToken.current.value
+        if (frontendEndpoint.current) {
+            setFrontendEndpoint(frontendEndpoint.current.value, setRegion, enqueueSnackbar)
+        }
+        if (sessionEndpoint.current) {
+            setSessionEndpoint(sessionEndpoint.current.value)
+        }
+        awsAccessKey.current && awsAccessKey.current.value
+            && awsSecretKey.current && awsSecretKey.current.value
+            && awsSessionToken.current && awsSessionToken.current.value
         && AWS.config.update({
             accessKeyId: awsAccessKey.current.value,
             secretAccessKey: awsSecretKey.current.value,

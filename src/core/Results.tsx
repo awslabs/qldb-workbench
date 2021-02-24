@@ -119,36 +119,34 @@ const prepareErrorView = (error: string) => error && <Alert variant={"filled"} s
 
 function prepareIonView(queryResult: [], darkState: boolean) {
     const classes = useStyles();
-    const items = []
-    for (const i in queryResult) {
-        const nonPrettyResult = JSON.stringify(queryResult[i], undefined)
-        const prettyResult = JSON.stringify(queryResult[i], undefined, 2)
-        items.push(
-            <Accordion key={"result-" + i}>
+    return <div>{
+        queryResult.map(i => {
+            const nonPrettyResult = JSON.stringify(queryResult[i], undefined);
+            const prettyResult = JSON.stringify(queryResult[i], undefined, 2);
+            return <Accordion key={"result-" + i}>
                 <AccordionSummary
-                    aria-controls={"result-panel-content-" + i}
-                    id={"result-panel-header-" + i}
+            aria-controls={"result-panel-content-" + i}
+            id={"result-panel-header-" + i}
                 >
-                    <div className={classes.headingAccordion}>
-                        {nonPrettyResult}
-                    </div>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <SyntaxHighlighter language="json" style={darkState ? zenburn : githubGist} showLineNumbers={true}>
-                        { prettyResult }
-                    </SyntaxHighlighter>
-                    <CopyToClipboard text={prettyResult}>
-                        <label htmlFor="icon-button-file">
-                            <IconButton color="primary" aria-label="copy" component="span">
-                                <FileCopyIcon />
-                            </IconButton>
-                        </label>
-                    </CopyToClipboard>
-                </AccordionDetails>
-            </Accordion>
-        )
-    }
-    return <div>{ items }</div>
+                <div className={classes.headingAccordion}>
+                {nonPrettyResult}
+        </div>
+        </AccordionSummary>
+            <AccordionDetails>
+                <SyntaxHighlighter language="json" style={darkState ? zenburn : githubGist} showLineNumbers={true}>
+                    { prettyResult }
+                </SyntaxHighlighter>
+                <CopyToClipboard text={prettyResult}>
+                    <label htmlFor="icon-button-file">
+                        <IconButton color="primary" aria-label="copy" component="span">
+                            <FileCopyIcon />
+                        </IconButton>
+                    </label>
+                </CopyToClipboard>
+            </AccordionDetails>
+        </Accordion>
+        })
+    }</div>;
 }
 
 function prepareTableView(queryResult: []) {
@@ -186,7 +184,7 @@ function findAllHeaders(queryResult: []): [] {
     for (const i in queryResult) {
         const map: Map<string, string> = queryResult[i]
         for (const key in map) {
-            const count = headers.get(key) ? headers.get(key) + 1 : 1
+            const count = headers.get(key) ? (headers.get(key) || 0) + 1 : 1
             headers.set(key, count)
         }
     }
@@ -205,11 +203,13 @@ export function execute(activeLedger: string, setHistory: SetHistoryFn, setResul
         if (output.errorMessage) {
             setError(output.errorMessage)
             setResult("")
-            setQueryStats(undefined)
+            setQueryStats({ timingInformation: { processingTimeMilliseconds: 0 }, consumedIOs: { readIOs: 0}})
         } else {
-            const extractedResult = JSON.stringify(output.result.reduce((acc, res) => acc.concat(res.getResultList()), []));
+            const extractedResult = JSON.stringify((output.result || []).reduce((acc, res) => [...acc, ...res.getResultList()], []));
             setResult(extractedResult);
-            setQueryStats(output.queryStats)
+            if (output.queryStats) {
+                setQueryStats(output.queryStats)
+            }
             setError("")
         }
     });

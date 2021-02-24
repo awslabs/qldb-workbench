@@ -53,7 +53,7 @@ const App = () => {
     const [result, setResult] = React.useState("")
     const [showInactive, setShowInactive] = React.useState(false)
     const [error, setError] = React.useState("")
-    const [queryStats, setQueryStats] = React.useState(undefined as QueryStats);
+    const [queryStats, setQueryStats] = React.useState(undefined as unknown as QueryStats);
     const [forceRefresh, setForceRefresh] = React.useState(false)
 
     AWS.config.update({region: activeRegion});

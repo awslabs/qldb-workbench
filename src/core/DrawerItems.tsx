@@ -117,45 +117,61 @@ export default ({activeRegion, setActiveLedger, showInactive, forceRefresh, setF
 
     React.useEffect(() => {
         AWS.config.update({region: activeRegion});
-        const fetchLedgers = async () => listLedgers(enqueueSnackbar).then(results => Promise.all(results.map(async ledger => await getLedgerMetaData(ledger, enqueueSnackbar))).then(l => setLedgers(l)));
+        const fetchLedgers = async () => {
+            const ledgers = await listLedgers(enqueueSnackbar);
+            const ledgerInfos = await Promise.all(ledgers.map(async ledger => {
+                return await getLedgerMetaData(ledger, enqueueSnackbar);
+            }));
+            setLedgers(ledgerInfos);
+        };
         fetchLedgers().then(() => {
            if(forceRefresh) enqueueSnackbar("Ledgers updated.", {variant: "success"})
         });
         setForceRefresh(false)
     }, [forceRefresh, activeRegion]);
 
+    function tablesOf(ledger: LedgerInfo) {
+        const tables = ledger.tables;
+        if (tables) {
+            return tables
+                .filter(t => showInactive || t.status == "ACTIVE")
+                .map(t => tableTreeItem(t));
+        }
+        return <></>;
+    }
+
     const ledgerTreeItem = (ledger: LedgerInfo): JSX.Element => {
         const key = "ledger-" + ledger.Name;
         return (
-            <StyledTreeItem key={key} nodeId={key} label={ledger.Name} className={ledger.State === "CREATING" ? classes.ledgerLabelSecondary : classes.ledgerLabel} >{
-                ledger
-                    .tables
-                    .filter(t => showInactive || t.status == "ACTIVE")
-                    .map(t => tableTreeItem(t))
+            <StyledTreeItem key={key} nodeId={key} label={ledger.Name} className={ledger.State === "CREATING" ? classes.ledgerLabelSecondary : classes.ledgerLabel}>{
+                tablesOf(ledger)
             }
             </StyledTreeItem>
         );
     };
 
     const handleCreateLedger = () => {
-        if (!ledgerNameRef.current.value) {
+        const currentLedgerName = ledgerNameRef.current;
+        if (!currentLedgerName || !currentLedgerName.value) {
             enqueueSnackbar("Ledger name is required.", {variant:"error"})
-            return
+            return;
         }
         let tags: {[key: string]: string} = {}
         try {
-            ledgerTagsRef.current.value.split(" ").forEach(val => {
-                const key = val.split("=")[0]
-                const value = val.split("=")[1];
-                if ((key && !value) || (!key && value)) throw BreakException
-                tags[key] = value
-            })
+            if (ledgerTagsRef.current) {
+                ledgerTagsRef.current.value.split(" ").forEach(val => {
+                    const key = val.split("=")[0]
+                    const value = val.split("=")[1];
+                    if ((key && !value) || (!key && value)) throw BreakException
+                    tags[key] = value
+                });
+            }
         } catch (e) {
             if (e === BreakException) {
                 enqueueSnackbar("Check supplied tags", {variant: "error"}); return;
             }
         }
-        createLedger(ledgerNameRef.current.value, deletionProtection, tags, enqueueSnackbar)
+        createLedger(currentLedgerName.value, deletionProtection, tags, enqueueSnackbar)
         setDialogOpen(false)
     }
 
@@ -254,13 +270,13 @@ export default ({activeRegion, setActiveLedger, showInactive, forceRefresh, setF
                             if (value.startsWith("ledger-")) {
                                 const ledger = value.substring(7);
                                 setActiveLedger(ledger)
-                                getLedgerMetaData(ledger).then(l => addCompleterForUserTables(l.tables.filter(t => t.status == "ACTIVE").map(t => t.name)))
+                                getLedgerMetaData(ledger).then(l => addCompleterForUserTables((l.tables || []).filter(t => t.status == "ACTIVE").map(t => t.name)))
                             }
                         }}
                     >
                         {ledgers.map((ledger) => ledgerTreeItem(ledger))}
                     </TreeView>
-                    <Toolbar />
+                    <Toolbar/>
                 </Box>
             </PullToRefresh>
             <Box className={classes.stickToBottom}>

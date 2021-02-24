@@ -1,13 +1,14 @@
-import {QLDB} from "aws-sdk";
-import {CreateLedgerRequest, LedgerSummary} from "aws-sdk/clients/qldb";
+import {AWSError, QLDB} from "aws-sdk";
+import {CreateLedgerRequest, LedgerList, LedgerSummary, ListLedgersResponse} from "aws-sdk/clients/qldb";
 import {openLedger, sessionEndpointValue} from "./session";
 import {ClientConfiguration} from "aws-sdk/clients/acm";
 import {qldbRegions} from "./AppBar";
 import {OptionsObject, SnackbarKey, SnackbarMessage} from "notistack";
+import {PromiseResult} from "aws-sdk/lib/request";
 
-export let frontendEndpointValue = undefined;
+export let frontendEndpointValue: string | undefined = undefined;
 
-function determineRegion(endpoint: string): string {
+function determineRegion(endpoint: string) {
     const regions = qldbRegions.filter(region => endpoint.includes(region.region));
     return regions.length > 0 ? regions[0].region : undefined
 }
@@ -21,8 +22,8 @@ export const setFrontendEndpoint = (endpoint: string, setRegion: (region: string
     }
 }
 
-export async function listLedgers(enqueueSnackbar: (message: SnackbarMessage, options?: OptionsObject) => SnackbarKey) {
-    let ledgers;
+export async function listLedgers(enqueueSnackbar: (message: SnackbarMessage, options?: OptionsObject) => SnackbarKey): Promise<string[]> {
+    let ledgers: PromiseResult<ListLedgersResponse, AWSError>;
     try {
         if (frontendEndpointValue) {
             const serviceConfigurationOptions: ClientConfiguration = {
@@ -32,21 +33,21 @@ export async function listLedgers(enqueueSnackbar: (message: SnackbarMessage, op
         } else {
             ledgers = await new QLDB().listLedgers().promise();
         }
-        if (!ledgers || ledgers.Ledgers.length == 0) {
+        if (!ledgers || !ledgers.Ledgers || ledgers.Ledgers.length == 0) {
             const errorMessage = "No ledgers found.";
             enqueueSnackbar(errorMessage, { variant: "warning" })
         }
-        return ledgers.Ledgers.filter(l => (l.State === "ACTIVE")).map(l => l.Name);
+        return (ledgers.Ledgers || []).filter(l => (l.State === "ACTIVE")).map(l => l.Name || "unknown-ledger");
     } catch (e) {
         const errorMessage = frontendEndpointValue ? "Error while fetching ledgers.\nMake sure frontend endpoint override is correct." : "Error while fetching ledgers.";
         enqueueSnackbar(errorMessage, {variant: "error"})
         console.log(e)
-        return []
+        return [];
     }
 }
 
-export async function createLedger(name: string, deletionProtection: boolean = false, tags?: {[key: string]: string},
-                                   enqueueSnackbar?: (message: SnackbarMessage, options?: OptionsObject) => SnackbarKey) {
+export async function createLedger(name: string, deletionProtection: boolean = false, tags: {[key: string]: string},
+                                   enqueueSnackbar: (message: SnackbarMessage, options?: OptionsObject) => SnackbarKey) {
     let request: CreateLedgerRequest = {
         Name: name,
         DeletionProtection: deletionProtection,
