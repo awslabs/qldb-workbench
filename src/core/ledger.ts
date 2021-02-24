@@ -5,7 +5,7 @@ import {ClientConfiguration} from "aws-sdk/clients/acm";
 import {qldbRegions} from "./AppBar";
 import {OptionsObject, SnackbarKey, SnackbarMessage} from "notistack";
 
-export let frontendEndpointValue = ""
+export let frontendEndpointValue = undefined;
 
 function determineRegion(endpoint: string): string {
     const regions = qldbRegions.filter(region => endpoint.includes(region.region));
@@ -96,13 +96,14 @@ export async function getLedgerMetaData(ledgerName: string, enqueueSnackbar?: (m
     } else {
         ledger = await new QLDB().describeLedger({Name: ledgerName}).promise();
     }
-    let result = await openLedger(ledgerName).execute("SELECT * FROM information_schema.user_tables")
-        .catch(() => {
-            const errorMessage = `Unable to execute query on ledger. ${frontendEndpointValue || sessionEndpointValue ? "Make sure you have set session endpoint correctly." : ""}`
-            enqueueSnackbar && enqueueSnackbar(errorMessage, {variant: "error"})
-        }); // There should be only 1 result.
-    ledger.tables = JSON.parse(JSON.stringify(result[0].getResultList()))
-    return ledger
+    try {
+        const result = await openLedger(ledgerName).execute("SELECT * FROM information_schema.user_tables");
+        ledger.tables = JSON.parse(JSON.stringify(result[0].getResultList()))
+    } catch (e) {
+        const errorMessage = `Unable to execute query on ledger. ${frontendEndpointValue || sessionEndpointValue ? "Make sure you have set session endpoint correctly." : ""}. ${e}`
+        enqueueSnackbar && enqueueSnackbar(errorMessage, {variant: "error"});
+    }
+    return ledger;
 }
 
 const nullLedger: LedgerInfo = {
