@@ -1,5 +1,6 @@
 import {AWSError, QLDB} from "aws-sdk";
 import {CreateLedgerRequest, LedgerList, LedgerSummary, ListLedgersResponse} from "aws-sdk/clients/qldb";
+import { dom } from "ion-js";
 import {openLedger, sessionEndpointValue} from "./session";
 import {ClientConfiguration} from "aws-sdk/clients/acm";
 import {qldbRegions} from "./AppBar";
@@ -99,7 +100,7 @@ export async function getLedgerMetaData(ledgerName: string, enqueueSnackbar?: (m
     }
     try {
         const result = await openLedger(ledgerName).execute("SELECT * FROM information_schema.user_tables");
-        ledger.tables = JSON.parse(JSON.stringify(result[0].getResultList()))
+        ledger.tables = parseTableInfos(result[0].getResultList())
     } catch (e) {
         const errorMessage = `Unable to execute query on ledger ${ledgerName}. ${frontendEndpointValue || sessionEndpointValue ? "Make sure you have set session endpoint correctly." : ""}. ${e}`
         enqueueSnackbar && enqueueSnackbar(errorMessage, {variant: "error"});
@@ -128,4 +129,29 @@ export interface IndexInfo {
     expr: string
     indexId: string
     status: string
+}
+
+function parseTableInfos(values: dom.Value[]): TableInfo[] {
+    return values.map((value) => parseTableInfo(value));
+}
+
+function parseTableInfo(value: dom.Value): TableInfo {
+    return {
+        name: value.get("name")!.stringValue()!,
+        tableId: value.get("tableId")!.stringValue()!,
+        status: value.get("status")!.stringValue()!,
+        indexes: parseIndexInfos(value.get("indexes")!.elements())
+    };
+}
+
+function parseIndexInfos(values: dom.Value[]): IndexInfo[] {
+    return values.map((value) => parseIndexInfo(value));
+}
+
+function parseIndexInfo(value: dom.Value): IndexInfo {
+    return {
+        expr: value.get("expr")!.stringValue()!,
+        indexId: value.get("indexId")!.stringValue()!,
+        status: value.get("status")!.stringValue()!,
+    };
 }
