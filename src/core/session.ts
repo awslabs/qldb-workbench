@@ -5,14 +5,19 @@ const SEPARATOR = ";"
 export let sessionEndpointValue = ""
 export const setSessionEndpoint = (endpoint: string) => sessionEndpointValue = endpoint
 
-const executeStatement = (driver: QldbDriver) => async (statement: string): Promise<Result[]> => {
-    return await driver.executeLambda(async (txn: TransactionExecutor) => {
-        if (!statement) throw new Error('Nothing to run!!')
-        const statements = statement.split(SEPARATOR).filter(st => st.trim().length > 0);
-        if (statements.length > 0) {
-            return Promise.all(statements.map(async st => txn.execute(st))).finally(() => driver.close())
-        } else throw new Error('Nothing to run!!');
-    });
+const executeStatement = (driver: QldbDriver) => {
+    return async (statement: string): Promise<Result[]> => {
+        return await driver.executeLambda(async (txn: TransactionExecutor) => {
+            if (!statement) {
+                return [];
+            }
+            const statements = statement.split(SEPARATOR).filter(st => st.trim().length > 0);
+            if (statements.length == 0) {
+                return [];
+            }
+            return await Promise.all(statements.map(async st => txn.execute(st)));
+        });
+    };
 }
 
 export function openLedger(ledgerName: string) {
