@@ -8,9 +8,10 @@ import {createLedger, deleteLedger, getLedgerMetaData, LedgerInfo, listLedgers, 
 import TreeItem, {TreeItemProps} from "@material-ui/lab/TreeItem";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
-import {PullDownContent, PullToRefresh, RefreshContent, ReleaseContent} from "react-js-pull-to-refresh";
 import {
-    Accordion, AccordionDetails, AccordionSummary,
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
     Box,
     Button,
     Checkbox,
@@ -35,9 +36,9 @@ import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {useSnackbar} from "notistack";
 import ace from "ace-builds/src-noconflict/ace";
-import AWS = require("aws-sdk");
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { useConfirm } from "material-ui-confirm";
+import {useConfirm} from "material-ui-confirm";
+import AWS = require("aws-sdk");
 
 const useStyles = makeStyles((theme) => ({
     treeView: {
@@ -252,33 +253,22 @@ export default ({activeRegion, setActiveLedger, showInactive, forceRefresh, setF
                     <Button size="small" color="primary" onClick={handleCreateLedger}>Create</Button>
                 </DialogActions>
             </Dialog>
-            <PullToRefresh
-                pullDownContent={<PullDownContent />}
-                releaseContent={<ReleaseContent />}
-                refreshContent={<RefreshContent />}
-                pullDownThreshold={50}
-                onRefresh={onRefresh}
-                triggerHeight={50}
-                backgroundColor={theme.palette.background.paper}>
-                <Box minHeight={500} style={{background: "inherit"}}>
-                    <TreeView
-                        className={classes.treeView}
-                        defaultCollapseIcon={<IndeterminateCheckBoxOutlinedIcon />}
-                        defaultExpandIcon={<AddBoxOutlinedIcon />}
-                        defaultEndIcon={<CheckBoxOutlineBlankIcon />}
-                        onNodeSelect={(event: object, value: string) => {
-                            if (value.startsWith("ledger-")) {
-                                const ledger = value.substring(7);
-                                setActiveLedger(ledger)
-                                getLedgerMetaData(ledger).then(l => addCompleterForUserTables((l.tables || []).filter(t => t.status == "ACTIVE").map(t => t.name)))
-                            }
-                        }}
-                    >
-                        {ledgers.map((ledger) => ledgerTreeItem(ledger))}
-                    </TreeView>
-                    <Toolbar/>
-                </Box>
-            </PullToRefresh>
+            <TreeView
+                    className={classes.treeView}
+                    defaultCollapseIcon={<IndeterminateCheckBoxOutlinedIcon />}
+                    defaultExpandIcon={<AddBoxOutlinedIcon />}
+                    defaultEndIcon={<CheckBoxOutlineBlankIcon />}
+                    onNodeSelect={(event: object, value: string) => {
+                        if (value.startsWith("ledger-")) {
+                            const ledger = value.substring(7);
+                            setActiveLedger(ledger)
+                            getLedgerMetaData(ledger).then(l => addCompleterForUserTables((l.tables || []).filter(t => t.status == "ACTIVE").map(t => t.name)))
+                        }
+                    }}
+                >
+                    {ledgers.map((ledger) => ledgerTreeItem(ledger))}
+            </TreeView>
+            <Toolbar/>
             <Box className={classes.stickToBottom}>
                 <Divider light={true}/>
                 <Tooltip title="Create ledger">
@@ -287,7 +277,6 @@ export default ({activeRegion, setActiveLedger, showInactive, forceRefresh, setF
                 <Tooltip title="Delete current ledger">
                     <IconButton size={"medium"} aria-label="delete" onClick={handleDeleteLedger}> <DeleteIcon /> </IconButton>
                 </Tooltip>
-                <Box component="div" display="inline" className={classes.info}>Pull down to refresh</Box>
                 <Tooltip title="Refresh ledgers">
                     <IconButton size={"medium"} aria-label="refresh" onClick={() => setForceRefresh(true)}> <RefreshIcon /> </IconButton>
                 </Tooltip>
