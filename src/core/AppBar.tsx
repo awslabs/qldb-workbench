@@ -241,7 +241,7 @@ export default ({region, setRegion, darkState, setDarkState, showInactive, setSh
 
     return (
         <AppBar position="fixed" className={classes.appBar}>
-            <Toolbar>
+            <Toolbar variant="dense">
                 <img src="../../assets/amazon-qldb.png" alt="QLDB" height="50" width="50"
                      style={{paddingRight: "2px"}}/>
                 <Typography variant="h6" noWrap style={{color: "#ffffff", flex: 1}}>

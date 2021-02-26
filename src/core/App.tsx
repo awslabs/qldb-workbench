@@ -72,6 +72,7 @@ const App = () => {
     const mainPrimaryColor = darkState ? orange[500] : lightBlue[500];
     const mainSecondaryColor = darkState ? deepOrange[900] : deepPurple[500];
     const darkTheme = createMuiTheme({
+        spacing: 2,
         palette: {
             type: palletType,
             primary: {
