@@ -19,3 +19,12 @@ To use the rapid development cycle, which starts the shell and then watches for 
 ```
 npm run watch
 ```
+
+## Security
+
+See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+
+## License
+
+This project is licensed under the Apache-2.0 License.
+
