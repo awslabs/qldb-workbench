@@ -262,7 +262,9 @@ export default ({activeRegion, setActiveLedger, showInactive, forceRefresh, setF
                         if (value.startsWith("ledger-")) {
                             const ledger = value.substring(7);
                             setActiveLedger(ledger)
-                            getLedgerMetaData(ledger).then(l => addCompleterForUserTables((l.tables || []).filter(t => t.status == "ACTIVE").map(t => t.name)))
+                            const ledgerSummary = ledgers.find(l => l.Name === ledger)!;
+                            getLedgerMetaData(ledgerSummary)
+                                .then(l => addCompleterForUserTables((l.tables || []).filter(t => t.status == "ACTIVE").map(t => t.name)))
                         }
                     }}
                 >

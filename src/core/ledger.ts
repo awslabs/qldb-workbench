@@ -23,7 +23,7 @@ export const setFrontendEndpoint = (endpoint: string, setRegion: (region: string
     }
 }
 
-export async function listLedgers(enqueueSnackbar: (message: SnackbarMessage, options?: OptionsObject) => SnackbarKey): Promise<string[]> {
+export async function listLedgers(enqueueSnackbar: (message: SnackbarMessage, options?: OptionsObject) => SnackbarKey): Promise<LedgerSummary[]> {
     let ledgers: PromiseResult<ListLedgersResponse, AWSError>;
     try {
         if (frontendEndpointValue) {
@@ -38,7 +38,7 @@ export async function listLedgers(enqueueSnackbar: (message: SnackbarMessage, op
             const errorMessage = "No ledgers found.";
             enqueueSnackbar(errorMessage, { variant: "warning" })
         }
-        return (ledgers.Ledgers || []).filter(l => (l.State === "ACTIVE")).map(l => l.Name || "unknown-ledger");
+        return ledgers.Ledgers || [];
     } catch (e) {
         const errorMessage = frontendEndpointValue ? "Error while fetching ledgers.\nMake sure frontend endpoint override is correct." : "Error while fetching ledgers.";
         enqueueSnackbar(errorMessage, {variant: "error"})
@@ -87,23 +87,32 @@ export async function deleteLedger(name: string, enqueueSnackbar: (message: Snac
     }
 }
 
-export async function getLedgerMetaData(ledgerName: string, enqueueSnackbar?: (message: SnackbarMessage, options?: OptionsObject) => SnackbarKey): Promise<LedgerInfo> {
-    if (!ledgerName) return nullLedger
+export async function getLedgerMetaData(
+    ledgerSummary: LedgerSummary,
+    enqueueSnackbar?: (message: SnackbarMessage, options?: OptionsObject) => SnackbarKey): Promise<LedgerInfo> {
+    if (!ledgerSummary.Name) {
+        return nullLedger
+    }
     let ledger: LedgerInfo;
     if (frontendEndpointValue) {
         const serviceConfigurationOptions: ClientConfiguration = {
             endpoint: frontendEndpointValue,
         };
-        ledger = await new QLDB(serviceConfigurationOptions).describeLedger({Name: ledgerName}).promise();
+        ledger = await new QLDB(serviceConfigurationOptions).describeLedger({Name: ledgerSummary.Name}).promise();
     } else {
-        ledger = await new QLDB().describeLedger({Name: ledgerName}).promise();
+        ledger = await new QLDB().describeLedger({Name: ledgerSummary.Name}).promise();
     }
-    try {
-        const result = await openLedger(ledgerName).execute("SELECT * FROM information_schema.user_tables");
-        ledger.tables = parseTableInfos(result[0].getResultList())
-    } catch (e) {
-        const errorMessage = `Unable to execute query on ledger ${ledgerName}. ${frontendEndpointValue || sessionEndpointValue ? "Make sure you have set session endpoint correctly." : ""}. ${e}`
-        enqueueSnackbar && enqueueSnackbar(errorMessage, {variant: "error"});
+
+    if (ledger.State === "ACTIVE") {
+        try {
+                const result = await openLedger(ledgerSummary.Name).execute("SELECT * FROM information_schema.user_tables");
+                ledger.tables = parseTableInfos(result[0].getResultList())
+        } catch (e) {
+            const errorMessage =
+                `Unable to execute query on ledger ${ledgerSummary.Name}. ${frontendEndpointValue || sessionEndpointValue 
+                    ? "Make sure you have set session endpoint correctly." : ""}. ${e}`
+            enqueueSnackbar && enqueueSnackbar(errorMessage, {variant: "error"});
+        }
     }
     return ledger;
 }
