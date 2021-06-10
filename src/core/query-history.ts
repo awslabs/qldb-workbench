@@ -1,9 +1,9 @@
-import {IOUsage, TimingInformation} from "amazon-qldb-driver-nodejs";
-import {Value} from "ion-js/dist/commonjs/es6/dom";
+import { IOUsage, TimingInformation } from "amazon-qldb-driver-nodejs";
+import { Value } from "ion-js/dist/commonjs/es6/dom";
 import * as fs from "fs";
 import * as readline from "readline";
 
-const HISTORY_FILE = ".qldb-quark-history";
+const HISTORY_FILE = ".qldb-workbench-history";
 
 export type QueryStats = { timingInformation: { processingTimeMilliseconds: number }; consumedIOs: { readIOs: number } };
 
@@ -23,8 +23,8 @@ export function loadHistory(setHistory: SetHistoryFn) {
 
 export function flattenQueryStats(queryStats: { timingInformation: TimingInformation[]; consumedIOs: IOUsage[] }) {
     return {
-        consumedIOs: {readIOs: queryStats.consumedIOs.reduce((acc, io) => acc + io.getReadIOs(), 0)},
-        timingInformation: {processingTimeMilliseconds: queryStats.timingInformation.reduce((acc, timeInfo) => acc + timeInfo.getProcessingTimeMilliseconds(), 0)},
+        consumedIOs: { readIOs: queryStats.consumedIOs.reduce((acc, io) => acc + io.getReadIOs(), 0) },
+        timingInformation: { processingTimeMilliseconds: queryStats.timingInformation.reduce((acc, timeInfo) => acc + timeInfo.getProcessingTimeMilliseconds(), 0) },
     };
 }
 

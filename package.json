@@ -1,5 +1,5 @@
 {
-  "name": "qldb-quark",
+  "name": "qldb-workbench",
   "version": "1.0.0",
   "description": "A cross-platform visual shell for QLDB",
   "main": "build/src/index.js",
@@ -24,14 +24,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alpian/qldb-quark.git"
+    "url": "git+https://github.com/awslabs/qldb-workbench.git"
   },
   "author": "",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/alpian/qldb-quark/issues"
+    "url": "https://github.com/awslabs/qldb-workbench/issues"
   },
-  "homepage": "https://github.com/alpian/qldb-quark#readme",
+  "homepage": "https://github.com/awslabs/qldb-workbench#readme",
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
