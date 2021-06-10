@@ -248,7 +248,7 @@ export default ({region, setRegion, darkState, setDarkState, showInactive, setSh
                     QLDB - Quark!
                 </Typography>
                 <RegionSelector/>
-                <Tooltip title={useDarkThemeIcon ? "Swith to dark mode" : "Switch to light mode"} arrow>
+                <Tooltip title={useDarkThemeIcon ? "Switch to dark mode" : "Switch to light mode"} arrow>
                     <IconButton aria-label={"Theme"} component={"span"} onClick={handleThemeChange}>
                         {useDarkThemeIcon ? <Brightness4 style={{color: "#FFFFFF"}}/> :
                             <Brightness7 style={{color: "#FFFFFF"}}/>}
