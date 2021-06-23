@@ -5,19 +5,20 @@
   "main": "build/src/index.js",
   "scripts": {
     "compile": "tsc",
+    "watch-tsc": "tsc --watch --preserveWatchOutput true",
     "bundleAssets": "cp -a assets build",
     "build": "npm run compile && npm run bundleAssets",
-    "start": "npm run build && electron build/src",
-    "watch": "concurrently \"npm run start\" npm-watch",
+    "start-electron": "electron build/src",
+    "start": "npm run build && npm run start-electron",
+    "watch": "npm run build && concurrently \"npm:start-electron\" \"npm:watch-tsc\" \"npm-watch bundleAssets\"",
     "test": "test"
   },
   "watch": {
-    "build": {
+    "bundleAssets": {
       "patterns": [
-        "src",
         "assets"
       ],
-      "extensions": "ts,tsx,html,css",
+      "extensions": "png,html,ttf,css",
       "delay": 250,
       "runOnChangeOnly": true
     }
@@ -32,15 +33,20 @@
     "url": "https://github.com/awslabs/qldb-workbench/issues"
   },
   "homepage": "https://github.com/awslabs/qldb-workbench#readme",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
+    "@types/node": "^14.14.31",
     "ace-builds": "^1.4.12",
     "amazon-qldb-driver-nodejs": "^2.1.1",
     "aws-sdk": "^2.834.0",
     "brace": "^0.11.1",
-    "electron": "^11.2.1",
+    "electron": "^13.1.4",
     "ion-js": "^4.1.0",
     "jsbi": "^3.1.4",
     "logplease": "^1.2.15",
