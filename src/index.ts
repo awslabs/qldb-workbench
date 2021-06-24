@@ -10,7 +10,7 @@ if (electronIsDev.valueOf()) {
   console.log("process.platform:", process.platform);
 }
 
-require("electron-reload")(__dirname, {
+require("electron-reload")(path.join(__dirname, ".."), {
   electron: undefined // this is deliberately not set because it causes SIGABRTs on MacOS
 });
 

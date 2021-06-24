@@ -18,6 +18,7 @@
       "patterns": [
         "assets"
       ],
+      "quiet": false,
       "extensions": "png,html,ttf,css",
       "delay": 250,
       "runOnChangeOnly": true

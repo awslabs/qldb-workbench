@@ -1,5 +1,32 @@
 body {
-  margin: 0 0;
+  margin: 0;
+}
+
+#app {
+  height: 100vh;
+
+  /* grid container settings */
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    'header'
+    'main'
+    'footer';
+}
+
+#app > header {
+  grid-area: header;
+  background-color: lightblue;
+}
+
+#app > main {
+  grid-area: main;
+  padding: 15px 5px 10px 5px;
+}
+
+#app > footer {
+  grid-area: footer;
 }
 
 .Resizer {
