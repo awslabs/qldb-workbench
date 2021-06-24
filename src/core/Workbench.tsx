@@ -5,9 +5,9 @@ function Workbench() {
     return <>
         <header>This is the header</header>
         <main>
-            <p>This is the main</p>
-            <p>More main content</p>
-            <p>Yet another paragraph with some more text and even more text</p>
+            <nav>This is the nav</nav>
+            <section>This is where the files will go</section>
+            <div id="tools">This is where the toolbox will go</div>
         </main>
         <footer>This is the footer</footer>
     </>;

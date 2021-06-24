@@ -22,11 +22,29 @@ body {
 
 #app > main {
   grid-area: main;
-  padding: 15px 5px 10px 5px;
+  overflow: auto;
+  background-color: lightcyan;
+
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: 1fr;
+  grid-template-areas: "nav section tools";
 }
 
 #app > footer {
   grid-area: footer;
+}
+
+#app > main > nav {
+  grid-area: nav;
+}
+
+#app > main > section {
+  grid-area: section;
+}
+
+#app > main > div#tools {
+  grid-area: tools;
 }
 
 .Resizer {
