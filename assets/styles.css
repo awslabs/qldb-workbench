@@ -26,9 +26,9 @@ body {
   background-color: lightcyan;
 
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 5px 1fr 5px auto;
   grid-template-rows: 1fr;
-  grid-template-areas: "nav section tools";
+  grid-template-areas: "nav lefthandle section righthandle tools";
 }
 
 #app > footer {
@@ -45,6 +45,19 @@ body {
 
 #app > main > div#tools {
   grid-area: tools;
+}
+
+#app > main > div#lefthandle {
+  grid-area: lefthandle;
+}
+
+#app > main > div#righthandle {
+  grid-area: righthandle;
+}
+
+.handle {
+  background-color: darkgray;
+  cursor: col-resize;
 }
 
 .Resizer {

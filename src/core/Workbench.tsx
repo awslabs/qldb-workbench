@@ -6,7 +6,9 @@ function Workbench() {
         <header>This is the header</header>
         <main>
             <nav>This is the nav</nav>
+            <div id="lefthandle" className="handle"/>
             <section>This is where the files will go</section>
+            <div id="righthandle" className="handle"/>
             <div id="tools">This is where the toolbox will go</div>
         </main>
         <footer>This is the footer</footer>
