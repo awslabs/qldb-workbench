@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {useCallback, useReducer} from "react";
 
-function reducer(state, action) {
+function handleDragging(state, action) {
     switch (action.type) {
         case "widthknown":
             return { ...state, startWidth: action.width };
@@ -25,7 +25,7 @@ function reducer(state, action) {
 }
 
 function useDraggableHandle(id: string, invert: boolean) {
-    const [handleState, dispatch] = useReducer(reducer, { id, invert, dragging: false });
+    const [handleState, dispatch] = useReducer(handleDragging, { id, invert, dragging: false });
     const el = useCallback(node => {
         if (node !== null) {
             dispatch({ type: "widthknown", width: node.offsetWidth });
