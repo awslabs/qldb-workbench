@@ -21,7 +21,7 @@ function reducer(state, action) {
 }
 
 function Workbench() {
-    const [leftHandleState, dispatch] = useReducer(reducer, { dragging: false, width: undefined });
+    const [leftHandleState, dispatch] = useReducer(reducer, { dragging: false });
     const navEl = useCallback(node => {
         if (node !== null) {
             dispatch({ type: "widthknown", width: node.offsetWidth });
