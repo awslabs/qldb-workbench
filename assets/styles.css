@@ -26,7 +26,7 @@ body {
   background-color: lightcyan;
 
   display: grid;
-  grid-template-columns: auto 5px 1fr 5px auto;
+  grid-template-columns: auto 3px 1fr 3px auto;
   grid-template-rows: 1fr;
   grid-template-areas: "nav lefthandle section righthandle tools";
 }
@@ -56,7 +56,7 @@ body {
 }
 
 .handle {
-  background-color: darkgray;
+  border-left: 1px solid darkgray;
   cursor: col-resize;
 }
 

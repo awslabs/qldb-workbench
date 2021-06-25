@@ -1,9 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {useCallback, useReducer, useRef} from "react";
+import {useCallback, useReducer} from "react";
 
 function reducer(state, action) {
-    console.log(state);
     switch (action.type) {
         case "widthknown":
             return { ...state, startWidth: action.width };
