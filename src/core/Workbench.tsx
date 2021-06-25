@@ -3,38 +3,53 @@ import * as ReactDOM from "react-dom";
 import {useCallback, useReducer, useRef} from "react";
 
 function reducer(state, action) {
+    console.log(state);
     switch (action.type) {
         case "widthknown":
             return { ...state, startWidth: action.width };
         case "mousedown":
             return { ...state, dragging: true, startX: action.clientX };
         case "mouseup":
+            if (!state.dragging) {
+                return state;
+            }
             return { ...state, dragging: false, startWidth: state.width };
         case "mousemove":
             if (!state.dragging) {
                 return state;
             }
-            return { ...state, currentX: action.clientX, width: state.startWidth + (action.clientX - state.startX) };
+            const delta = action.clientX - state.startX;
+            return { ...state, currentX: action.clientX, width: state.startWidth + (state.invert ? -delta : delta )};
         default:
             return state;
     }
 }
 
-function Workbench() {
-    const [leftHandleState, dispatch] = useReducer(reducer, { dragging: false });
-    const navEl = useCallback(node => {
+function useDraggableHandle(id: string, invert: boolean) {
+    const [handleState, dispatch] = useReducer(reducer, { id, invert, dragging: false });
+    const el = useCallback(node => {
         if (node !== null) {
             dispatch({ type: "widthknown", width: node.offsetWidth });
         }
     }, []);
+    return [handleState, el, dispatch];
+}
+
+function Workbench() {
+    const [leftHandleState, navEl, dispatchLeft] = useDraggableHandle("left", false);
+    const [rightHandleState, toolsEl, dispatchRight] = useDraggableHandle("right", true);
+    const dispatchBoth = (e) => {
+        dispatchLeft(e);
+        dispatchRight(e);
+    }
     return <>
         <header>This is the header</header>
-        <main style={{ userSelect: leftHandleState.dragging ? "none" : "auto" }} onMouseUp={dispatch} onMouseMove={dispatch}>
+        <main style={{ userSelect: leftHandleState.dragging || rightHandleState.dragging ? "none" : "auto" }} onMouseUp={dispatchBoth} onMouseMove={dispatchBoth}>
             <nav ref={navEl} style={{ width: leftHandleState.width + "px" }}>This is the nav</nav>
-            <div id="lefthandle" className="handle" onMouseDown={dispatch} onMouseMove={dispatch}/>
+            <div id="lefthandle" className="handle" onMouseDown={dispatchLeft} onMouseMove={dispatchLeft}/>
             <section>This is where the files will go</section>
-            <div id="righthandle" className="handle"/>
-            <div id="tools">This is where the toolbox will go</div>
+            <div id="righthandle" className="handle" onMouseDown={dispatchRight} onMouseMove={dispatchRight}/>
+            <div ref={toolsEl} id="tools" style={{ width: rightHandleState.width + "px" }}>This is where the toolbox will go</div>
         </main>
         <footer>This is the footer</footer>
     </>;
