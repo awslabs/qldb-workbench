@@ -43,6 +43,13 @@ body {
 
 #app > main > nav {
   grid-area: nav;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'nav-header'
+    'nav-section';
 }
 
 #app > main > section {
@@ -64,6 +71,50 @@ body {
 .handle {
   border-left: 1px solid darkgray;
   cursor: col-resize;
+}
+
+nav > header {
+  grid-area: nav-header;
+
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 1fr;
+  grid-template-areas: "nav-header-main nav-header-tools";
+
+  background-color: rgb(242, 243, 243);
+}
+
+.nav-header > ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+.nav-header > ul#nav-header-main {
+}
+
+.nav-header > ul#nav-header-tools {
+  display: flex;
+  justify-content: flex-end;
+}
+
+li.minimize {
+  padding: 0 0.1rem 0 0.1rem
+;
+}
+
+li.minimize:hover {
+  background-color: rgb(222, 223, 223);
+}
+
+li.minimize > hr {
+  color: dimgray;
+  border-style: solid;
+  width: 0.8rem;
+}
+
+nav > section {
+  grid-area: nav-section;
 }
 
 .Resizer {

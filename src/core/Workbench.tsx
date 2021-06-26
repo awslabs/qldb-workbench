@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {useCallback, useReducer} from "react";
+import {useCallback, useReducer, useState} from "react";
 
 function handleDragging(state, action) {
     switch (action.type) {
@@ -34,7 +34,27 @@ function useDraggableHandle(id: string, invert: boolean) {
     return [handleState, el, dispatch];
 }
 
+function NavOpen({onClosed}) {
+    return <>
+        <header className="nav-header">
+            <ul id="nav-header-main">
+            </ul>
+            <ul id="nav-header-tools">
+                <li className="minimize" onClick={onClosed}><hr/></li>
+            </ul>
+        </header>
+        <section>Nav content</section>
+    </>;
+}
+
+function NavClosed() {
+    return <>
+        <div>N</div>
+    </>;
+}
+
 function Workbench() {
+    const [navOpen, setNavOpen] = useState(true);
     const [leftHandleState, navEl, dispatchLeft] = useDraggableHandle("left", false);
     const [rightHandleState, toolsEl, dispatchRight] = useDraggableHandle("right", true);
     const dispatchBoth = (e) => {
@@ -44,7 +64,9 @@ function Workbench() {
     return <>
         <header>This is the header</header>
         <main style={{ userSelect: leftHandleState.dragging || rightHandleState.dragging ? "none" : "auto" }} onMouseUp={dispatchBoth} onMouseMove={dispatchBoth}>
-            <nav ref={navEl} style={{ width: leftHandleState.width + "px" }}>This is the nav</nav>
+            <nav ref={navEl} style={{ width: leftHandleState.width + "px" }}>{
+                navOpen ? <NavOpen onClosed={() => setNavOpen(false)}/> : <NavClosed/>
+            }</nav>
             <div id="lefthandle" className="handle" onMouseDown={dispatchLeft} onMouseMove={dispatchLeft}/>
             <section>This is where the files will go</section>
             <div id="righthandle" className="handle" onMouseDown={dispatchRight} onMouseMove={dispatchRight}/>
