@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "tsc",
     "watch-tsc": "tsc --watch --preserveWatchOutput true",
-    "bundleAssets": "cp -a assets build",
+    "bundleAssets": "cp -a assets build && cp node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff2 build",
     "build": "npm run compile && npm run bundleAssets",
     "start-electron": "electron build/src",
     "start": "npm run build && npm run start-electron",
@@ -54,6 +54,7 @@
     "ion-js": "^4.1.0",
     "jsbi": "^3.1.4",
     "logplease": "^1.2.15",
+    "material-design-icons": "^3.0.1",
     "material-ui-confirm": "^2.1.1",
     "notistack": "^1.0.3",
     "react": "^17.0.1",

@@ -1,6 +1,24 @@
 @font-face {
   font-family: "Noto Sans";
-  src:  url("NotoSans-Regular.ttf") format("truetype")
+  src:  url(NotoSans-Regular.ttf) format("truetype")
+}
+
+@font-face {
+  font-family: "Material Icons";
+  font-style: normal;
+  font-weight: 400;
+  src: url(MaterialIcons-Regular.woff2) format('woff2');
+}
+
+.material-icons {
+  font-family: "Material Icons", serif;
+  writing-mode: lr;
+  font-size: medium;
+}
+
+:root {
+  --tool-gray-plain: rgb(242, 243, 243);
+  --tool-gray-lit: rgb(232, 233, 233);
 }
 
 body {
@@ -32,7 +50,7 @@ body {
   background-color: lightcyan;
 
   display: grid;
-  grid-template-columns: auto 3px 1fr 3px auto;
+  grid-template-columns: auto auto 1fr 3px auto;
   grid-template-rows: 1fr;
   grid-template-areas: "nav lefthandle section righthandle tools";
 }
@@ -71,6 +89,7 @@ body {
 }
 
 .handle {
+  width: 3px;
   border-left: 1px solid darkgray;
   cursor: col-resize;
 }
@@ -117,6 +136,36 @@ li.minimize > hr {
 
 nav > section {
   grid-area: nav-section;
+}
+
+aside.collapsed {
+  grid-area: nav;
+  background-color: var(--tool-gray-plain);
+  font-size: small;
+}
+
+div#lefthandle.collapsed {
+  width: 0;
+  border: 0;
+}
+
+aside.collapsed > ul {
+  padding: 0 0.1rem 0 0.1rem;
+  margin: 0;
+  list-style-type: none;
+  cursor: default;
+}
+
+aside.collapsed > ul > li {
+  writing-mode: vertical-lr;
+}
+
+aside.collapsed .icon {
+  padding-bottom: 0.1rem;
+}
+
+aside.collapsed > ul > li:hover {
+  background-color: var(--tool-gray-lit);
 }
 
 .Resizer {
