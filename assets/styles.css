@@ -102,6 +102,10 @@ body {
   border-right: 1px solid darkgray;
 }
 
+#app > main > div#righthandle.collapsed {
+  border-right: 0;
+}
+
 .handle {
   width: 3px;
   cursor: col-resize;
@@ -169,13 +173,25 @@ div#tools > section {
   grid-area: tools-section;
 }
 
-aside.collapsed {
+aside.left.collapsed {
   grid-area: nav;
   background-color: var(--tool-gray-plain);
   font-size: small;
 }
 
+aside.right.collapsed {
+  grid-area: tools;
+  background-color: var(--tool-gray-plain);
+  font-size: small;
+  border-left: 1px solid darkgray;
+}
+
 div#lefthandle.collapsed {
+  width: 0;
+  border: 0;
+}
+
+div#righthandle.collapsed {
   width: 0;
   border: 0;
 }

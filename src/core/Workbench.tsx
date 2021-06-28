@@ -2,6 +2,8 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {useCallback, useEffect, useReducer, useState} from "react";
 
+const MIN_TOOL_WINDOW_WIDTH = 10;
+
 function handleDragging(state, action) {
     switch (action.type) {
         case "widthknown":
@@ -18,7 +20,8 @@ function handleDragging(state, action) {
                 return state;
             }
             const delta = action.clientX - state.startX;
-            return { ...state, currentX: action.clientX, width: state.startWidth + (state.invert ? -delta : delta )};
+            const width = state.startWidth + (state.invert ? -delta : delta );
+            return { ...state, currentX: action.clientX, width: width < MIN_TOOL_WINDOW_WIDTH ? MIN_TOOL_WINDOW_WIDTH : width};
         default:
             return state;
     }
@@ -97,7 +100,7 @@ function Nav({navEl, width, dispatchLeft}) {
         </>
         :
         <>
-            <aside className="collapsed">
+            <aside className="left collapsed">
                 <ul>
                     <li onClick={setOpen}>
                         <TextIcon name="manage_search"/><span>Browse</span>
@@ -121,14 +124,14 @@ function Tools({toolsEl, width, dispatchRight}) {
         </>
         :
         <>
-            <aside className="collapsed">
+            <aside className="right collapsed">
                 <ul>
                     <li onClick={setOpen}>
-                        <TextIcon name="manage_search"/><span>Browse</span>
+                        <TextIcon name="history"/><span>History</span>
                     </li>
                 </ul>
             </aside>
-            <div id="lefthandle" className="handle collapsed"/>
+            <div id="righthandle" className="handle collapsed"/>
         </>;
 }
 
