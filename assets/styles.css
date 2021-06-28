@@ -78,19 +78,32 @@ body {
 
 #app > main > div#tools {
   grid-area: tools;
+
+  overflow: auto;
+  margin: 0 0 0 1px;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'tools-header'
+    'tools-section';
 }
 
 #app > main > div#lefthandle {
   grid-area: lefthandle;
+
+  border-left: 1px solid darkgray;
 }
 
 #app > main > div#righthandle {
   grid-area: righthandle;
+
+  border-right: 1px solid darkgray;
 }
 
 .handle {
   width: 3px;
-  border-left: 1px solid darkgray;
   cursor: col-resize;
 }
 
@@ -100,42 +113,60 @@ nav > header {
   display: grid;
   grid-template-columns: auto auto;
   grid-template-rows: 1fr;
-  grid-template-areas: "nav-header-main nav-header-tools";
+  grid-template-areas: "tool-header-main tool-header-controls";
 
   background-color: rgb(242, 243, 243);
 }
 
-.nav-header > ul {
+div#tools > header {
+  grid-area: tools-header;
+
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 1fr;
+  grid-template-areas: "tool-header-main tool-header-controls";
+
+  background-color: rgb(242, 243, 243);
+}
+
+.tool-header > ul {
   padding: 0;
   margin: 0;
   list-style-type: none;
 }
 
-.nav-header > ul#nav-header-main {
+.tool-header > ul#tool-header-main {
+  grid-area: tool-header-main;
 }
 
-.nav-header > ul#nav-header-tools {
+.tool-header > ul#tool-header-controls {
+  grid-area: tool-header-controls;
   display: flex;
   justify-content: flex-end;
 }
 
 li.minimize {
-  padding: 0 0.1rem 0 0.1rem
-;
+  cursor: default;
+}
+
+li.minimize.chosen {
+  background-color: rgb(202, 203, 203);
+}
+
+li.minimize.chosen:hover {
+  background-color: rgb(202, 203, 203);
 }
 
 li.minimize:hover {
   background-color: rgb(222, 223, 223);
 }
 
-li.minimize > hr {
-  color: dimgray;
-  border-style: solid;
-  width: 0.8rem;
-}
-
 nav > section {
   grid-area: nav-section;
+}
+
+div#tools > section {
+  grid-area: tools-section;
 }
 
 aside.collapsed {
@@ -166,6 +197,16 @@ aside.collapsed .icon {
 
 aside.collapsed > ul > li:hover {
   background-color: var(--tool-gray-lit);
+}
+
+section.tool {
+  background-color: white;
+  padding: 0 0 0 0;
+}
+
+section.tool p {
+  margin: 0;
+  padding: 0;
 }
 
 .Resizer {

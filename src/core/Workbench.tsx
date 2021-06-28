@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {useCallback, useReducer, useState} from "react";
+import {useCallback, useEffect, useReducer, useState} from "react";
 
 function handleDragging(state, action) {
     switch (action.type) {
@@ -34,21 +34,64 @@ function useDraggableHandle(id: string, invert: boolean) {
     return [handleState, el, dispatch];
 }
 
+enum CssColor {
+    darkgray = "darkgray",
+    dimgray = "dimgray",
+    slategray = "slategray"
+}
+
+interface TextIconProps {
+    name: string;
+    color?: CssColor;
+}
+
+function TextIcon({name, color}: TextIconProps) {
+    return <span style={{color}} className="material-icons icon">{name}</span>;
+}
+
+function useToggle(initial: boolean): [boolean, () => void, () => void] {
+    const [value, setValue] = useState(initial);
+    return [
+        value,
+        () => { setValue(true) },
+        () => { setValue(false) }
+    ];
+}
+
+function useMouseUpAnywhere(onMouseUp) {
+    useEffect(() => {
+        document.addEventListener("mouseup", onMouseUp);
+        return () => document.removeEventListener("mouseup", onMouseUp);
+    }, []);
+}
+
+function Tool({close, children}) {
+    const [minimizeChosen, chooseMinimize, unchooseMinimize] = useToggle(false);
+    useMouseUpAnywhere(unchooseMinimize);
+    const chosenClass = "minimize " + (minimizeChosen ? "chosen" : "");
+    return <>
+        <header className="tool-header">
+            <ul id="tool-header-main">
+            </ul>
+            <ul id="tool-header-controls">
+                <li className={chosenClass} onClick={close} onMouseDown={chooseMinimize} onMouseUp={unchooseMinimize}>
+                    <TextIcon color={CssColor.dimgray} name="minimize"/>
+                </li>
+            </ul>
+        </header>
+        <section className="tool">
+            {children}
+        </section>
+    </>;
+}
 function Nav({navEl, width, dispatchLeft}) {
-    const [navOpen, setNavOpen] = useState(true);
-    return navOpen ?
+    const [open, setOpen, setClosed] = useToggle(true);
+    return open ?
         <>
             <nav ref={navEl} style={{width: width + "px"}}>
-                    <header className="nav-header">
-                        <ul id="nav-header-main">
-                        </ul>
-                        <ul id="nav-header-tools">
-                            <li className="minimize" onClick={() => setNavOpen(false)}>
-                                <hr/>
-                            </li>
-                        </ul>
-                    </header>
-                    <section>Nav content</section>
+                <Tool close={setClosed}>
+                    <p>This is the browse tool content</p>
+                </Tool>
             </nav>
             <div id="lefthandle" className="handle" onMouseDown={dispatchLeft} onMouseMove={dispatchLeft}/>
         </>
@@ -56,8 +99,8 @@ function Nav({navEl, width, dispatchLeft}) {
         <>
             <aside className="collapsed">
                 <ul>
-                    <li onClick={() => setNavOpen(true)}>
-                        <span className="material-icons icon">manage_search</span><span>Browse</span>
+                    <li onClick={setOpen}>
+                        <TextIcon name="manage_search"/><span>Browse</span>
                     </li>
                 </ul>
             </aside>
@@ -66,12 +109,27 @@ function Nav({navEl, width, dispatchLeft}) {
 }
 
 function Tools({toolsEl, width, dispatchRight}) {
-    return <>
-        <div id="righthandle" className="handle" onMouseDown={dispatchRight} onMouseMove={dispatchRight}/>
-        <div ref={toolsEl} id="tools" style={{width: width + "px"}}>This is where the toolbox will
-            go
-        </div>
-    </>;
+    const [open, setOpen, setClosed] = useToggle(true);
+    return open ?
+        <>
+            <div id="righthandle" className="handle" onMouseDown={dispatchRight} onMouseMove={dispatchRight}/>
+            <div ref={toolsEl} id="tools" style={{width: width + "px"}}>
+                <Tool close={setClosed}>
+                    <p>This is the history tool content</p>
+                </Tool>
+            </div>
+        </>
+        :
+        <>
+            <aside className="collapsed">
+                <ul>
+                    <li onClick={setOpen}>
+                        <TextIcon name="manage_search"/><span>Browse</span>
+                    </li>
+                </ul>
+            </aside>
+            <div id="lefthandle" className="handle collapsed"/>
+        </>;
 }
 
 function Workbench() {
