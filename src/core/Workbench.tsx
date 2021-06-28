@@ -34,12 +34,6 @@ function useDraggableHandle(id: string, invert: boolean) {
     return [handleState, el, dispatch];
 }
 
-function NavClosed() {
-    return <>
-        <div>N</div>
-    </>;
-}
-
 function Nav({navEl, width, dispatchLeft}) {
     const [navOpen, setNavOpen] = useState(true);
     return navOpen ?
@@ -71,6 +65,15 @@ function Nav({navEl, width, dispatchLeft}) {
         </>;
 }
 
+function Tools({toolsEl, width, dispatchRight}) {
+    return <>
+        <div id="righthandle" className="handle" onMouseDown={dispatchRight} onMouseMove={dispatchRight}/>
+        <div ref={toolsEl} id="tools" style={{width: width + "px"}}>This is where the toolbox will
+            go
+        </div>
+    </>;
+}
+
 function Workbench() {
     const [leftHandleState, navEl, dispatchLeft] = useDraggableHandle("left", false);
     const [rightHandleState, toolsEl, dispatchRight] = useDraggableHandle("right", true);
@@ -86,10 +89,7 @@ function Workbench() {
             onMouseMove={dispatchBoth}>
             <Nav {...{navEl, width: leftHandleState.width, dispatchLeft}} />
             <section>This is where the files will go</section>
-            <div id="righthandle" className="handle" onMouseDown={dispatchRight} onMouseMove={dispatchRight}/>
-            <div ref={toolsEl} id="tools" style={{width: rightHandleState.width + "px"}}>This is where the toolbox will
-                go
-            </div>
+            <Tools {...{toolsEl, width: rightHandleState.width, dispatchRight}} />
         </main>
         <footer>This is the footer</footer>
     </>;
