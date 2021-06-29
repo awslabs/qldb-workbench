@@ -144,6 +144,18 @@ function Breadcrumb() {
     </ul>;
 }
 
+function Editors() {
+    return <section className="editors">
+        <ul className="buffers">
+            <li>Buffer One</li>
+            <li>Buffer Two</li>
+            <li>Buffer Three</li>
+        </ul>
+        <div className="editor">This is the editor</div>
+        <div className="result">These are the results</div>
+    </section>;
+}
+
 function Workbench() {
     const [leftHandleState, navEl, dispatchLeft] = useDraggableHandle("left", false);
     const [rightHandleState, toolsEl, dispatchRight] = useDraggableHandle("right", true);
@@ -158,7 +170,7 @@ function Workbench() {
             onMouseUp={dispatchBoth}
             onMouseMove={dispatchBoth}>
             <Nav {...{navEl, width: leftHandleState.width, dispatchLeft}} />
-            <section>This is where the files will go</section>
+            <Editors />
             <Tools {...{toolsEl, width: rightHandleState.width, dispatchRight}} />
         </main>
         <footer>This is the footer</footer>

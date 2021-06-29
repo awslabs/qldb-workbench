@@ -85,6 +85,14 @@ body {
 
 #app > main > section {
   grid-area: section;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    'buffers'
+    'editor'
+    'results';
 }
 
 #app > main > div#tools {
@@ -201,14 +209,14 @@ aside.left.collapsed {
   grid-area: nav;
   background-color: var(--tool-gray-plain);
   font-size: small;
-  border-right: 1px solid darkgray;
+  border-right: 1px solid var(--tool-gray-demarcate);
 }
 
 aside.right.collapsed {
   grid-area: tools;
   background-color: var(--tool-gray-plain);
   font-size: small;
-  border-left: 1px solid darkgray;
+  border-left: 1px solid var(--tool-gray-demarcate);
 }
 
 div#lefthandle.collapsed {
@@ -276,6 +284,28 @@ header ul.breadcrumb > li {
 
 header ul.breadcrumb li.strong {
   font-weight: bold;
+}
+
+main > section > ul.buffers {
+  grid-area: buffers;
+  margin: 0 0 0 0.2rem;
+  padding: 0;
+  list-style-type: none;
+  background-color: var(--tool-gray-plain);
+}
+
+ul.buffers > li {
+  display: inline-block;
+  padding: 0 0.2rem 0 0.2rem;
+  border-right: 1px solid var(--tool-gray-demarcate);
+}
+
+main > section > div.editor {
+  grid-area: editor;
+}
+
+main > section > div.results {
+  grid-area: results;
 }
 
 .Resizer {
