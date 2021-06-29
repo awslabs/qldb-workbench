@@ -68,15 +68,16 @@ function useMouseUpAnywhere(onMouseUp) {
     }, []);
 }
 
-function Tool({close, children}) {
+function Tool({name, close, children}) {
     const [minimizeChosen, chooseMinimize, unchooseMinimize] = useToggle(false);
     useMouseUpAnywhere(unchooseMinimize);
     const chosenClass = "minimize " + (minimizeChosen ? "chosen" : "");
     return <>
         <header className="tool-header">
-            <ul id="tool-header-main">
+            <ul className="tool-header-main">
+                <li>{name}</li>
             </ul>
-            <ul id="tool-header-controls">
+            <ul className="tool-header-controls">
                 <li className={chosenClass} onClick={close} onMouseDown={chooseMinimize} onMouseUp={unchooseMinimize}>
                     <TextIcon color={CssColor.dimgray} name="minimize"/>
                 </li>
@@ -92,7 +93,7 @@ function Nav({navEl, width, dispatchLeft}) {
     return open ?
         <>
             <nav ref={navEl} style={{width: width + "px"}}>
-                <Tool close={setClosed}>
+                <Tool name="Browse" close={setClosed}>
                     <p>This is the browse tool content</p>
                 </Tool>
             </nav>
@@ -117,7 +118,7 @@ function Tools({toolsEl, width, dispatchRight}) {
         <>
             <div id="righthandle" className="handle" onMouseDown={dispatchRight} onMouseMove={dispatchRight}/>
             <div ref={toolsEl} id="tools" style={{width: width + "px"}}>
-                <Tool close={setClosed}>
+                <Tool name="History" close={setClosed}>
                     <p>This is the history tool content</p>
                 </Tool>
             </div>
