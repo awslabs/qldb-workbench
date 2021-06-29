@@ -102,8 +102,8 @@ function Nav({navEl, width, dispatchLeft}) {
         <>
             <aside className="left collapsed">
                 <ul>
-                    <li onClick={setOpen}>
-                        <TextIcon name="manage_search"/><span>Browse</span>
+                    <li className="left" onClick={setOpen}>
+                        <TextIcon name="manage_search"/><span className="left">Browse</span>
                     </li>
                 </ul>
             </aside>
@@ -126,8 +126,8 @@ function Tools({toolsEl, width, dispatchRight}) {
         <>
             <aside className="right collapsed">
                 <ul>
-                    <li onClick={setOpen}>
-                        <TextIcon name="history"/><span>History</span>
+                    <li className="right" onClick={setOpen}>
+                        <TextIcon name="history"/><span className="right">History</span>
                     </li>
                 </ul>
             </aside>

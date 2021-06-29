@@ -12,7 +12,6 @@
 
 .material-icons {
   font-family: "Material Icons", serif;
-  writing-mode: lr;
   font-size: medium;
 }
 
@@ -153,6 +152,10 @@ div#tools > header {
   justify-content: flex-end;
 }
 
+.tool-header > ul#tool-header-controls {
+  padding: 0.1rem;
+}
+
 li.minimize {
   cursor: default;
 }
@@ -202,14 +205,27 @@ div#righthandle.collapsed {
 }
 
 aside.collapsed > ul {
-  padding: 0 0.1rem 0 0.1rem;
+  padding: 0.2rem 0.1rem 0 0.1rem;
   margin: 0;
   list-style-type: none;
   cursor: default;
 }
 
 aside.collapsed > ul > li {
+  padding: 0 0 0 0;
   writing-mode: vertical-lr;
+}
+
+aside.collapsed > ul > li.left {
+  transform: rotate(-180deg);
+}
+
+aside.collapsed > ul > li.left > span.left {
+  padding: 0.1rem 0 0 0;
+}
+
+aside.collapsed > ul > li.right > span.right {
+  padding: 0.1rem 0 0 0;
 }
 
 aside.collapsed .icon {
