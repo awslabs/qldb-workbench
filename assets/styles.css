@@ -96,6 +96,10 @@ body {
   border-left: 1px solid darkgray;
 }
 
+#app > main > div#lefthandle.collapsed {
+  display: none;
+}
+
 #app > main > div#righthandle {
   grid-area: righthandle;
 
@@ -103,7 +107,7 @@ body {
 }
 
 #app > main > div#righthandle.collapsed {
-  border-right: 0;
+  display: none;
 }
 
 .handle {
@@ -177,6 +181,7 @@ aside.left.collapsed {
   grid-area: nav;
   background-color: var(--tool-gray-plain);
   font-size: small;
+  border-right: 1px solid darkgray;
 }
 
 aside.right.collapsed {
