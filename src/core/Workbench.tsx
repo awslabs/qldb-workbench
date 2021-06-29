@@ -135,6 +135,14 @@ function Tools({toolsEl, width, dispatchRight}) {
         </>;
 }
 
+function Breadcrumb() {
+    return <ul className="breadcrumb">
+        <li className="strong"><span>us-east-1</span></li>
+        <li><TextIcon name="chevron_right"/></li>
+        <li><span>LedgerOne</span></li>
+    </ul>;
+}
+
 function Workbench() {
     const [leftHandleState, navEl, dispatchLeft] = useDraggableHandle("left", false);
     const [rightHandleState, toolsEl, dispatchRight] = useDraggableHandle("right", true);
@@ -143,7 +151,7 @@ function Workbench() {
         dispatchRight(e);
     }
     return <>
-        <header>This is the header</header>
+        <header><Breadcrumb /></header>
         <main
             style={{userSelect: leftHandleState.dragging || rightHandleState.dragging ? "none" : "auto"}}
             onMouseUp={dispatchBoth}
