@@ -61,7 +61,7 @@ body {
   background-color: lightcyan;
 
   display: grid;
-  grid-template-columns: auto auto 1fr 3px auto;
+  grid-template-columns: auto auto 1fr auto auto;
   grid-template-rows: 1fr;
   grid-template-areas: "nav lefthandle section righthandle tools";
 }
@@ -88,10 +88,11 @@ body {
 
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr auto auto;
   grid-template-areas:
     'buffers'
     'editor'
+    'buttomhandle'
     'results';
 }
 
@@ -222,7 +223,7 @@ aside.buttom.collapsed {
   grid-area: results;
   background-color: var(--tool-gray-plain);
   font-size: small;
-  border-left: 1px solid var(--tool-gray-demarcate);
+  border-top: 1px solid var(--tool-gray-demarcate);
 }
 
 div#lefthandle.collapsed {
@@ -231,6 +232,11 @@ div#lefthandle.collapsed {
 }
 
 div#righthandle.collapsed {
+  width: 0;
+  border: 0;
+}
+
+div#buttomhandle.collapsed {
   width: 0;
   border: 0;
 }

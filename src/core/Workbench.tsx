@@ -176,7 +176,7 @@ function Result() {
     const [ButtomHandleState, resultEl, dispatchButtom] = useDraggableHandle("buttom", true);
     return open ?
         <>
-            <div id="righthandle" className="handle" onMouseDown={dispatchButtom} onMouseMove={dispatchButtom}/>
+            <div id="buttomhandle" className="handle" onMouseDown={dispatchButtom} onMouseMove={dispatchButtom}/>
             <div ref={resultEl} id="tools" style={{width: ButtomHandleState.width + "px"}}>
                 <Tool name="Results" close={setClosed}>
                     <p>These are the results</p>
@@ -185,14 +185,14 @@ function Result() {
         </>
         :
         <>
-            <aside className="right collapsed">
+            <aside className="buttom collapsed">
                 <ul>
-                    <li className="right" onClick={setOpen}>
-                        <TextIcon name="result"/><span className="right">Results</span>
+                    <li className="buttom" onClick={setOpen}>
+                        <TextIcon name="add"/><span className="buttom">Results</span>
                     </li>
                 </ul>
             </aside>
-            <div id="righthandle" className="handle collapsed"/>
+            <div id="buttomhandle" className="handle collapsed"/>
         </>;
 
 }
