@@ -100,7 +100,7 @@ body {
   grid-area: tools;
 
   overflow: auto;
-  margin: 0 0 0 1px;
+  margin: 0 0 0 0;
 
   display: grid;
   grid-template-columns: 1fr;
