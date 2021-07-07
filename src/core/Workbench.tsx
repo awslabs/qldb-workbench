@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {useCallback, useEffect, useReducer, useState} from "react";
+import AceEditor from 'react-ace';
 
 const MIN_TOOL_WINDOW_WIDTH = 10;
 
@@ -147,13 +148,53 @@ function Breadcrumb() {
 function Editors() {
     return <section className="editors">
         <ul className="buffers">
-            <li>Buffer One</li>
-            <li>Buffer Two</li>
-            <li>Buffer Three</li>
+            <li><Button name="Buffer One"/></li>
+            <li><Button name="Buffer Two"/></li>
+            <li><Button name="Buffer Three"/></li>
         </ul>
-        <div className="editor">This is the editor</div>
-        <div className="result">These are the results</div>
+        <AceEditor />
+        <div><Result /></div>
     </section>;
+}
+
+function Button({name}) {
+  const [isOpen, setIsOpen] = React.useState(true); 
+  const onClickBufferCloseButton = () => setIsOpen(false);
+
+  return <li>
+            <div className={isOpen ? 'button-opened' : 'button-closed'}>
+              {name}
+              <button className="close" onClick={onClickBufferCloseButton}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </li>
+}
+
+function Result() {
+    const [open, setOpen, setClosed] = useToggle(true);
+    const [ButtomHandleState, resultEl, dispatchButtom] = useDraggableHandle("buttom", true);
+    return open ?
+        <>
+            <div id="righthandle" className="handle" onMouseDown={dispatchButtom} onMouseMove={dispatchButtom}/>
+            <div ref={resultEl} id="tools" style={{width: ButtomHandleState.width + "px"}}>
+                <Tool name="Results" close={setClosed}>
+                    <p>These are the results</p>
+                </Tool>
+            </div>
+        </>
+        :
+        <>
+            <aside className="right collapsed">
+                <ul>
+                    <li className="right" onClick={setOpen}>
+                        <TextIcon name="result"/><span className="right">Results</span>
+                    </li>
+                </ul>
+            </aside>
+            <div id="righthandle" className="handle collapsed"/>
+        </>;
+
 }
 
 function Workbench() {
@@ -176,5 +217,6 @@ function Workbench() {
         <footer>This is the footer</footer>
     </>;
 }
+
 
 ReactDOM.render(<Workbench />, document.getElementById("app"));

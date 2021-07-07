@@ -130,7 +130,6 @@ body {
 }
 
 .handle {
-  width: 3px;
   cursor: col-resize;
 }
 
@@ -219,6 +218,13 @@ aside.right.collapsed {
   border-left: 1px solid var(--tool-gray-demarcate);
 }
 
+aside.buttom.collapsed {
+  grid-area: results;
+  background-color: var(--tool-gray-plain);
+  font-size: small;
+  border-left: 1px solid var(--tool-gray-demarcate);
+}
+
 div#lefthandle.collapsed {
   width: 0;
   border: 0;
@@ -288,7 +294,7 @@ header ul.breadcrumb li.strong {
 
 main > section > ul.buffers {
   grid-area: buffers;
-  margin: 0 0 0 0.2rem;
+  margin: 0 0 0 0;
   padding: 0;
   list-style-type: none;
   background-color: var(--tool-gray-plain);
@@ -383,4 +389,8 @@ main > section > div.results {
 .query-history .MuiTypography-body2 {
   font-family: "Courier New", serif;
   font-size: 8pt;
+}
+
+.button-closed {
+  display: none;
 }
