@@ -400,3 +400,7 @@ main > section > div.results {
 .button-closed {
   display: none;
 }
+
+.close {
+  border:rgba(0, 0, 0, 0.5);
+}

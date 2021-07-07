@@ -179,7 +179,12 @@ function Result() {
             <div id="buttomhandle" className="handle" onMouseDown={dispatchButtom} onMouseMove={dispatchButtom}/>
             <div ref={resultEl} id="tools" style={{width: ButtomHandleState.width + "px"}}>
                 <Tool name="Results" close={setClosed}>
-                    <p>These are the results</p>
+                    <p>These are the results.</p>
+                    <p>These are the results.</p>
+                    <p>These are the results.</p>
+                    <p>These are the results.</p>
+                    <p>These are the results.</p>
+                    <p>These are the results.</p>
                 </Tool>
             </div>
         </>
