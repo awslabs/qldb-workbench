@@ -152,7 +152,7 @@ function Editors() {
             <li><Button name="Buffer Two"/></li>
             <li><Button name="Buffer Three"/></li>
         </ul>
-        <AceEditor />
+        <AceEditor width="100%" height="100%" />
         <div><Result /></div>
     </section>;
 }
