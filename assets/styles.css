@@ -3,6 +3,24 @@
   src:  url(NotoSans-Regular.ttf) format("truetype")
 }
 
+:root {
+  --tool-gray-plain: rgb(242, 243, 243);
+  --tool-gray-demarcate: rgb(212, 213, 213);
+  --tool-gray-lit: rgb(232, 233, 233);
+}
+
+body[data-theme="light"] {
+  --tool-gray-plain: rgb(242, 243, 243);
+  --tool-gray-demarcate: rgb(212, 213, 213);
+  --tool-gray-lit: rgb(232, 233, 233);
+}
+
+body[data-theme="dark"] {
+  --tool-gray-plain: black;
+  --tool-gray-demarcate: black;
+  --tool-gray-lit: black;
+}
+
 @font-face {
   font-family: "Material Icons";
   font-style: normal;
@@ -22,12 +40,6 @@
   white-space: nowrap;
   direction: ltr;
   vertical-align: bottom;
-}
-
-:root {
-  --tool-gray-plain: rgb(242, 243, 243);
-  --tool-gray-demarcate: rgb(212, 213, 213);
-  --tool-gray-lit: rgb(232, 233, 233);
 }
 
 body {
