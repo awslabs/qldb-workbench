@@ -209,7 +209,7 @@ function Result({resultsEl, height, dispatchButtom}) {
     return open ?
         <>
             <div id="buttomhandle" className="resultshandle" onMouseDown={dispatchButtom} onMouseMove={dispatchButtom}/>
-            <div ref={resultsEl} id="tools" style={{height: height + "px"}}>
+            <div ref={resultsEl} id="results" style={{height: height + "px"}}>
                 <Tool name="Results" close={setClosed}>
                     <p>These are the results.</p>
                     <p>These are the results.</p>

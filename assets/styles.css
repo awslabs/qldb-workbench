@@ -159,7 +159,7 @@ main > section > div.results {
   overflow: auto;
 }
 
-main > section > div#tools {
+main > section > div#results {
   background-color: white;
 }
 
@@ -206,6 +206,17 @@ main > section > div#tools {
 }
 
 div#tools > header {
+  grid-area: tools-header;
+
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 1fr;
+  grid-template-areas: "tool-header-main tool-header-controls";
+
+  background-color: rgb(242, 243, 243);
+}
+
+div#results > header {
   grid-area: tools-header;
 
   display: grid;
@@ -293,7 +304,7 @@ div#righthandle.collapsed {
 }
 
 div#buttomhandle.collapsed {
-  width: 0;
+  width: 3px;
   border: 0;
 }
 
@@ -311,6 +322,7 @@ aside.collapsed > ul > li {
 
 aside.collapsed > ul > li.buttom{
   padding: 0 0 0 0;
+  margin-right: 600px;
   writing-mode: horizontal-tb;
 }
 
