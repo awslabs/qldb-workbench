@@ -142,16 +142,13 @@ main > section > div.editor {
   overflow: auto;
 }
 
-#app > main > section > div#buttomhandle {
+#app > main > section > div#buttomhandle.resultshandle {
   grid-area: buttomhandle;
-
   border-bottom: 3px solid var(--tool-gray-demarcate);
-  
 }
 
 #app > main > div#buttomhandle.collapsed {
   display: none;
-  
 }
 
 main > section > div.results {
@@ -304,7 +301,7 @@ div#righthandle.collapsed {
 }
 
 div#buttomhandle.collapsed {
-  width: 3px;
+  width: 0;
   border: 0;
 }
 
