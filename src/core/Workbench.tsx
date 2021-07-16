@@ -145,7 +145,7 @@ function Breadcrumb() {
     </ul>;
 }
 
-function Editors() {
+function Editors({resultsEl, width, dispatchButtom}) {
     return <section className="editors">
         <ul className="buffers">
             <li><Button name="Buffer One"/></li>
@@ -153,7 +153,7 @@ function Editors() {
             <li><Button name="Buffer Three"/></li>
         </ul>
         <AceEditor width="100%" height="100%" />
-        <div><Result /></div>
+        <Result {...{resultsEl, width: width, dispatchButtom}}/>
     </section>;
 }
 
@@ -171,14 +171,15 @@ function Button({name}) {
           </li>
 }
 
-function Result() {
+function Result({resultsEl, width, dispatchButtom}) {
     const [open, setOpen, setClosed] = useToggle(true);
-    const [ButtomHandleState, resultEl, dispatchButtom] = useDraggableHandle("buttom", true);
     return open ?
         <>
-            <div id="buttomhandle" className="handle" onMouseDown={dispatchButtom} onMouseMove={dispatchButtom}/>
-            <div ref={resultEl} id="tools" style={{width: ButtomHandleState.width + "px"}}>
+            <div id="buttomhandle" className="resultshandle" onMouseDown={dispatchButtom} onMouseMove={dispatchButtom}/>
+            <div ref={resultsEl} id="tools" style={{height: width + "px"}}>
                 <Tool name="Results" close={setClosed}>
+                    <p>These are the results.</p>
+                    <p>These are the results.</p>
                     <p>These are the results.</p>
                     <p>These are the results.</p>
                     <p>These are the results.</p>
@@ -193,7 +194,7 @@ function Result() {
             <aside className="buttom collapsed">
                 <ul>
                     <li className="buttom" onClick={setOpen}>
-                        <TextIcon name="add"/><span className="buttom">Results</span>
+                        <TextIcon name="zoom_in"/><span className="buttom">Results</span>
                     </li>
                 </ul>
             </aside>
@@ -205,18 +206,20 @@ function Result() {
 function Workbench() {
     const [leftHandleState, navEl, dispatchLeft] = useDraggableHandle("left", false);
     const [rightHandleState, toolsEl, dispatchRight] = useDraggableHandle("right", true);
+    const [buttomHandleState, resultsEl, dispatchButtom] = useDraggableHandle("buttom", true);
     const dispatchBoth = (e) => {
         dispatchLeft(e);
         dispatchRight(e);
+        dispatchButtom(e);
     }
     return <>
         <header><Breadcrumb /></header>
         <main
-            style={{userSelect: leftHandleState.dragging || rightHandleState.dragging ? "none" : "auto"}}
+            style={{userSelect: leftHandleState.dragging || rightHandleState.dragging || buttomHandleState.dragging? "none" : "auto"}}
             onMouseUp={dispatchBoth}
             onMouseMove={dispatchBoth}>
             <Nav {...{navEl, width: leftHandleState.width, dispatchLeft}} />
-            <Editors />
+            <Editors {...{resultsEl, width: buttomHandleState.width, dispatchButtom}}/>
             <Tools {...{toolsEl, width: rightHandleState.width, dispatchRight}} />
         </main>
         <footer>This is the footer</footer>

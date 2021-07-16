@@ -69,7 +69,7 @@ body {
 
 #app > main {
   grid-area: main;
-  overflow: auto;
+  overflow: hidden;
   background-color: lightcyan;
 
   display: grid;
@@ -95,6 +95,21 @@ body {
     'nav-section';
 }
 
+nav > header {
+  grid-area: nav-header;
+
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 1fr;
+  grid-template-areas: "tool-header-main tool-header-controls";
+
+  background-color: var(--tool-gray-plain);
+}
+
+nav > section {
+  grid-area: nav-section;
+}
+
 #app > main > section {
   grid-area: section;
 
@@ -106,6 +121,44 @@ body {
     'editor'
     'buttomhandle'
     'results';
+}
+
+main > section > ul.buffers {
+  grid-area: buffers;
+  margin: 0 0 0 0;
+  padding: 0;
+  list-style-type: none;
+  background-color: var(--tool-gray-plain);
+}
+
+ul.buffers > li {
+  display: inline-block;
+  padding: 0 0.2rem 0 0.2rem;
+  border-right: 1px solid var(--tool-gray-demarcate);
+}
+
+main > section > div.editor {
+  grid-area: editor;
+  overflow: auto;
+}
+
+#app > main > section > div#buttomhandle {
+  grid-area: buttomhandle;
+
+  border-bottom: 10px solid var(--tool-gray-demarcate);
+}
+
+#app > main > div#buttomhandle.collapsed {
+  display: none;
+}
+
+main > section > div.results {
+  grid-area: results;
+  overflow: auto;
+}
+
+main > section > div#tools {
+  background-color: white;
 }
 
 #app > main > div#tools {
@@ -146,15 +199,8 @@ body {
   cursor: col-resize;
 }
 
-nav > header {
-  grid-area: nav-header;
-
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-template-rows: 1fr;
-  grid-template-areas: "tool-header-main tool-header-controls";
-
-  background-color: var(--tool-gray-plain);
+.resultshandle {
+  cursor: row-resize;
 }
 
 div#tools > header {
@@ -209,10 +255,6 @@ li.minimize:hover {
   background-color: rgb(222, 223, 223);
 }
 
-nav > section {
-  grid-area: nav-section;
-}
-
 div#tools > section {
   grid-area: tools-section;
 }
@@ -265,6 +307,11 @@ aside.collapsed > ul > li {
   writing-mode: vertical-lr;
 }
 
+aside.collapsed > ul > li.buttom{
+  padding: 0 0 0 0;
+  writing-mode: horizontal-tb;
+}
+
 aside.collapsed > ul > li.left {
   transform: rotate(-180deg);
 }
@@ -308,28 +355,6 @@ header ul.breadcrumb > li {
 
 header ul.breadcrumb li.strong {
   font-weight: bold;
-}
-
-main > section > ul.buffers {
-  grid-area: buffers;
-  margin: 0 0 0 0;
-  padding: 0;
-  list-style-type: none;
-  background-color: var(--tool-gray-plain);
-}
-
-ul.buffers > li {
-  display: inline-block;
-  padding: 0 0.2rem 0 0.2rem;
-  border-right: 1px solid var(--tool-gray-demarcate);
-}
-
-main > section > div.editor {
-  grid-area: editor;
-}
-
-main > section > div.results {
-  grid-area: results;
 }
 
 .Resizer {
