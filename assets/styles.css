@@ -145,7 +145,7 @@ main > section > div.editor {
 #app > main > section > div#buttomhandle {
   grid-area: buttomhandle;
 
-  border-bottom: 1.5px solid var(--tool-gray-demarcate);
+  border-bottom: 3px solid var(--tool-gray-demarcate);
   
 }
 
@@ -180,7 +180,7 @@ main > section > div#tools {
 #app > main > div#lefthandle {
   grid-area: lefthandle;
 
-  border-left: 1.5px solid var(--tool-gray-demarcate);
+  border-left: 3px solid var(--tool-gray-demarcate);
 }
 
 #app > main > div#lefthandle.collapsed {
@@ -190,7 +190,7 @@ main > section > div#tools {
 #app > main > div#righthandle {
   grid-area: righthandle;
 
-  border-right: 1.5px solid var(--tool-gray-demarcate);
+  border-right: 3px solid var(--tool-gray-demarcate);
 }
 
 #app > main > div#righthandle.collapsed {
