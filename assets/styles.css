@@ -145,7 +145,7 @@ main > section > div.editor {
 #app > main > section > div#buttomhandle {
   grid-area: buttomhandle;
 
-  border-bottom: 10px solid var(--tool-gray-demarcate);
+  border-bottom: 1px solid var(--tool-gray-demarcate);
 }
 
 #app > main > div#buttomhandle.collapsed {

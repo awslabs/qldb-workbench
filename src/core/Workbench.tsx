@@ -5,7 +5,7 @@ import AceEditor from 'react-ace';
 
 const MIN_TOOL_WINDOW_WIDTH = 10;
 
-function handleDragging(state, action) {
+function handleWidthDragging(state, action) {
     switch (action.type) {
         case "widthknown":
             return { ...state, startWidth: action.width };
@@ -28,14 +28,47 @@ function handleDragging(state, action) {
     }
 }
 
-function useDraggableHandle(id: string, invert: boolean) {
-    const [handleState, dispatch] = useReducer(handleDragging, { id, invert, dragging: false });
-    const el = useCallback(node => {
+function handleHeightDragging(state, action) {
+  switch (action.type) {
+      case "heightknown":
+          return { ...state, startHeight: action.height };
+      case "mousedown":
+          return { ...state, dragging: true, startX: action.clientX };
+      case "mouseup":
+          if (!state.dragging) {
+              return state;
+          }
+          return { ...state, dragging: false, startHeight: state.height };
+      case "mousemove":
+          if (!state.dragging) {
+              return state;
+          }
+          const delta = action.clientX - state.startX;
+          const height = state.startHeight + (state.invert ? -delta : delta );
+          return { ...state, currentX: action.clientX, height: height < MIN_TOOL_WINDOW_WIDTH ? MIN_TOOL_WINDOW_WIDTH : height};
+      default:
+          return state;
+  }
+}
+
+function useWidthDraggableHandle(id: string, invert: boolean) {
+  const [handleState, dispatch] = useReducer(handleWidthDragging, { id, invert, dragging: false });    
+  const el = useCallback(node => {
         if (node !== null) {
             dispatch({ type: "widthknown", width: node.offsetWidth });
         }
     }, []);
     return [handleState, el, dispatch];
+}
+
+function useHeightDraggableHandle(id: string, invert: boolean) {
+  const [handleState, dispatch] = useReducer(handleHeightDragging, { id, invert, dragging: false });
+  const el = useCallback(node => {
+      if (node !== null) {
+          dispatch({ type: "heightknown", height: node.offsetHeight });
+      }
+  }, []);
+  return [handleState, el, dispatch];
 }
 
 enum CssColor {
@@ -145,7 +178,7 @@ function Breadcrumb() {
     </ul>;
 }
 
-function Editors({resultsEl, width, dispatchButtom}) {
+function Editors({resultsEl, height, dispatchButtom}) {
     return <section className="editors">
         <ul className="buffers">
             <li><Button name="Buffer One"/></li>
@@ -153,7 +186,7 @@ function Editors({resultsEl, width, dispatchButtom}) {
             <li><Button name="Buffer Three"/></li>
         </ul>
         <AceEditor width="100%" height="100%" />
-        <Result {...{resultsEl, width: width, dispatchButtom}}/>
+        <Result {...{resultsEl, height: height, dispatchButtom}}/>
     </section>;
 }
 
@@ -171,12 +204,12 @@ function Button({name}) {
           </li>
 }
 
-function Result({resultsEl, width, dispatchButtom}) {
+function Result({resultsEl, height, dispatchButtom}) {
     const [open, setOpen, setClosed] = useToggle(true);
     return open ?
         <>
             <div id="buttomhandle" className="resultshandle" onMouseDown={dispatchButtom} onMouseMove={dispatchButtom}/>
-            <div ref={resultsEl} id="tools" style={{height: width + "px"}}>
+            <div ref={resultsEl} id="tools" style={{height: height + "px"}}>
                 <Tool name="Results" close={setClosed}>
                     <p>These are the results.</p>
                     <p>These are the results.</p>
@@ -204,9 +237,9 @@ function Result({resultsEl, width, dispatchButtom}) {
 }
 
 function Workbench() {
-    const [leftHandleState, navEl, dispatchLeft] = useDraggableHandle("left", false);
-    const [rightHandleState, toolsEl, dispatchRight] = useDraggableHandle("right", true);
-    const [buttomHandleState, resultsEl, dispatchButtom] = useDraggableHandle("buttom", true);
+    const [leftHandleState, navEl, dispatchLeft] = useWidthDraggableHandle("left", false);
+    const [rightHandleState, toolsEl, dispatchRight] = useWidthDraggableHandle("right", true);
+    const [buttomHandleState, resultsEl, dispatchButtom] = useHeightDraggableHandle("buttom", true);
     const dispatchBoth = (e) => {
         dispatchLeft(e);
         dispatchRight(e);
@@ -219,7 +252,7 @@ function Workbench() {
             onMouseUp={dispatchBoth}
             onMouseMove={dispatchBoth}>
             <Nav {...{navEl, width: leftHandleState.width, dispatchLeft}} />
-            <Editors {...{resultsEl, width: buttomHandleState.width, dispatchButtom}}/>
+            <Editors {...{resultsEl, height: buttomHandleState.height, dispatchButtom}}/>
             <Tools {...{toolsEl, width: rightHandleState.width, dispatchRight}} />
         </main>
         <footer>This is the footer</footer>
