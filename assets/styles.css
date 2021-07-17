@@ -319,7 +319,7 @@ aside.collapsed > ul > li {
 
 aside.collapsed > ul > li.buttom{
   padding: 0 0 0 0;
-  margin-right: 600px;
+  margin: auto 90% auto auto;
   writing-mode: horizontal-tb;
 }
 

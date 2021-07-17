@@ -4,6 +4,7 @@ import {useCallback, useEffect, useReducer, useState} from "react";
 import AceEditor from 'react-ace';
 
 const MIN_TOOL_WINDOW_WIDTH = 10;
+const MIN_TOOL_WINDOW_HEIGHT = 10;
 
 function handleWidthDragging(state, action) {
     switch (action.type) {
@@ -43,9 +44,9 @@ function handleHeightDragging(state, action) {
           if (!state.dragging) {
               return state;
           }
-          const delta = action.clientX - state.startX;
+          const delta = action.clientY - state.startX;
           const height = state.startHeight + (state.invert ? -delta : delta );
-          return { ...state, currentX: action.clientX, height: height < MIN_TOOL_WINDOW_WIDTH ? MIN_TOOL_WINDOW_WIDTH : height};
+          return { ...state, currentY: action.clientY, height: height < MIN_TOOL_WINDOW_HEIGHT ? MIN_TOOL_WINDOW_HEIGHT : height};
       default:
           return state;
   }
@@ -240,7 +241,7 @@ function Workbench() {
     const [leftHandleState, navEl, dispatchLeft] = useWidthDraggableHandle("left", false);
     const [rightHandleState, toolsEl, dispatchRight] = useWidthDraggableHandle("right", true);
     const [buttomHandleState, resultsEl, dispatchButtom] = useHeightDraggableHandle("buttom", true);
-    const dispatchBoth = (e) => {
+    const dispatchAll = (e) => {
         dispatchLeft(e);
         dispatchRight(e);
         dispatchButtom(e);
@@ -249,8 +250,8 @@ function Workbench() {
         <header><Breadcrumb /></header>
         <main
             style={{userSelect: leftHandleState.dragging || rightHandleState.dragging || buttomHandleState.dragging? "none" : "auto"}}
-            onMouseUp={dispatchBoth}
-            onMouseMove={dispatchBoth}>
+            onMouseUp={dispatchAll}
+            onMouseMove={dispatchAll}>
             <Nav {...{navEl, width: leftHandleState.width, dispatchLeft}} />
             <Editors {...{resultsEl, height: buttomHandleState.height, dispatchButtom}}/>
             <Tools {...{toolsEl, width: rightHandleState.width, dispatchRight}} />
