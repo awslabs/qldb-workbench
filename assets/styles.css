@@ -119,7 +119,7 @@ nav > section {
   grid-template-areas:
     'buffers'
     'editor'
-    'buttomhandle'
+    'bottomhandle'
     'results';
 }
 
@@ -140,14 +140,20 @@ ul.buffers > li {
 main > section > div.editor {
   grid-area: editor;
   overflow: auto;
+  padding: 0 0.2px 0.2px 0;
 }
 
-#app > main > section > div#buttomhandle.resultshandle {
-  grid-area: buttomhandle;
+#app > main > section > div#bottomhandle.resultshandle {
+  grid-area: bottomhandle;
+  border-bottom: 1px solid var(--tool-gray-demarcate);
+}
+
+#app > main > section > div#bottomhandle.resultshandle:hover {
+  grid-area: bottomhandle;
   border-bottom: 3px solid var(--tool-gray-demarcate);
 }
 
-#app > main > div#buttomhandle.collapsed {
+#app > main > div#bottomhandle.collapsed {
   display: none;
 }
 
@@ -177,6 +183,11 @@ main > section > div#results {
 #app > main > div#lefthandle {
   grid-area: lefthandle;
 
+  border-left: 1px solid var(--tool-gray-demarcate);
+}
+
+#app > main > div#lefthandle:hover {
+  grid-area: lefthandle;
   border-left: 3px solid var(--tool-gray-demarcate);
 }
 
@@ -187,6 +198,11 @@ main > section > div#results {
 #app > main > div#righthandle {
   grid-area: righthandle;
 
+  border-right: 1px solid var(--tool-gray-demarcate);
+}
+
+#app > main > div#righthandle:hover {
+  grid-area: righthandle;
   border-right: 3px solid var(--tool-gray-demarcate);
 }
 
@@ -283,7 +299,7 @@ aside.right.collapsed {
   border-left: 1px solid var(--tool-gray-demarcate);
 }
 
-aside.buttom.collapsed {
+aside.bottom.collapsed {
   grid-area: results;
   background-color: var(--tool-gray-plain);
   font-size: small;
@@ -300,7 +316,7 @@ div#righthandle.collapsed {
   border: 0;
 }
 
-div#buttomhandle.collapsed {
+div#bottomhandle.collapsed {
   width: 0;
   border: 0;
 }
@@ -317,7 +333,7 @@ aside.collapsed > ul > li {
   writing-mode: vertical-lr;
 }
 
-aside.collapsed > ul > li.buttom{
+aside.collapsed > ul > li.bottom{
   padding: 0 0 0 0;
   margin: auto 90% auto auto;
   writing-mode: horizontal-tb;

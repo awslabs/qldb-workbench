@@ -34,7 +34,7 @@ function handleHeightDragging(state, action) {
       case "heightknown":
           return { ...state, startHeight: action.height };
       case "mousedown":
-          return { ...state, dragging: true, startX: action.clientX };
+          return { ...state, dragging: true, startY: action.clientY };
       case "mouseup":
           if (!state.dragging) {
               return state;
@@ -44,7 +44,7 @@ function handleHeightDragging(state, action) {
           if (!state.dragging) {
               return state;
           }
-          const delta = action.clientY - state.startX;
+          const delta = action.clientY - state.startY;
           const height = state.startHeight + (state.invert ? -delta : delta );
           return { ...state, currentY: action.clientY, height: height < MIN_TOOL_WINDOW_HEIGHT ? MIN_TOOL_WINDOW_HEIGHT : height};
       default:
@@ -179,15 +179,17 @@ function Breadcrumb() {
     </ul>;
 }
 
-function Editors({resultsEl, height, dispatchButtom}) {
+function Editors({resultsEl, height, dispatchBottom}) {
     return <section className="editors">
         <ul className="buffers">
             <li><Button name="Buffer One"/></li>
             <li><Button name="Buffer Two"/></li>
             <li><Button name="Buffer Three"/></li>
         </ul>
-        <AceEditor width="100%" height="100%" />
-        <Result {...{resultsEl, height: height, dispatchButtom}}/>
+        <div className="editor">
+          <AceEditor width="100%" height="100%" />
+        </div>
+        <Result {...{resultsEl, height: height, dispatchBottom}}/>
     </section>;
 }
 
@@ -196,20 +198,20 @@ function Button({name}) {
   const onClickBufferCloseButton = () => setIsOpen(false);
 
   return <li>
-            <div className={isOpen ? 'button-opened' : 'button-closed'}>
-              {name}
-              <button className="close" onClick={onClickBufferCloseButton}>
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          </li>
+          <div className={isOpen ? 'button-opened' : 'button-closed'}>
+            {name}
+            <button className="close" onClick={onClickBufferCloseButton}>
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </li>
 }
 
-function Result({resultsEl, height, dispatchButtom}) {
+function Result({resultsEl, height, dispatchBottom}) {
     const [open, setOpen, setClosed] = useToggle(true);
     return open ?
         <>
-            <div id="buttomhandle" className="resultshandle" onMouseDown={dispatchButtom} onMouseMove={dispatchButtom}/>
+            <div id="bottomhandle" className="resultshandle" onMouseDown={dispatchBottom} onMouseMove={dispatchBottom}/>
             <div ref={resultsEl} id="results" style={{height: height + "px"}}>
                 <Tool name="Results" close={setClosed}>
                     <p>These are the results.</p>
@@ -225,14 +227,14 @@ function Result({resultsEl, height, dispatchButtom}) {
         </>
         :
         <>
-            <aside className="buttom collapsed">
+            <aside className="bottom collapsed">
                 <ul>
-                    <li className="buttom" onClick={setOpen}>
-                        <TextIcon name="zoom_in"/><span className="buttom">Results</span>
+                    <li className="bottom" onClick={setOpen}>
+                        <TextIcon name="zoom_in"/><span className="bottom">Results</span>
                     </li>
                 </ul>
             </aside>
-            <div id="buttomhandle" className="handle collapsed"/>
+            <div id="bottomhandle" className="handle collapsed"/>
         </>;
 
 }
@@ -240,20 +242,20 @@ function Result({resultsEl, height, dispatchButtom}) {
 function Workbench() {
     const [leftHandleState, navEl, dispatchLeft] = useWidthDraggableHandle("left", false);
     const [rightHandleState, toolsEl, dispatchRight] = useWidthDraggableHandle("right", true);
-    const [buttomHandleState, resultsEl, dispatchButtom] = useHeightDraggableHandle("buttom", true);
+    const [bottomHandleState, resultsEl, dispatchBottom] = useHeightDraggableHandle("bottom", true);
     const dispatchAll = (e) => {
         dispatchLeft(e);
         dispatchRight(e);
-        dispatchButtom(e);
+        dispatchBottom(e);
     }
     return <>
         <header><Breadcrumb /></header>
         <main
-            style={{userSelect: leftHandleState.dragging || rightHandleState.dragging || buttomHandleState.dragging? "none" : "auto"}}
+            style={{userSelect: leftHandleState.dragging || rightHandleState.dragging || bottomHandleState.dragging? "none" : "auto"}}
             onMouseUp={dispatchAll}
             onMouseMove={dispatchAll}>
             <Nav {...{navEl, width: leftHandleState.width, dispatchLeft}} />
-            <Editors {...{resultsEl, height: buttomHandleState.height, dispatchButtom}}/>
+            <Editors {...{resultsEl, height: bottomHandleState.height, dispatchBottom}}/>
             <Tools {...{toolsEl, width: rightHandleState.width, dispatchRight}} />
         </main>
         <footer>This is the footer</footer>
