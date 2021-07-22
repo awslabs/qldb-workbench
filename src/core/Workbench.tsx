@@ -16,6 +16,9 @@ function handleWidthDragging(state, action) {
             if (!state.dragging) {
                 return state;
             }
+            if (typeof(state.width) === "undefined") {
+              return { ...state, dragging: false, startWidth: state.startWidth };
+            }
             return { ...state, dragging: false, startWidth: state.width };
         case "mousemove":
             if (!state.dragging) {
@@ -38,6 +41,9 @@ function handleHeightDragging(state, action) {
       case "mouseup":
           if (!state.dragging) {
               return state;
+          }
+          if (typeof(state.height) === "undefined") {
+            return { ...state, dragging: false, startHeight: state.startHeight };
           }
           return { ...state, dragging: false, startHeight: state.height };
       case "mousemove":

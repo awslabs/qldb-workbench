@@ -150,7 +150,7 @@ main > section > div.editor {
 
 #app > main > section > div#bottomhandle.resultshandle:hover {
   grid-area: bottomhandle;
-  border-bottom: 3px solid var(--tool-gray-demarcate);
+  border-bottom: 5px solid var(--tool-gray-demarcate);
 }
 
 #app > main > div#bottomhandle.collapsed {
@@ -188,7 +188,7 @@ main > section > div#results {
 
 #app > main > div#lefthandle:hover {
   grid-area: lefthandle;
-  border-left: 3px solid var(--tool-gray-demarcate);
+  border-left: 5px solid var(--tool-gray-demarcate);
 }
 
 #app > main > div#lefthandle.collapsed {
@@ -203,7 +203,7 @@ main > section > div#results {
 
 #app > main > div#righthandle:hover {
   grid-area: righthandle;
-  border-right: 3px solid var(--tool-gray-demarcate);
+  border-right: 1px solid var(--tool-gray-demarcate);
 }
 
 #app > main > div#righthandle.collapsed {
