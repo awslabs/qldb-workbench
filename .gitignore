@@ -109,3 +109,6 @@ dist
 .vscode
 
 .qldb-quark-history
+
+# Build files
+build
