@@ -195,7 +195,7 @@ function Editors({resultsEl, height, dispatchBottom}) {
             <li><Button name="Buffer Three"/></li>
         </ul>
         <div className="editor">
-          <AceEditor mode={"text"} width="99%" height="99%" />
+          <AceEditor mode={"text"} width="100%" height="100%" />
         </div>
         <Result {...{resultsEl, height: height, dispatchBottom}}/>
     </section>;

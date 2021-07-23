@@ -94,15 +94,13 @@ body {
       > div#bottomhandle.resultshandle {
         grid-area: bottomhandle;
         border-bottom: 1px solid var(--tool-gray-demarcate);
-        &:hover {
-          border-bottom: 3px solid var(--tool-gray-demarcate);
-          margin-bottom: -1px;
-        }
       }
-    }
 
-    > div#bottomhandle.collapsed {
-      display: none;
+      > div#bottomhandle.handle.collapsed {
+        display: none;
+        margin: 0;
+      }
+
     }
 
     > div#tools {
@@ -120,11 +118,6 @@ body {
     > div#lefthandle {
       grid-area: lefthandle;
       border-left: 1px solid var(--tool-gray-demarcate);
-
-      &:hover {
-        border-left: 3px solid var(--tool-gray-demarcate);
-        margin-left: -2px;
-      }
     }
 
     > div#lefthandle.collapsed {
@@ -133,12 +126,7 @@ body {
 
     > div#righthandle {
       grid-area: righthandle;
-      border-right: 1px solid var(--tool-gray-demarcate);
-
-      &:hover {
-        border-right: 3px solid var(--tool-gray-demarcate);
-        margin-right: -2px;
-      }
+      border-left: 1px solid var(--tool-gray-demarcate);
     }
 
     > div#righthandle.collapsed {
@@ -178,7 +166,7 @@ main {
     > div.editor {
       grid-area: editor;
       overflow: auto;
-      padding: 0 0.2px 0.2px 0;
+      padding: 0 0.5px 0.5px 0;
     }
 
     > div.results {
@@ -291,6 +279,7 @@ aside.bottom.collapsed {
   background-color: var(--tool-gray-plain);
   font-size: small;
   border-top: 1px solid var(--tool-gray-demarcate);
+  margin-top: -1px;
 }
 
 div#lefthandle.collapsed {
