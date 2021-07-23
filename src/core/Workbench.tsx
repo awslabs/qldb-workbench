@@ -3,6 +3,8 @@ import * as ReactDOM from "react-dom";
 import {useCallback, useEffect, useReducer, useState} from "react";
 import AceEditor from 'react-ace';
 
+import '../../assets/styles.scss';
+
 const MIN_TOOL_WINDOW_WIDTH = 10;
 const MIN_TOOL_WINDOW_HEIGHT = 10;
 
@@ -193,7 +195,7 @@ function Editors({resultsEl, height, dispatchBottom}) {
             <li><Button name="Buffer Three"/></li>
         </ul>
         <div className="editor">
-          <AceEditor width="100%" height="100%" />
+          <AceEditor mode={"text"} width="100%" height="100%" />
         </div>
         <Result {...{resultsEl, height: height, dispatchBottom}}/>
     </section>;
@@ -203,14 +205,14 @@ function Button({name}) {
   const [isOpen, setIsOpen] = React.useState(true); 
   const onClickBufferCloseButton = () => setIsOpen(false);
 
-  return <li>
-          <div className={isOpen ? 'button-opened' : 'button-closed'}>
+  return (
+        <div className={isOpen ? 'button-opened' : 'button-closed'}>
             {name}
             <button className="close" onClick={onClickBufferCloseButton}>
-              <span aria-hidden="true">&times;</span>
+                <span aria-hidden="true">&times;</span>
             </button>
-          </div>
-        </li>
+        </div>
+    )
 }
 
 function Result({resultsEl, height, dispatchBottom}) {
