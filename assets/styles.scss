@@ -11,21 +11,28 @@
 }
 
 :root {
-  --tool-gray-plain: rgb(242, 243, 243);
-  --tool-gray-demarcate: rgb(212, 213, 213);
-  --tool-gray-lit: rgb(232, 233, 233);
+  --color-background-plain: rgb(242, 243, 243);
+  --color-background-lighter: rgb(255, 255, 255);
+  --color-demarcate: rgb(212, 213, 213);
+  --color-highlight: rgb(232, 233, 233);
+  --color-text-default: rgb(0, 0, 0);
+  --color-cursor: var(--color-amazon-orange-aFtZyb);
 }
 
-body[data-theme="light"] {
-  --tool-gray-plain: rgb(242, 243, 243);
-  --tool-gray-demarcate: rgb(212, 213, 213);
-  --tool-gray-lit: rgb(232, 233, 233);
+.root.light {
+  --color-background-plain: rgb(242, 243, 243);
+  --color-background-lighter: rgb(255, 255, 255);
+  --color-demarcate: rgb(212, 213, 213);
+  --color-highlight: rgb(232, 233, 233);
+  --color-text-default: rgb(0, 0, 0);
 }
 
-body[data-theme="dark"] {
-  --tool-gray-plain: black;
-  --tool-gray-demarcate: black;
-  --tool-gray-lit: black;
+.root.dark {
+  --color-background-plain: rgb(44, 41, 41);
+  --color-background-lighter: rgb(55, 54, 54);
+  --color-demarcate: rgb(94, 92, 92);
+  --color-highlight: rgb(139, 139, 139);
+  --color-text-default: rgb(255, 255, 255);
 }
 
 .material-icons {
@@ -47,7 +54,15 @@ body {
   margin: 0;
 }
 
-#app {
+.spinner {
+  color: var(--color-amazon-orange-aFtZyb);
+  text-align: center;
+}
+
+.root {
+  background-color: var(--color-background-plain);
+  color: var(--color-text-default);
+
   height: 100vh;
 
   /* grid container settings */
@@ -58,15 +73,15 @@ body {
 
   > header {
     grid-area: header;
-    background-color: var(--tool-gray-plain);
+    background-color: var(--color-background-plain);
     font-size: small;
-    border-bottom: 1px solid var(--tool-gray-demarcate);
+    border-bottom: 1px solid var(--color-demarcate);
   }
 
   > main {
     grid-area: main;
     overflow: hidden;
-    background-color: lightcyan;
+    background-color: var(--color-background-plain);
 
     display: grid;
     grid-template-columns: auto auto 1fr auto auto;
@@ -93,10 +108,20 @@ body {
 
       > div#bottomhandle.resultshandle {
         grid-area: bottomhandle;
-        border-bottom: 1px solid var(--tool-gray-demarcate);
+        border-bottom: 1px solid var(--color-demarcate);
         &:hover {
           grid-area: bottomhandle;
-          border-bottom: 3px solid var(--tool-gray-demarcate);
+          border-bottom: 3px solid var(--color-demarcate);
+        }
+      }
+
+      .close {
+        background-color: var(--color-background-plain);
+        color: var(--color-text-default);
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--color-demarcate);
         }
       }
     }
@@ -119,11 +144,11 @@ body {
 
     > div#lefthandle {
       grid-area: lefthandle;
-      border-left: 1px solid var(--tool-gray-demarcate);
+      border-left: 1px solid var(--color-demarcate);
 
       &:hover {
         grid-area: lefthandle;
-        border-left: 3px solid var(--tool-gray-demarcate);
+        border-left: 3px solid var(--color-demarcate);
       }
     }
 
@@ -133,11 +158,11 @@ body {
 
     > div#righthandle {
       grid-area: righthandle;
-      border-right: 1px solid var(--tool-gray-demarcate);
+      border-right: 1px solid var(--color-demarcate);
 
       &:hover {
         grid-area: righthandle;
-        border-right: 3px solid var(--tool-gray-demarcate);
+        border-right: 3px solid var(--color-demarcate);
       }
     }
 
@@ -158,7 +183,7 @@ nav {
     grid-template-columns: auto auto;
     grid-template-rows: 1fr;
     grid-template-areas: "tool-header-main tool-header-controls";
-    background-color: var(--tool-gray-plain);
+    background-color: var(--color-background-plain);
   }
 
   > section {
@@ -172,13 +197,36 @@ main {
       margin: 0 0 0 0;
       padding: 0;
       list-style-type: none;
-      background-color: var(--tool-gray-plain);
+      background-color: var(--color-background-plain);
     }
 
     > div.editor {
       grid-area: editor;
       overflow: auto;
       padding: 0 0.2px 0.2px 0;
+
+      #ace-editor {
+        background-color: var(--color-background-lighter);
+        color: var(--color-text-default);
+
+        .ace_cursor {
+          color: var(--color-cursor);
+        }
+
+        .ace_print-margin {
+          background-color: var(--color-demarcate);
+        }
+
+        .ace_gutter {
+          background-color: var(--color-background-plain);
+          color: var(--color-text-default);
+
+          .ace_gutter-active-line {
+            background-color: var(--color-highlight);
+            color: var(--color-text-default);
+          }
+        }
+      }
     }
 
     > div.results {
@@ -187,7 +235,7 @@ main {
     }
 
     > div#results {
-      background-color: white;
+      background-color: var(--color-background-lighter);
     }
   }
 }
@@ -196,7 +244,7 @@ ul.buffers {
   > li {
     display: inline-block;
     padding: 0 0.2rem 0 0.2rem;
-    border-right: 1px solid var(--tool-gray-demarcate);
+    border-right: 1px solid var(--color-demarcate);
   }
 }
 .handle {
@@ -213,8 +261,6 @@ div#tools {
     grid-template-columns: auto auto;
     grid-template-rows: 1fr;
     grid-template-areas: "tool-header-main tool-header-controls";
-
-    background-color: rgb(242, 243, 243);
   }
   > section {
     grid-area: tools-section;
@@ -229,7 +275,7 @@ div#results {
     grid-template-rows: 1fr;
     grid-template-areas: "tool-header-main tool-header-controls";
 
-    background-color: rgb(242, 243, 243);
+    background-color: var(--color-background-plain);
   }
 }
 
@@ -261,36 +307,36 @@ li.minimize {
   cursor: default;
 
   &:hover {
-    background-color: rgb(222, 223, 223);
+    background-color: var(--color-highlight);
   }
 }
 
 li.minimize.chosen {
-  background-color: rgb(202, 203, 203);
+  background-color: var(--color-highlight);
 
   &:hover {
-    background-color: rgb(202, 203, 203);
+    background-color: var(--color-highlight);
   }
 }
 aside.left.collapsed {
   grid-area: nav;
-  background-color: var(--tool-gray-plain);
+  background-color: var(--color-background-plain);
   font-size: small;
-  border-right: 1px solid var(--tool-gray-demarcate);
+  border-right: 1px solid var(--color-demarcate);
 }
 
 aside.right.collapsed {
   grid-area: tools;
-  background-color: var(--tool-gray-plain);
+  background-color: var(--color-background-plain);
   font-size: small;
-  border-left: 1px solid var(--tool-gray-demarcate);
+  border-left: 1px solid var(--color-demarcate);
 }
 
 aside.bottom.collapsed {
   grid-area: results;
-  background-color: var(--tool-gray-plain);
+  background-color: var(--color-background-plain);
   font-size: small;
-  border-top: 1px solid var(--tool-gray-demarcate);
+  border-top: 1px solid var(--color-demarcate);
 }
 
 div#lefthandle.collapsed {
@@ -320,7 +366,7 @@ aside.collapsed {
       writing-mode: vertical-lr;
 
       &:hover {
-        background-color: var(--tool-gray-lit);
+        background-color: var(--color-highlight);
       }
     }
 
@@ -351,7 +397,7 @@ aside.collapsed {
 }
 
 section.tool {
-  background-color: white;
+  background-color: var(--color-background-lighter);
   padding: 0 0 0 0;
   p {
     margin: 0;
@@ -377,7 +423,7 @@ header {
 }
 
 .Resizer {
-  background: #000;
+  background: var(--color-demarcate);
   opacity: 0.2;
   z-index: 1;
   box-sizing: border-box;
@@ -433,7 +479,7 @@ header {
   cursor: pointer;
 
   &:hover {
-    background-color: #d1d1d1;
+    background-color: var(--color-highlight);
   }
 }
 
