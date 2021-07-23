@@ -11,7 +11,7 @@ const MIN_TOOL_WINDOW_HEIGHT = 10;
 function handleWidthDragging(state, action) {
     switch (action.type) {
         case "widthknown":
-            return { ...state, startWidth: action.width };
+            return { ...state, startWidth: action.width, width: action.width  };
         case "mousedown":
             return { ...state, dragging: true, startX: action.clientX };
         case "mouseup":
@@ -37,7 +37,7 @@ function handleWidthDragging(state, action) {
 function handleHeightDragging(state, action) {
   switch (action.type) {
       case "heightknown":
-          return { ...state, startHeight: action.height };
+          return { ...state, startHeight: action.height, height: action.height };
       case "mousedown":
           return { ...state, dragging: true, startY: action.clientY };
       case "mouseup":
@@ -195,7 +195,7 @@ function Editors({resultsEl, height, dispatchBottom}) {
             <li><Button name="Buffer Three"/></li>
         </ul>
         <div className="editor">
-          <AceEditor mode={"text"} width="100%" height="100%" />
+          <AceEditor mode={"text"} width="99%" height="99%" />
         </div>
         <Result {...{resultsEl, height: height, dispatchBottom}}/>
     </section>;

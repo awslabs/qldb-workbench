@@ -95,8 +95,8 @@ body {
         grid-area: bottomhandle;
         border-bottom: 1px solid var(--tool-gray-demarcate);
         &:hover {
-          grid-area: bottomhandle;
           border-bottom: 3px solid var(--tool-gray-demarcate);
+          margin-bottom: -1px;
         }
       }
     }
@@ -122,8 +122,8 @@ body {
       border-left: 1px solid var(--tool-gray-demarcate);
 
       &:hover {
-        grid-area: lefthandle;
         border-left: 3px solid var(--tool-gray-demarcate);
+        margin-left: -2px;
       }
     }
 
@@ -136,8 +136,8 @@ body {
       border-right: 1px solid var(--tool-gray-demarcate);
 
       &:hover {
-        grid-area: righthandle;
         border-right: 3px solid var(--tool-gray-demarcate);
+        margin-right: -2px;
       }
     }
 
