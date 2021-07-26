@@ -38,7 +38,7 @@ module.exports = {
     rules: [
       // Compile scss into css and load it with import syntax
       {
-        test: /\.scss$/,
+        test: /\.s?css$/,
         use: [
           "style-loader",
           "css-loader",
@@ -49,6 +49,13 @@ module.exports = {
       {
         test: /\.tsx?$/,
         loader: 'ts-loader',
+      },
+      {
+        test: /\.(png|jpe?g|gif|bmp|svg|pdf)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: './images/[name].[hash][ext][query]',
+        },
       },
     ],
   },
