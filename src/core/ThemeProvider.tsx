@@ -62,7 +62,7 @@ export default function ThemeProvider(props: React.PropsWithChildren<Props>) {
 
   return (
     <ThemeContext.Provider value={[theme, toggle]}>
-      <div className={`${className} ${theme}`}>{children}</div>
+      <div className={`${className} awsui-${theme}-mode`}>{children}</div>
     </ThemeContext.Provider>
   );
 }

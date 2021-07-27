@@ -1,3 +1,6 @@
+// Use Polaris design tokens for consistent colors
+@use '@awsui/design-tokens/index.scss' as awsui;
+
 .topbar {
   display: flex;
   flex-direction: column;
@@ -10,12 +13,12 @@
   left: 0px;
   top: 0px;
 
-  background-color: var(--color-background-plain);
-  color: var(--color-text-default);
+  background-color: awsui.$color-background-container-content;
+  color: awsui.$color-text-body-default;
 
   &.dark {
     .toggle {
-      color: var(--color-text-default) !important;
+      color: awsui.$color-text-body-default !important;
     }
   }
 
@@ -53,6 +56,6 @@
 
   .divider {
     height: 1px;
-    background-color: var(--color-demarcate);
+    background-color: awsui.$color-border-divider-default;
   }
 }

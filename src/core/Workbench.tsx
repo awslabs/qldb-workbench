@@ -2,13 +2,16 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { useCallback, useReducer } from "react";
 import AceEditor from "react-ace";
+import "ace-builds/src-min-noconflict/theme-tomorrow_night_bright";
+import "ace-builds/src-min-noconflict/theme-dawn";
 
 import "../../assets/styles.scss";
 import "@awsui/global-styles/index.css";
 import { useToggle } from "../common/useToggle";
 import { useMouseUpAnywhere } from "../common/useMouseUpAnywhere";
 import { Topbar } from "../topbar/Topbar";
-import ThemeProvider from "./ThemeProvider";
+import ThemeProvider, { ThemeContext } from "./ThemeProvider";
+import { useContext } from "react";
 
 const MIN_TOOL_WINDOW_WIDTH = 10;
 const MIN_TOOL_WINDOW_HEIGHT = 10;
@@ -219,6 +222,8 @@ function Breadcrumb() {
 }
 
 function Editors({ resultsEl, height, dispatchBottom }) {
+  const [theme] = useContext(ThemeContext);
+
   return (
     <section className="editors">
       <ul className="buffers">
@@ -233,7 +238,12 @@ function Editors({ resultsEl, height, dispatchBottom }) {
         </li>
       </ul>
       <div className="editor">
-        <AceEditor mode={"text"} width="100%" height="100%" />
+        <AceEditor
+          theme={theme === "dark" ? "tomorrow_night_bright" : "dawn"}
+          mode={"text"}
+          width="100%"
+          height="100%"
+        />
       </div>
       <Result {...{ resultsEl, height: height, dispatchBottom }} />
     </section>

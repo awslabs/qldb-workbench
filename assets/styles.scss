@@ -1,3 +1,6 @@
+// Use Polaris design tokens for consistent colors
+@use '@awsui/design-tokens/index.scss' as awsui;
+
 @font-face {
   font-family: "Noto Sans";
   src: url(NotoSans-Regular.ttf) format("truetype");
@@ -8,31 +11,6 @@
   font-style: normal;
   font-weight: 400;
   src: url(MaterialIcons-Regular.woff2) format("woff2");
-}
-
-:root {
-  --color-background-plain: rgb(242, 243, 243);
-  --color-background-lighter: rgb(255, 255, 255);
-  --color-demarcate: rgb(212, 213, 213);
-  --color-highlight: rgb(232, 233, 233);
-  --color-text-default: rgb(0, 0, 0);
-  --color-cursor: var(--color-amazon-orange-aFtZyb);
-}
-
-.root.light {
-  --color-background-plain: rgb(242, 243, 243);
-  --color-background-lighter: rgb(255, 255, 255);
-  --color-demarcate: rgb(212, 213, 213);
-  --color-highlight: rgb(232, 233, 233);
-  --color-text-default: rgb(0, 0, 0);
-}
-
-.root.dark {
-  --color-background-plain: rgb(44, 41, 41);
-  --color-background-lighter: rgb(55, 54, 54);
-  --color-demarcate: rgb(94, 92, 92);
-  --color-highlight: rgb(139, 139, 139);
-  --color-text-default: rgb(255, 255, 255);
 }
 
 .material-icons {
@@ -55,13 +33,13 @@ body {
 }
 
 .spinner {
-  color: var(--color-amazon-orange-aFtZyb);
+  color: awsui.$color-text-accent;
   text-align: center;
 }
 
 .root {
-  background-color: var(--color-background-plain);
-  color: var(--color-text-default);
+  background-color: awsui.$color-background-layout-main;
+  color: awsui.$color-text-body-default;
 
   height: 100vh;
 
@@ -73,15 +51,15 @@ body {
 
   > header {
     grid-area: header;
-    background-color: var(--color-background-plain);
+    background-color: awsui.$color-background-layout-main;
     font-size: small;
-    border-bottom: 1px solid var(--color-demarcate);
+    border-bottom: 1px solid awsui.$color-border-divider-default;
   }
 
   > main {
     grid-area: main;
     overflow: hidden;
-    background-color: var(--color-background-plain);
+    background-color: awsui.$color-background-layout-main;
 
     display: grid;
     grid-template-columns: auto auto 1fr auto auto;
@@ -108,20 +86,20 @@ body {
 
       > div#bottomhandle.resultshandle {
         grid-area: bottomhandle;
-        border-bottom: 1px solid var(--color-demarcate);
+        border-bottom: 1px solid awsui.$color-border-divider-default;
         &:hover {
           grid-area: bottomhandle;
-          border-bottom: 3px solid var(--color-demarcate);
+          border-bottom: 3px solid awsui.$color-border-divider-default;
         }
       }
 
       .close {
-        background-color: var(--color-background-plain);
-        color: var(--color-text-default);
+        background-color: awsui.$color-background-layout-main;
+        color: awsui.$color-text-body-default;
         cursor: pointer;
 
         &:hover {
-          background-color: var(--color-demarcate);
+          background-color: awsui.$color-border-divider-default;
         }
       }
     }
@@ -144,11 +122,11 @@ body {
 
     > div#lefthandle {
       grid-area: lefthandle;
-      border-left: 1px solid var(--color-demarcate);
+      border-left: 1px solid awsui.$color-border-divider-default;
 
       &:hover {
         grid-area: lefthandle;
-        border-left: 3px solid var(--color-demarcate);
+        border-left: 3px solid awsui.$color-border-divider-default;
       }
     }
 
@@ -158,11 +136,11 @@ body {
 
     > div#righthandle {
       grid-area: righthandle;
-      border-right: 1px solid var(--color-demarcate);
+      border-right: 1px solid awsui.$color-border-divider-default;
 
       &:hover {
         grid-area: righthandle;
-        border-right: 3px solid var(--color-demarcate);
+        border-right: 3px solid awsui.$color-border-divider-default;
       }
     }
 
@@ -183,7 +161,7 @@ nav {
     grid-template-columns: auto auto;
     grid-template-rows: 1fr;
     grid-template-areas: "tool-header-main tool-header-controls";
-    background-color: var(--color-background-plain);
+    background-color: awsui.$color-background-container-header;
   }
 
   > section {
@@ -197,36 +175,7 @@ main {
       margin: 0 0 0 0;
       padding: 0;
       list-style-type: none;
-      background-color: var(--color-background-plain);
-    }
-
-    > div.editor {
-      grid-area: editor;
-      overflow: auto;
-      padding: 0 0.2px 0.2px 0;
-
-      #ace-editor {
-        background-color: var(--color-background-lighter);
-        color: var(--color-text-default);
-
-        .ace_cursor {
-          color: var(--color-cursor);
-        }
-
-        .ace_print-margin {
-          background-color: var(--color-demarcate);
-        }
-
-        .ace_gutter {
-          background-color: var(--color-background-plain);
-          color: var(--color-text-default);
-
-          .ace_gutter-active-line {
-            background-color: var(--color-highlight);
-            color: var(--color-text-default);
-          }
-        }
-      }
+      background-color: awsui.$color-background-layout-main;
     }
 
     > div.results {
@@ -235,7 +184,7 @@ main {
     }
 
     > div#results {
-      background-color: var(--color-background-lighter);
+      background-color: awsui.$color-background-container-content;
     }
   }
 }
@@ -244,7 +193,7 @@ ul.buffers {
   > li {
     display: inline-block;
     padding: 0 0.2rem 0 0.2rem;
-    border-right: 1px solid var(--color-demarcate);
+    border-right: 1px solid awsui.$color-border-divider-default;
   }
 }
 .handle {
@@ -275,7 +224,7 @@ div#results {
     grid-template-rows: 1fr;
     grid-template-areas: "tool-header-main tool-header-controls";
 
-    background-color: var(--color-background-plain);
+    background-color: awsui.$color-background-container-header;
   }
 }
 
@@ -307,36 +256,36 @@ li.minimize {
   cursor: default;
 
   &:hover {
-    background-color: var(--color-highlight);
+    background-color: awsui.$color-background-dropdown-item-hover;
   }
 }
 
 li.minimize.chosen {
-  background-color: var(--color-highlight);
+  background-color: awsui.$color-background-dropdown-item-hover;
 
   &:hover {
-    background-color: var(--color-highlight);
+    background-color: awsui.$color-background-dropdown-item-hover;
   }
 }
 aside.left.collapsed {
   grid-area: nav;
-  background-color: var(--color-background-plain);
+  background-color: awsui.$color-background-container-header;
   font-size: small;
-  border-right: 1px solid var(--color-demarcate);
+  border-right: 1px solid awsui.$color-border-divider-default;
 }
 
 aside.right.collapsed {
   grid-area: tools;
-  background-color: var(--color-background-plain);
+  background-color: awsui.$color-background-container-header;
   font-size: small;
-  border-left: 1px solid var(--color-demarcate);
+  border-left: 1px solid awsui.$color-border-divider-default;
 }
 
 aside.bottom.collapsed {
   grid-area: results;
-  background-color: var(--color-background-plain);
+  background-color: awsui.$color-background-container-header;
   font-size: small;
-  border-top: 1px solid var(--color-demarcate);
+  border-top: 1px solid awsui.$color-border-divider-default;
 }
 
 div#lefthandle.collapsed {
@@ -366,7 +315,7 @@ aside.collapsed {
       writing-mode: vertical-lr;
 
       &:hover {
-        background-color: var(--color-highlight);
+        background-color: awsui.$color-background-dropdown-item-hover;
       }
     }
 
@@ -397,7 +346,7 @@ aside.collapsed {
 }
 
 section.tool {
-  background-color: var(--color-background-lighter);
+  background-color: awsui.$color-background-container-content;
   padding: 0 0 0 0;
   p {
     margin: 0;
@@ -423,7 +372,7 @@ header {
 }
 
 .Resizer {
-  background: var(--color-demarcate);
+  background: awsui.$color-border-divider-default;
   opacity: 0.2;
   z-index: 1;
   box-sizing: border-box;
@@ -479,7 +428,7 @@ header {
   cursor: pointer;
 
   &:hover {
-    background-color: var(--color-highlight);
+    background-color: awsui.$color-background-dropdown-item-hover;
   }
 }
 
