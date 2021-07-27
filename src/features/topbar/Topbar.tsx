@@ -1,7 +1,7 @@
 import * as React from "react";
 import "./styles.scss";
 import { useContext } from "react";
-import { ThemeContext } from "../core/ThemeProvider";
+import { ThemeContext } from "../../core/ThemeProvider";
 import { Logo } from "./Logo";
 import { ThemeSelector } from "./ThemeSelector";
 

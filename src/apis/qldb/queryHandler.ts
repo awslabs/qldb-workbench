@@ -1,10 +1,5 @@
 import { openLedger } from "./session";
-import * as React from "react";
-import {
-  flattenQueryStats,
-  recordHistory,
-  SetHistoryFn,
-} from "./query-history";
+import { flattenQueryStats, recordHistory, SetHistoryFn } from "./queryHistory";
 
 export const executeStatement = async (
   ledgerName: string,

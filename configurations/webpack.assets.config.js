@@ -15,7 +15,7 @@ module.exports = {
   devtool: 'cheap-module-source-map',
   // the entry point is the top of the tree of modules.
   // webpack will bundle this file and everything it references.
-  entry: './src/core/Workbench.tsx',
+  entry: './src/core/App.tsx',
   // we specify we want to put the bundled result in the matching build/ folder
   output: {
     filename: 'index.js',

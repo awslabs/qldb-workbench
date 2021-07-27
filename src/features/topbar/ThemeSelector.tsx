@@ -1,8 +1,8 @@
 import Toggle from "@awsui/components-react/toggle";
 import * as React from "react";
 import { useContext, useEffect } from "react";
-import { useKeyboard } from "../common/useKeyboard";
-import { ThemeContext } from "../core/ThemeProvider";
+import { useKeyboard } from "../../common/hooks/useKeyboard";
+import { ThemeContext } from "../../core/ThemeProvider";
 
 export function ThemeSelector() {
   const [theme, toggleTheme] = useContext(ThemeContext);

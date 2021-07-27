@@ -2,7 +2,7 @@ import { Spinner } from "@awsui/components-react";
 import * as React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useToggle } from "../common/useToggle";
+import { useToggle } from "../common/hooks/useToggle";
 
 type Theme = "light" | "dark";
 
