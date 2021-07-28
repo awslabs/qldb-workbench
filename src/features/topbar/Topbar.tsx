@@ -9,16 +9,18 @@ export function Topbar() {
   const [theme] = useContext(ThemeContext);
 
   return (
-    <div className={`topbar ${theme}`} data-theme={theme}>
-      <div className="content">
-        <div className="left">
-          <Logo />
+    <header>
+      <div className={`topbar ${theme}`} data-theme={theme}>
+        <div className="content">
+          <div className="left">
+            <Logo />
+          </div>
+          <div className="right">
+            <ThemeSelector />
+          </div>
         </div>
-        <div className="right">
-          <ThemeSelector />
-        </div>
+        <div className="divider" />
       </div>
-      <div className="divider" />
-    </div>
+    </header>
   );
 }

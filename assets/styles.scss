@@ -45,9 +45,9 @@ body {
 
   /* grid container settings */
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto 1fr auto;
-  grid-template-areas: "header" "main" "footer";
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "header header" "nav main";
 
   > header {
     grid-area: header;
@@ -56,101 +56,21 @@ body {
     border-bottom: 1px solid awsui.$color-border-divider-default;
   }
 
+  > nav {
+    grid-area: nav;
+
+    overflow: auto;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "nav-header" "nav-section";
+  }
+
   > main {
     grid-area: main;
     overflow: hidden;
     background-color: awsui.$color-background-layout-main;
-
-    display: grid;
-    grid-template-columns: auto auto 1fr auto auto;
-    grid-template-rows: 1fr;
-    grid-template-areas: "nav lefthandle section righthandle tools";
-
-    > nav {
-      grid-area: nav;
-
-      overflow: auto;
-
-      display: grid;
-      grid-template-columns: 1fr;
-      grid-template-rows: auto 1fr;
-      grid-template-areas: "nav-header" "nav-section";
-    }
-
-    > section {
-      grid-area: section;
-      display: grid;
-      grid-template-columns: 1fr;
-      grid-template-rows: auto 1fr auto auto;
-      grid-template-areas: "buffers" "editor" "bottomhandle" "results";
-
-      > div#bottomhandle.resultshandle {
-        grid-area: bottomhandle;
-        border-bottom: 1px solid awsui.$color-border-divider-default;
-        &:hover {
-          grid-area: bottomhandle;
-          border-bottom: 3px solid awsui.$color-border-divider-default;
-        }
-      }
-
-      .close {
-        background-color: awsui.$color-background-layout-main;
-        color: awsui.$color-text-body-default;
-        cursor: pointer;
-
-        &:hover {
-          background-color: awsui.$color-border-divider-default;
-        }
-      }
-    }
-
-    > div#bottomhandle.collapsed {
-      display: none;
-    }
-
-    > div#tools {
-      grid-area: tools;
-
-      overflow: auto;
-      margin: 0 0 0 0;
-
-      display: grid;
-      grid-template-columns: 1fr;
-      grid-template-rows: auto 1fr;
-      grid-template-areas: "tools-header" "tools-section";
-    }
-
-    > div#lefthandle {
-      grid-area: lefthandle;
-      border-left: 1px solid awsui.$color-border-divider-default;
-
-      &:hover {
-        grid-area: lefthandle;
-        border-left: 3px solid awsui.$color-border-divider-default;
-      }
-    }
-
-    > div#lefthandle.collapsed {
-      display: none;
-    }
-
-    > div#righthandle {
-      grid-area: righthandle;
-      border-right: 1px solid awsui.$color-border-divider-default;
-
-      &:hover {
-        grid-area: righthandle;
-        border-right: 3px solid awsui.$color-border-divider-default;
-      }
-    }
-
-    > div#righthandle.collapsed {
-      display: none;
-    }
-  }
-
-  > footer {
-    grid-area: footer;
   }
 }
 
@@ -168,87 +88,135 @@ nav {
     grid-area: nav-section;
   }
 }
-main {
-  > section {
-    > ul.buffers {
-      grid-area: buffers;
+
+.editor-container {
+  display: flex;
+  height: 100%;
+
+  .editor-pannel {
+    display: flex;
+  }
+
+  .main-section {
+    display: flex;
+    flex-direction: column;
+
+    flex-basis: auto;
+    flex-grow: 1;
+
+    .editor {
+      flex-grow: 1;
+    }
+
+    .editor-results {
+      background-color: awsui.$color-background-container-content;
+    }
+
+    > div#bottomhandle.resultshandle {
+      border-bottom: 1px solid awsui.$color-border-divider-default;
+      &:hover {
+        border-bottom: 3px solid awsui.$color-border-divider-default;
+      }
+    }
+
+    .close {
+      background-color: awsui.$color-background-layout-main;
+      color: awsui.$color-text-body-default;
+      cursor: pointer;
+
+      &:hover {
+        background-color: awsui.$color-border-divider-default;
+      }
+    }
+
+    > ul.editor-tabs {
+      grid-area: tabs;
       margin: 0 0 0 0;
       padding: 0;
       list-style-type: none;
       background-color: awsui.$color-background-layout-main;
-    }
 
-    > div.results {
-      grid-area: results;
-      overflow: auto;
-    }
-
-    > div#results {
-      background-color: awsui.$color-background-container-content;
+      > li {
+        display: inline-block;
+        padding: 0 0.2rem 0 0.2rem;
+        border-right: 1px solid awsui.$color-border-divider-default;
+      }
     }
   }
-}
 
-ul.buffers {
-  > li {
-    display: inline-block;
-    padding: 0 0.2rem 0 0.2rem;
+  > div#lefthandle {
+    grid-area: lefthandle;
+    border-left: 1px solid awsui.$color-border-divider-default;
+
+    &:hover {
+      grid-area: lefthandle;
+      border-left: 3px solid awsui.$color-border-divider-default;
+    }
+  }
+
+  > div#righthandle {
+    grid-area: righthandle;
     border-right: 1px solid awsui.$color-border-divider-default;
+
+    &:hover {
+      grid-area: righthandle;
+      border-right: 3px solid awsui.$color-border-divider-default;
+    }
   }
 }
+
 .handle {
   cursor: col-resize;
+
+  .collapsed {
+    display: none;
+  }
 }
 .resultshandle {
   cursor: row-resize;
 }
-div#tools {
-  > header {
-    grid-area: tools-header;
 
-    display: grid;
-    grid-template-columns: auto auto;
-    grid-template-rows: 1fr;
-    grid-template-areas: "tool-header-main tool-header-controls";
-  }
-  > section {
-    grid-area: tools-section;
-  }
-}
-div#results {
-  > header {
-    grid-area: tools-header;
+.tool {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex-grow: 1;
 
-    display: grid;
-    grid-template-columns: auto auto;
-    grid-template-rows: 1fr;
-    grid-template-areas: "tool-header-main tool-header-controls";
-
+  .tool-header {
+    display: flex;
     background-color: awsui.$color-background-container-header;
-  }
-}
 
-.tool-header {
-  > ul {
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-    font-size: small;
-  }
+    .tool-header-main {
+      flex-grow: 1;
+    }
 
-  > ul.tool-header-main {
-    grid-area: tool-header-main;
+    > ul {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+      font-size: small;
+    }
 
-    > li {
-      padding: 0 0 0 0.2rem;
+    > ul.tool-header-main {
+      grid-area: tool-header-main;
+
+      > li {
+        padding: 0 0 0 0.2rem;
+      }
+    }
+
+    > ul.tool-header-controls {
+      grid-area: tool-header-controls;
+      display: flex;
+      justify-content: flex-end;
+      padding: 0.1rem;
     }
   }
-
-  > ul.tool-header-controls {
-    grid-area: tool-header-controls;
-    display: flex;
-    justify-content: flex-end;
-    padding: 0.1rem;
+  .tool-body {
+    flex-grow: 1;
+    flex-basis: auto;
+    background-color: awsui.$color-background-layout-main;
+    overflow: scroll;
   }
 }
 
@@ -267,6 +235,7 @@ li.minimize.chosen {
     background-color: awsui.$color-background-dropdown-item-hover;
   }
 }
+
 aside.left.collapsed {
   grid-area: nav;
   background-color: awsui.$color-background-container-header;
@@ -288,22 +257,11 @@ aside.bottom.collapsed {
   border-top: 1px solid awsui.$color-border-divider-default;
 }
 
-div#lefthandle.collapsed {
-  width: 0;
-  border: 0;
-}
-
-div#righthandle.collapsed {
-  width: 0;
-  border: 0;
-}
-
-div#bottomhandle.collapsed {
-  width: 0;
-  border: 0;
-}
-
 aside.collapsed {
+  &:hover {
+    background-color: awsui.$color-background-dropdown-item-hover;
+  }
+
   > ul {
     padding: 0.2rem 0.1rem 0 0.1rem;
     margin: 0;
@@ -313,10 +271,6 @@ aside.collapsed {
     > li {
       padding: 0 0 0 0;
       writing-mode: vertical-lr;
-
-      &:hover {
-        background-color: awsui.$color-background-dropdown-item-hover;
-      }
     }
 
     > li.bottom {
@@ -345,72 +299,41 @@ aside.collapsed {
   }
 }
 
-section.tool {
-  background-color: awsui.$color-background-container-content;
-  padding: 0 0 0 0;
-  p {
-    margin: 0;
-    padding: 0;
-  }
-}
-
-header {
-  ul.breadcrumb {
-    display: inline-block;
-    padding: 0;
-    margin: 0 0 0 0.5rem;
-    list-style-type: none;
-
-    > li {
-      display: inline-block;
-    }
-
-    li.strong {
-      font-weight: bold;
-    }
-  }
-}
-
-.Resizer {
-  background: awsui.$color-border-divider-default;
+.handle {
+  background-color: awsui.$color-border-divider-default;
   opacity: 0.2;
-  z-index: 1;
+  z-index: 100;
   box-sizing: border-box;
   background-clip: padding-box;
-}
-
-.Resizer.horizontal {
-  height: 11px;
-  margin: -5px 0;
-  border-top: 5px solid rgba(255, 255, 255, 0);
-  border-bottom: 5px solid rgba(255, 255, 255, 0);
-  cursor: row-resize;
-  width: 100%;
 
   &:hover {
-    border-top: 3px solid rgba(0, 0, 0, 0.5);
-    border-bottom: 3px solid rgba(0, 0, 0, 0.5);
+    border: 3px solid awsui.$color-text-accent !important;
+    background-color: awsui.$color-text-accent;
   }
-}
 
-.Resizer.vertical {
-  width: 11px;
-  margin: 0 -5px;
-  border-left: 5px solid rgba(255, 255, 255, 0);
-  border-right: 5px solid rgba(255, 255, 255, 0);
-  cursor: col-resize;
-
-  &:hover {
-    border-left: 3px solid rgba(0, 0, 0, 0.5);
-    border-right: 3px solid rgba(0, 0, 0, 0.5);
+  &.horizontal {
+    height: 11px;
+    margin: -5px 0;
+    border-top: 5px solid rgba(255, 255, 255, 0);
+    border-bottom: 5px solid rgba(255, 255, 255, 0);
+    cursor: row-resize;
+    width: 100%;
   }
-}
 
-.Resizer.disabled {
-  cursor: not-allowed;
+  &.vertical {
+    width: 11px;
+    margin: 0 -5px;
+    border-left: 5px solid rgba(255, 255, 255, 0);
+    border-right: 5px solid rgba(255, 255, 255, 0);
+    cursor: col-resize;
+  }
 
-  &:hover {
-    border-color: transparent;
+  &.disabled {
+    cursor: not-allowed;
+
+    &:hover {
+      border-color: transparent;
+    }
   }
 }
 

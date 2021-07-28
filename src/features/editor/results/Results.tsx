@@ -8,12 +8,15 @@ export function Results({ resultsEl, height, dispatchBottom }) {
   return open ? (
     <>
       <div
-        id="bottomhandle"
-        className="resultshandle"
+        className="horizontal handle"
         onMouseDown={dispatchBottom}
         onMouseMove={dispatchBottom}
       />
-      <div ref={resultsEl} id="results" style={{ height: height + "px" }}>
+      <div
+        ref={resultsEl}
+        className="editor-results"
+        style={{ height: height + "px" }}
+      >
         <Tool name="Results" close={toggleOpen}>
           <p>These are the results.</p>
           <p>These are the results.</p>
@@ -28,15 +31,15 @@ export function Results({ resultsEl, height, dispatchBottom }) {
     </>
   ) : (
     <>
-      <aside className="bottom collapsed">
+      <aside className="bottom collapsed" onClick={toggleOpen}>
         <ul>
-          <li className="bottom" onClick={toggleOpen}>
+          <li className="bottom">
             <TextIcon name="zoom_in" />
             <span className="bottom">Results</span>
           </li>
         </ul>
       </aside>
-      <div id="bottomhandle" className="handle collapsed" />
+      <div className="handle collapsed" />
     </>
   );
 }

@@ -10,11 +10,11 @@ import { Editor } from "../features/editor/Editor";
 export function Workbench() {
   return (
     <ThemeProvider className="root">
-      <header>
-        <Topbar />
-      </header>
+      <Topbar />
       <Navigation />
-      <Editor />
+      <main>
+        <Editor />
+      </main>
     </ThemeProvider>
   );
 }

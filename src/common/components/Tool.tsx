@@ -8,7 +8,7 @@ export function Tool({ name, close, children }) {
   useMouseUpAnywhere(setMinimize(false));
   const chosenClass = "minimize " + (minimizeChosen ? "chosen" : "");
   return (
-    <>
+    <div className="tool">
       <header className="tool-header">
         <ul className="tool-header-main">
           <li>{name}</li>
@@ -24,7 +24,7 @@ export function Tool({ name, close, children }) {
           </li>
         </ul>
       </header>
-      <section className="tool">{children}</section>
-    </>
+      <section className="tool-body">{children}</section>
+    </div>
   );
 }

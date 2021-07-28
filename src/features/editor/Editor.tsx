@@ -6,7 +6,7 @@ import { Tab } from "./Tab";
 import AceEditor from "react-ace";
 import "ace-builds/src-min-noconflict/theme-tomorrow_night_bright";
 import "ace-builds/src-min-noconflict/theme-dawn";
-import { Ledgers } from "./ledgers/Ledgers";
+import { EditorPannel } from "./ledgers/Ledgers";
 import {
   DragActions,
   useDraggableHandle,
@@ -26,7 +26,8 @@ export function Editor() {
   };
 
   return (
-    <main
+    <div
+      className="editor-container"
       style={{
         userSelect:
           ledgersDragState.dragging || resultsDragState.dragging
@@ -36,15 +37,15 @@ export function Editor() {
       onMouseUp={dispatchDragged}
       onMouseMove={dispatchDragged}
     >
-      <Ledgers
+      <EditorPannel
         {...{
           navEl: ledgersEl,
           width: ledgersDragState.currentSize,
           dispatchLeft: dispatchLedgersDragged,
         }}
       />
-      <section className="editors">
-        <ul className="buffers">
+      <section className="main-section">
+        <ul className="editor-tabs">
           <li>
             <Tab name="Buffer One" />
           </li>
@@ -71,6 +72,6 @@ export function Editor() {
           }}
         />
       </section>
-    </main>
+    </div>
   );
 }
