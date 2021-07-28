@@ -1,9 +1,10 @@
-import { useCallback, useReducer } from "react";
+import * as React from "react";
+import { ReactNode, useCallback, useEffect, useReducer } from "react";
 
 const MIN_TOOL_SIZE = 10;
 
 type Direction = "vertical" | "horizontal";
-type Anchor = "start" | "end";
+type Position = "start" | "end";
 
 interface DragSubscribed {
   type: "drag-subscribed";
@@ -24,12 +25,11 @@ interface MouseMove {
   clientY: number;
   clientX: number;
 }
-export type DragActions = DragSubscribed | MouseDown | MouseUp | MouseMove;
+type DragActions = DragSubscribed | MouseDown | MouseUp | MouseMove;
 
 interface DragState {
-  id: string;
   direction: Direction;
-  anchor: Anchor;
+  position: Position;
   dragging: boolean;
   startSize?: number;
   currentSize?: number;
@@ -46,7 +46,7 @@ function dragReducer(state: DragState, action: DragActions): DragState {
         ...state,
         dragging: true,
         startPosition:
-          state.direction === "horizontal" ? action.clientX : action.clientY,
+          state.direction === "vertical" ? action.clientX : action.clientY,
       };
     case "mouseup":
       if (!state.dragging) {
@@ -58,10 +58,10 @@ function dragReducer(state: DragState, action: DragActions): DragState {
         return state;
       }
       const position =
-        state.direction === "horizontal" ? action.clientX : action.clientY;
+        state.direction === "vertical" ? action.clientX : action.clientY;
       const delta = position - state.startPosition;
       const size =
-        state.startSize + (state.anchor === "start" ? delta : -delta);
+        state.startSize + (state.position === "start" ? -delta : delta);
       return {
         ...state,
         currentPosition: position,
@@ -73,14 +73,12 @@ function dragReducer(state: DragState, action: DragActions): DragState {
 }
 
 export function useDraggableHandle(
-  id: string,
   direction: Direction,
-  anchor: Anchor
-): [DragState, React.LegacyRef<HTMLDivElement>, React.Dispatch<DragActions>] {
-  const [handleState, dispatch] = useReducer(dragReducer, {
-    id,
+  position: Position
+): [DragState, React.LegacyRef<HTMLDivElement>, ReactNode] {
+  const [dragState, dispatch] = useReducer(dragReducer, {
     direction,
-    anchor,
+    position,
     dragging: false,
   });
 
@@ -89,9 +87,34 @@ export function useDraggableHandle(
 
     dispatch({
       type: "drag-subscribed",
-      size: direction === "horizontal" ? node.offsetWidth : node.offsetHeight,
+      size: direction === "vertical" ? node.offsetWidth : node.offsetHeight,
     });
   }, []);
 
-  return [handleState, el, dispatch];
+  useEffect(() => {
+    document
+      .getElementsByTagName("body")[0]
+      .classList.toggle("dragging", dragState.dragging);
+  }, [dragState.dragging]);
+
+  useEffect(() => {
+    const handler = (e) => dispatch(e as DragActions);
+
+    document.addEventListener("mousemove", handler);
+    document.addEventListener("mouseup", handler);
+
+    return () => {
+      document.removeEventListener("mousemove", handler);
+      document.removeEventListener("mouseup", handler);
+    };
+  }, []);
+
+  const handle: ReactNode = (
+    <div
+      className={`${direction} handle ${dragState.dragging ? "dragging" : ""}`}
+      onMouseDown={(e) => dispatch(e as DragActions)}
+    />
+  );
+
+  return [dragState, el, handle];
 }

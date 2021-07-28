@@ -6,44 +6,14 @@ import { Tab } from "./Tab";
 import AceEditor from "react-ace";
 import "ace-builds/src-min-noconflict/theme-tomorrow_night_bright";
 import "ace-builds/src-min-noconflict/theme-dawn";
-import { EditorPannel } from "./ledgers/Ledgers";
-import {
-  DragActions,
-  useDraggableHandle,
-} from "../../common/hooks/useDraggableHandle";
+import { EditorPannel } from "./ledgers/EditorPannel";
 
 export function Editor() {
   const [theme] = useContext(ThemeContext);
-  const [ledgersDragState, ledgersEl, dispatchLedgersDragged] =
-    useDraggableHandle("ledgers", "horizontal", "start");
-
-  const [resultsDragState, resultsEl, dispatchResultsDragged] =
-    useDraggableHandle("results", "vertical", "end");
-
-  const dispatchDragged: React.MouseEventHandler<HTMLElement> = (e) => {
-    dispatchLedgersDragged(e as DragActions);
-    dispatchResultsDragged(e as DragActions);
-  };
 
   return (
-    <div
-      className="editor-container"
-      style={{
-        userSelect:
-          ledgersDragState.dragging || resultsDragState.dragging
-            ? "none"
-            : "auto",
-      }}
-      onMouseUp={dispatchDragged}
-      onMouseMove={dispatchDragged}
-    >
-      <EditorPannel
-        {...{
-          navEl: ledgersEl,
-          width: ledgersDragState.currentSize,
-          dispatchLeft: dispatchLedgersDragged,
-        }}
-      />
+    <div className="editor-container">
+      <EditorPannel />
       <section className="main-section">
         <ul className="editor-tabs">
           <li>
@@ -64,13 +34,7 @@ export function Editor() {
             height="100%"
           />
         </div>
-        <Results
-          {...{
-            resultsEl,
-            height: resultsDragState.currentSize,
-            dispatchBottom: dispatchResultsDragged,
-          }}
-        />
+        <Results />
       </section>
     </div>
   );

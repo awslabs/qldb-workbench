@@ -30,6 +30,10 @@
 body {
   font-family: "Noto Sans", serif;
   margin: 0;
+
+  &.dragging {
+    user-select: none;
+  }
 }
 
 .spinner {
@@ -112,13 +116,6 @@ nav {
       background-color: awsui.$color-background-container-content;
     }
 
-    > div#bottomhandle.resultshandle {
-      border-bottom: 1px solid awsui.$color-border-divider-default;
-      &:hover {
-        border-bottom: 3px solid awsui.$color-border-divider-default;
-      }
-    }
-
     .close {
       background-color: awsui.$color-background-layout-main;
       color: awsui.$color-text-body-default;
@@ -143,37 +140,6 @@ nav {
       }
     }
   }
-
-  > div#lefthandle {
-    grid-area: lefthandle;
-    border-left: 1px solid awsui.$color-border-divider-default;
-
-    &:hover {
-      grid-area: lefthandle;
-      border-left: 3px solid awsui.$color-border-divider-default;
-    }
-  }
-
-  > div#righthandle {
-    grid-area: righthandle;
-    border-right: 1px solid awsui.$color-border-divider-default;
-
-    &:hover {
-      grid-area: righthandle;
-      border-right: 3px solid awsui.$color-border-divider-default;
-    }
-  }
-}
-
-.handle {
-  cursor: col-resize;
-
-  .collapsed {
-    display: none;
-  }
-}
-.resultshandle {
-  cursor: row-resize;
 }
 
 .tool {
@@ -305,8 +271,14 @@ aside.collapsed {
   z-index: 100;
   box-sizing: border-box;
   background-clip: padding-box;
+  cursor: col-resize;
 
-  &:hover {
+  .collapsed {
+    display: none;
+  }
+
+  &:hover,
+  &.dragging {
     border: 3px solid awsui.$color-text-accent !important;
     background-color: awsui.$color-text-accent;
   }
