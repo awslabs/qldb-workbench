@@ -8,29 +8,25 @@ export function EditorPannel() {
   const [open, toggleOpen] = useToggle(true);
   const [dragState, el, handle] = useDraggableHandle("vertical", "end");
 
-  return (
+  return open ? (
     <div
       ref={el}
       className="editor-pannel"
-      style={{ width: dragState.currentSize + "px" }}
+      style={open ? { width: dragState.currentSize + "px" } : {}}
     >
-      {open ? (
-        <>
-          <Tool name="Browse" close={toggleOpen}>
-            <p>This is the browse tool content</p>
-          </Tool>
-          {handle}
-        </>
-      ) : (
-        <aside className="left collapsed">
-          <ul>
-            <li className="left" onClick={toggleOpen}>
-              <TextIcon name="manage_search" />
-              <span className="left">Browse</span>
-            </li>
-          </ul>
-        </aside>
-      )}
+      <Tool name="Browse" close={toggleOpen}>
+        <p>This is the browse tool content</p>
+      </Tool>
+      {handle}
     </div>
+  ) : (
+    <aside className="left collapsed" onClick={toggleOpen}>
+      <ul>
+        <li className="left">
+          <TextIcon name="manage_search" />
+          <span className="left">Browse</span>
+        </li>
+      </ul>
+    </aside>
   );
 }

@@ -3,7 +3,7 @@ import "./styles.scss";
 import { useContext } from "react";
 import { ThemeContext } from "../../core/ThemeProvider";
 import { Logo } from "./Logo";
-import { ThemeSelector } from "./ThemeSelector";
+import { RegionSelector } from "./RegionSelector";
 
 export function Topbar() {
   const [theme] = useContext(ThemeContext);
@@ -16,7 +16,7 @@ export function Topbar() {
             <Logo />
           </div>
           <div className="right">
-            <ThemeSelector />
+            <RegionSelector />
           </div>
         </div>
         <div className="divider" />

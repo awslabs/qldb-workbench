@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Workbench } from "./Workbench";
+import Workbench from "./Workbench";
 
 function App() {
   return <Workbench />;
