@@ -1,13 +1,14 @@
 import * as React from "react";
 import { ReactNode, useCallback, useEffect, useReducer } from "react";
 
-const MIN_TOOL_SIZE = 10;
+const MIN_TOOL_SIZE = 40;
 
-type Direction = "vertical" | "horizontal";
-type Position = "start" | "end";
+export type Direction = "vertical" | "horizontal";
+export type Position = "start" | "end";
 
 interface DragSubscribed {
   type: "drag-subscribed";
+  minSize: number;
   size: number;
 }
 interface MouseDown {
@@ -31,6 +32,7 @@ interface DragState {
   direction: Direction;
   position: Position;
   dragging: boolean;
+  minSize?: number;
   startSize?: number;
   currentSize?: number;
   startPosition?: number;
@@ -40,7 +42,12 @@ interface DragState {
 function dragReducer(state: DragState, action: DragActions): DragState {
   switch (action.type) {
     case "drag-subscribed":
-      return { ...state, startSize: action.size };
+      return {
+        ...state,
+        minSize: action.minSize,
+        startSize: action.size,
+        currentSize: action.size,
+      };
     case "mousedown":
       return {
         ...state,
@@ -82,12 +89,13 @@ export function useDraggableHandle(
     dragging: false,
   });
 
-  const el = useCallback((node) => {
+  const resizableEl = useCallback((node) => {
     if (!node) return;
 
     dispatch({
       type: "drag-subscribed",
       size: direction === "vertical" ? node.offsetWidth : node.offsetHeight,
+      minSize: direction === "vertical" ? node.offsetHeight : node.offsetWidth,
     });
   }, []);
 
@@ -116,5 +124,5 @@ export function useDraggableHandle(
     />
   );
 
-  return [dragState, el, handle];
+  return [dragState, resizableEl, handle];
 }

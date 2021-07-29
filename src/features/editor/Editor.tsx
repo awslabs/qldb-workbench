@@ -4,9 +4,10 @@ import { ThemeContext } from "../../core/ThemeProvider";
 import { Results } from "./results/Results";
 import { Tab } from "./Tab";
 import AceEditor from "react-ace";
+import "ace-builds/src-min-noconflict/mode-sql";
 import "ace-builds/src-min-noconflict/theme-tomorrow_night_bright";
 import "ace-builds/src-min-noconflict/theme-dawn";
-import { EditorPannel } from "./ledgers/EditorPannel";
+import { EditorPannel } from "./pannel/EditorPannel";
 
 export function Editor() {
   const [theme] = useContext(ThemeContext);
@@ -29,7 +30,7 @@ export function Editor() {
         <div className="editor">
           <AceEditor
             theme={theme === "dark" ? "tomorrow_night_bright" : "dawn"}
-            mode={"text"}
+            mode={"sql"}
             width="100%"
             height="100%"
           />
