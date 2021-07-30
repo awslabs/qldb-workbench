@@ -15,7 +15,6 @@
   &.collapsed {
     .tool {
       background-color: awsui.$color-background-container-header !important;
-      cursor: pointer !important;
 
       > div:first-child {
         border-bottom: none !important;

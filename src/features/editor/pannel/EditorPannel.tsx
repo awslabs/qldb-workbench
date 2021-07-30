@@ -5,10 +5,7 @@ import "./styles.scss";
 
 export function EditorPannel() {
   return (
-    <FlexContainer
-      header="Ledgers"
-      handle={{ direction: "vertical", position: "end" }}
-    >
+    <FlexContainer handle={{ direction: "vertical", position: "end" }}>
       <p>This is the browse tool content</p>
     </FlexContainer>
   );

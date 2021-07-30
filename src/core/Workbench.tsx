@@ -7,31 +7,41 @@ import { Editor } from "../features/editor/Editor";
 
 import "../../assets/styles.scss";
 import "@awsui/global-styles/index.css";
-import { PageNotFound } from "../features/page-not-found/PageNotFound";
-import { Page, usePage } from "../common/hooks/usePage";
 import { Settings } from "../features/settings-page/Settings";
 import { useShortcuts } from "../common/hooks/useShortcuts";
-
-function getMainPage(page: Page) {
-  switch (page) {
-    case "editor":
-      return <Editor />;
-    case "settings":
-      return <Settings />;
-    default:
-      return <PageNotFound name={page} />;
-  }
-}
+import { Page } from "../common/components/Page";
+import { Pages } from "../common/components/Pages";
+import { PageNotFound } from "../features/page-not-found/PageNotFound";
 
 function Workbench() {
-  const [page, setPage] = usePage();
   useShortcuts();
 
   return (
     <>
       <Topbar />
-      <Navigation page={page} onPageChange={setPage} />
-      <main>{getMainPage(page)}</main>
+      <Pages defaultPage="editor">
+        <Navigation />
+        <main>
+          <Page name="editor">
+            <Editor />
+          </Page>
+          <Page name="recent">
+            <PageNotFound />
+          </Page>
+          <Page name="saved">
+            <PageNotFound />
+          </Page>
+          <Page name="verification">
+            <PageNotFound />
+          </Page>
+          <Page name="settings">
+            <Settings />
+          </Page>
+          <Page name="feedback">
+            <PageNotFound />
+          </Page>
+        </main>
+      </Pages>
     </>
   );
 }

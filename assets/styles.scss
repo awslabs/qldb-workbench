@@ -99,6 +99,26 @@ nav {
       flex-grow: 1;
     }
 
+    .editor-tabs {
+      // Decrease padding of header
+      button {
+        padding: 4px 0px !important;
+
+        button {
+          padding: 0px 0px !important;
+        }
+      }
+
+      // Hide tabs content
+      > div:last-child {
+        display: none;
+      }
+
+      .new-tab-button {
+        border: none !important;
+      }
+    }
+
     .close {
       background-color: awsui.$color-background-layout-main;
       color: awsui.$color-text-body-default;
@@ -106,20 +126,6 @@ nav {
 
       &:hover {
         background-color: awsui.$color-border-divider-default;
-      }
-    }
-
-    > ul.editor-tabs {
-      grid-area: tabs;
-      margin: 0 0 0 0;
-      padding: 0;
-      list-style-type: none;
-      background-color: awsui.$color-background-layout-main;
-
-      > li {
-        display: inline-block;
-        padding: 0 0.2rem 0 0.2rem;
-        border-right: 1px solid awsui.$color-border-divider-default;
       }
     }
   }

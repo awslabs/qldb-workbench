@@ -28,7 +28,6 @@ export function FlexContainer(props: PropsWithChildren<Props>) {
       className={`tool-container ${handle.direction} ${
         !open ? "collapsed" : ""
       }`}
-      onClick={!open ? toggleOpen : undefined}
     >
       {open && handle.position === "start" && handleComponent}
       <Container
@@ -40,7 +39,7 @@ export function FlexContainer(props: PropsWithChildren<Props>) {
               <Button
                 variant="icon"
                 iconName={open ? "treeview-collapse" : "treeview-expand"}
-                onClick={open ? toggleOpen : undefined}
+                onClick={toggleOpen}
               />
             }
           >
