@@ -1,3 +1,6 @@
+// Use Polaris design tokens for consistent colors
+@use '@awsui/design-tokens/index.scss' as awsui;
+
 .topbar {
   display: flex;
   flex-direction: column;
@@ -10,12 +13,12 @@
   left: 0px;
   top: 0px;
 
-  background-color: var(--color-background-plain);
-  color: var(--color-text-default);
+  background-color: awsui.$color-background-container-content;
+  color: awsui.$color-text-body-default;
 
   &.dark {
     .toggle {
-      color: var(--color-text-default) !important;
+      color: awsui.$color-text-body-default !important;
     }
   }
 
@@ -24,12 +27,12 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 20px 7px 12px;
     flex-grow: 1;
 
     height: 35px;
 
     .left {
+      padding: 8px 20px 7px 12px;
       height: 20px;
       flex-grow: auto;
 
@@ -43,7 +46,7 @@
       flex-direction: row;
       align-items: flex-start;
 
-      height: 20px;
+      padding: 0px 20px;
 
       a {
         cursor: pointer;
@@ -53,6 +56,10 @@
 
   .divider {
     height: 1px;
-    background-color: var(--color-demarcate);
+    background-color: awsui.$color-border-divider-default;
+  }
+
+  .region-selector {
+    border: none !important;
   }
 }

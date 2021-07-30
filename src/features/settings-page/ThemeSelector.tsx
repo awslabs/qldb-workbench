@@ -1,12 +1,10 @@
 import Toggle from "@awsui/components-react/toggle";
 import * as React from "react";
-import { useContext, useEffect } from "react";
-import { useKeyboard } from "../common/useKeyboard";
-import { ThemeContext } from "../core/ThemeProvider";
+import { useContext } from "react";
+import { ThemeContext } from "../../core/ThemeProvider";
 
 export function ThemeSelector() {
   const [theme, toggleTheme] = useContext(ThemeContext);
-  useKeyboard((e) => e.metaKey && e.code === "Semicolon", toggleTheme);
 
   return (
     <div className="theme-toggle">
@@ -15,7 +13,7 @@ export function ThemeSelector() {
         checked={theme === "dark"}
         onChange={toggleTheme}
       >
-        Dark Mode
+        Dark Mode <span className="shortcut">(cmd + ;)</span>
       </Toggle>
     </div>
   );

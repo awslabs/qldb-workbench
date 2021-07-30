@@ -1,0 +1,33 @@
+// Use Polaris design tokens for consistent colors
+@use '@awsui/design-tokens/index.scss' as awsui;
+
+$color-orange: #ec7211;
+
+.navigation {
+  background-color: awsui.$color-background-container-header;
+  border-right: 1px solid awsui.$color-border-divider-default;
+  font-size: 9px;
+
+  .nav-button {
+    width: 60px;
+    height: 35px;
+    text-align: center;
+    border-bottom: 1px solid awsui.$color-border-divider-default;
+    cursor: pointer;
+    color: awsui.$color-text-label;
+    padding: 5px 0px;
+
+    &:hover {
+      color: awsui.$color-text-accent;
+    }
+
+    &.selected {
+      background-color: awsui.$color-background-container-content;
+      color: $color-orange;
+
+      > div {
+        color: awsui.$color-text-body-default;
+      }
+    }
+  }
+}

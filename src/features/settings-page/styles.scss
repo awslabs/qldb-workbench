@@ -1,0 +1,10 @@
+// Use Polaris design tokens for consistent colors
+@use '@awsui/design-tokens/index.scss' as awsui;
+
+.settings {
+  text-align: center;
+
+  .shortcut {
+    color: awsui.$color-text-body-secondary;
+  }
+}

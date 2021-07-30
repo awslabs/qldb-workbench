@@ -2,7 +2,7 @@ import { Spinner } from "@awsui/components-react";
 import * as React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useToggle } from "../common/useToggle";
+import { useToggle } from "../common/hooks/useToggle";
 
 type Theme = "light" | "dark";
 
@@ -62,7 +62,7 @@ export default function ThemeProvider(props: React.PropsWithChildren<Props>) {
 
   return (
     <ThemeContext.Provider value={[theme, toggle]}>
-      <div className={`${className} ${theme}`}>{children}</div>
+      <div className={`${className} awsui-${theme}-mode`}>{children}</div>
     </ThemeContext.Provider>
   );
 }
