@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export type Page =
+export type PageName =
   | "editor"
   | "recent"
   | "saved"
@@ -8,6 +8,6 @@ export type Page =
   | "settings"
   | "feedback";
 
-export function usePage() {
-  return useState<Page>("editor");
+export function usePage(initial: PageName) {
+  return useState<PageName>(initial);
 }

@@ -88,10 +88,6 @@ nav {
   display: flex;
   height: 100%;
 
-  .editor-pannel {
-    display: flex;
-  }
-
   .main-section {
     display: flex;
     flex-direction: column;
@@ -103,8 +99,24 @@ nav {
       flex-grow: 1;
     }
 
-    .editor-results {
-      background-color: awsui.$color-background-container-content;
+    .editor-tabs {
+      // Decrease padding of header
+      button {
+        padding: 4px 0px !important;
+
+        button {
+          padding: 0px 0px !important;
+        }
+      }
+
+      // Hide tabs content
+      > div:last-child {
+        display: none;
+      }
+
+      .new-tab-button {
+        border: none !important;
+      }
     }
 
     .close {
@@ -115,181 +127,6 @@ nav {
       &:hover {
         background-color: awsui.$color-border-divider-default;
       }
-    }
-
-    > ul.editor-tabs {
-      grid-area: tabs;
-      margin: 0 0 0 0;
-      padding: 0;
-      list-style-type: none;
-      background-color: awsui.$color-background-layout-main;
-
-      > li {
-        display: inline-block;
-        padding: 0 0.2rem 0 0.2rem;
-        border-right: 1px solid awsui.$color-border-divider-default;
-      }
-    }
-  }
-}
-
-.tool {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  flex-grow: 1;
-
-  .tool-header {
-    display: flex;
-    background-color: awsui.$color-background-container-header;
-
-    .tool-header-main {
-      flex-grow: 1;
-    }
-
-    > ul {
-      padding: 0;
-      margin: 0;
-      list-style-type: none;
-      font-size: small;
-    }
-
-    > ul.tool-header-main {
-      grid-area: tool-header-main;
-
-      > li {
-        padding: 0 0 0 0.2rem;
-      }
-    }
-
-    > ul.tool-header-controls {
-      grid-area: tool-header-controls;
-      display: flex;
-      justify-content: flex-end;
-      padding: 0.1rem;
-    }
-  }
-  .tool-body {
-    flex-grow: 1;
-    flex-basis: auto;
-    background-color: awsui.$color-background-layout-main;
-    overflow: scroll;
-  }
-}
-
-li.minimize {
-  cursor: default;
-
-  &:hover {
-    background-color: awsui.$color-background-dropdown-item-hover;
-  }
-}
-
-li.minimize.chosen {
-  background-color: awsui.$color-background-dropdown-item-hover;
-
-  &:hover {
-    background-color: awsui.$color-background-dropdown-item-hover;
-  }
-}
-
-aside.left.collapsed {
-  border-right: 1px solid awsui.$color-border-divider-default;
-}
-
-aside.right.collapsed {
-  border-left: 1px solid awsui.$color-border-divider-default;
-}
-
-aside.bottom.collapsed {
-  border-top: 1px solid awsui.$color-border-divider-default;
-}
-
-aside.collapsed {
-  background-color: awsui.$color-background-container-header;
-  font-size: small;
-
-  &:hover {
-    background-color: awsui.$color-background-dropdown-item-hover;
-  }
-
-  > ul {
-    padding: 0.2rem 0.1rem 0 0.1rem;
-    margin: 0;
-    list-style-type: none;
-    cursor: default;
-
-    > li {
-      padding: 0 0 0 0;
-      writing-mode: vertical-lr;
-    }
-
-    > li.bottom {
-      padding: 0 0 0 0;
-      margin: auto 90% auto auto;
-      writing-mode: horizontal-tb;
-    }
-
-    > li.left {
-      transform: rotate(-180deg);
-
-      > span.left {
-        padding: 0.1rem 0 0 0;
-      }
-    }
-
-    > li.right {
-      > span.right {
-        padding: 0.1rem 0 0 0;
-      }
-    }
-  }
-
-  .icon {
-    padding-bottom: 0.1rem;
-  }
-}
-
-.handle {
-  background-color: awsui.$color-border-divider-default;
-  opacity: 0.2;
-  z-index: 100;
-  box-sizing: border-box;
-  background-clip: padding-box;
-  cursor: col-resize;
-
-  .collapsed {
-    display: none;
-  }
-
-  &:hover,
-  &.dragging {
-    border: 3px solid awsui.$color-text-accent !important;
-    background-color: awsui.$color-text-accent;
-  }
-
-  &.horizontal {
-    height: 11px;
-    margin: -5px 0;
-    border-top: 5px solid rgba(255, 255, 255, 0);
-    border-bottom: 5px solid rgba(255, 255, 255, 0);
-    cursor: row-resize;
-    width: 100%;
-  }
-
-  &.vertical {
-    width: 11px;
-    margin: 0 -5px;
-    border-left: 5px solid rgba(255, 255, 255, 0);
-    border-right: 5px solid rgba(255, 255, 255, 0);
-    cursor: col-resize;
-  }
-
-  &.disabled {
-    cursor: not-allowed;
-
-    &:hover {
-      border-color: transparent;
     }
   }
 }

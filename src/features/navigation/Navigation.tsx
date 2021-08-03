@@ -1,16 +1,12 @@
 import * as React from "react";
-import { Page } from "../../common/hooks/usePage";
+import { useContext } from "react";
+import { PageContext } from "../../common/components/Pages";
 import { NavButton } from "./NavButton";
 
 import "./styles.scss";
 
-interface Props {
-  page: Page;
-  onPageChange: React.Dispatch<React.SetStateAction<Page>>;
-}
-
-export function Navigation(props: Props): React.ReactElement {
-  const { page, onPageChange } = props;
+export function Navigation(): React.ReactElement {
+  const [page, onPageChange] = useContext(PageContext);
 
   return (
     <nav className="navigation">
