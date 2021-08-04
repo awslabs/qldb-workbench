@@ -3,7 +3,7 @@ import * as React from "react";
 import { useContext } from "react";
 import { ThemeContext } from "../../core/ThemeProvider";
 
-export function ThemeSelector() {
+export function ThemeSelector(): JSX.Element {
   const [theme, toggleTheme] = useContext(ThemeContext);
 
   return (

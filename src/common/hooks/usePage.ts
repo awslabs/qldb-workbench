@@ -8,6 +8,8 @@ export type PageName =
   | "settings"
   | "feedback";
 
-export function usePage(initial: PageName) {
+export function usePage(
+  initial: PageName
+): [PageName, React.Dispatch<React.SetStateAction<PageName>>] {
   return useState<PageName>(initial);
 }

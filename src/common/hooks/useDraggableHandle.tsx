@@ -60,7 +60,7 @@ function dragReducer(state: DragState, action: DragActions): DragState {
         return state;
       }
       return { ...state, dragging: false, startSize: state.currentSize };
-    case "mousemove":
+    case "mousemove": {
       if (!state.dragging || !state.startSize || !state.startPosition) {
         return state;
       }
@@ -74,6 +74,7 @@ function dragReducer(state: DragState, action: DragActions): DragState {
         currentPosition: position,
         currentSize: Math.max(size, MIN_TOOL_SIZE),
       };
+    }
     default:
       return state;
   }
@@ -89,15 +90,19 @@ export function useDraggableHandle(
     dragging: false,
   });
 
-  const resizableEl = useCallback((node) => {
-    if (!node) return;
+  const resizableEl = useCallback(
+    (node) => {
+      if (!node) return;
 
-    dispatch({
-      type: "drag-subscribed",
-      size: direction === "vertical" ? node.offsetWidth : node.offsetHeight,
-      minSize: direction === "vertical" ? node.offsetHeight : node.offsetWidth,
-    });
-  }, []);
+      dispatch({
+        type: "drag-subscribed",
+        size: direction === "vertical" ? node.offsetWidth : node.offsetHeight,
+        minSize:
+          direction === "vertical" ? node.offsetHeight : node.offsetWidth,
+      });
+    },
+    [direction]
+  );
 
   useEffect(() => {
     document

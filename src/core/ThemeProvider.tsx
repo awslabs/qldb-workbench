@@ -1,8 +1,7 @@
 import { Spinner } from "@awsui/components-react";
 import * as React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import { useToggle } from "../common/hooks/useToggle";
+import { useCallback, useEffect } from "react";
+import { usePersistedState } from "../common/hooks/usePersistedState";
 
 type Theme = "light" | "dark";
 
@@ -10,7 +9,9 @@ type ThemeContextReturn = [Theme, () => void];
 
 export const ThemeContext = React.createContext<ThemeContextReturn>([
   "light",
-  () => {},
+  () => {
+    throw new Error();
+  },
 ]);
 
 interface Props {
@@ -34,31 +35,39 @@ async function getOSTheme(): Promise<Theme> {
   return darkMode ? "dark" : "light";
 }
 
-export default function ThemeProvider(props: React.PropsWithChildren<Props>) {
-  const { children, className } = props;
-  const [initialTheme, setInitialTheme] = useState<Theme | null>(null);
-  const otherTheme = initialTheme === "light" ? "dark" : "light";
+const WORKBENCH_THEME_STORAGE_KEY = "aws-qldb-workbench-theme";
 
-  const [isInitial, toggle] = useToggle(true);
+export default function ThemeProvider(
+  props: React.PropsWithChildren<Props>
+): JSX.Element {
+  const { children, className } = props;
+  const [theme, setTheme] = usePersistedState<Theme | null>(
+    WORKBENCH_THEME_STORAGE_KEY,
+    null
+  );
+
+  const toggle = useCallback(() => {
+    setTheme((theme) => (theme === "light" ? "dark" : "light"));
+  }, [setTheme]);
 
   useEffect(() => {
+    if (theme !== null) return;
+
     const fetchDarkMode = async () => {
       const OSTheme = await getOSTheme();
-      setInitialTheme(OSTheme);
+      setTheme(OSTheme);
     };
 
     fetchDarkMode();
-  }, [setInitialTheme, window.darkMode]);
+  }, [setTheme, theme]);
 
-  if (initialTheme === null) {
+  if (theme === null) {
     return (
       <div className="spinner">
         <Spinner size="large" />
       </div>
     );
   }
-
-  const theme = isInitial ? initialTheme : otherTheme;
 
   return (
     <ThemeContext.Provider value={[theme, toggle]}>

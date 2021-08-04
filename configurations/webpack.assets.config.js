@@ -2,6 +2,7 @@
 
 // pull in the 'path' module from node
 const path = require('path');
+const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -32,6 +33,10 @@ module.exports = {
     new ForkTsCheckerWebpackPlugin({
       async: true,
     }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('development'),
+      'process.env.NODE_DEBUG': false,
+    })
   ],
   module: {
     // rules tell webpack how to handle certain types of files
@@ -63,6 +68,14 @@ module.exports = {
     // specify certain file extensions to get automatically appended to imports
     // ie we can write `import 'index'` instead of `import 'index.ts'`
     extensions: ['.ts', '.tsx', '.js'],
+    // Fallbacks since driver depends on nodejs modules and webpack 5 doesn't include polyfills by default
+    // reference: https://webpack.js.org/migrate/5/
+    fallback: {
+      "crypto": require.resolve("crypto-browserify"),
+      "util": require.resolve("util/"),
+      "stream": require.resolve("stream-browserify"),
+      "http": require.resolve("stream-http")
+    },
   },
   devServer: {
     contentBase: path.join(__dirname, 'build/assets'),

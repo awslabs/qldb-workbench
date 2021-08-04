@@ -1,4 +1,4 @@
-import { Button, Tabs } from "@awsui/components-react";
+import { Icon, Tabs } from "@awsui/components-react";
 import * as React from "react";
 import { ReactNode, useCallback, useState } from "react";
 
@@ -66,26 +66,29 @@ export function useTabs(): [ReactNode, string, (content: string) => void] {
       const tabWithCloseButton = (tab: Tab): Tab => {
         const label = (
           <div>
-            <span style={{ marginRight: "10px" }}>{tab.label}</span>{" "}
-            <Button
-              iconName="close"
-              variant="icon"
-              onClick={() =>
-                setTabs((tabs) => {
-                  const updatedTabs = {
-                    ...tabs,
-                    [tab.id]: { ...tabs[tab.id], closed: true },
-                  };
-                  setActiveTab(
-                    Object.values(updatedTabs)
-                      .reverse()
-                      .find((t) => !t.closed)?.id ?? ""
-                  );
+            <span>{tab.label}</span>{" "}
+            {tabs.filter((t) => !t.closed).length > 1 && (
+              <span
+                className="close-btn"
+                onClick={() =>
+                  setTabs((tabs) => {
+                    const updatedTabs = {
+                      ...tabs,
+                      [tab.id]: { ...tabs[tab.id], closed: true },
+                    };
+                    setActiveTab(
+                      Object.values(updatedTabs)
+                        .reverse()
+                        .find((t) => !t.closed)?.id ?? ""
+                    );
 
-                  return updatedTabs;
-                })
-              }
-            />
+                    return updatedTabs;
+                  })
+                }
+              >
+                <Icon name="close" />
+              </span>
+            )}
           </div>
         );
 
@@ -106,7 +109,7 @@ export function useTabs(): [ReactNode, string, (content: string) => void] {
         ...decorateWithCloseButton(Object.values(tabs)),
         {
           id: "new",
-          label: <Button className="new-tab-button" iconName="add-plus" />,
+          label: <Icon className="new-tab-button" name="add-plus" />,
         },
       ]}
       variant="container"

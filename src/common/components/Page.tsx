@@ -8,7 +8,7 @@ interface Props {
   name: PageName;
 }
 
-export function Page(props: PropsWithChildren<Props>) {
+export function Page(props: PropsWithChildren<Props>): JSX.Element {
   const { name, children } = props;
   const [currentPage] = useContext(PageContext);
 

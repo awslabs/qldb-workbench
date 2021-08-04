@@ -5,7 +5,7 @@ export class PartiQLHighlightRules extends ace.acequire(
 ).TextHighlightRules {
   constructor() {
     super();
-    var keywords =
+    const keywords =
       "action|alter|and|any|are|as|asc|assertion|at|authorization|bag|begin|" +
       "between|bit_length|both|by|cascade|cascaded|case|cast|catalog|" +
       "character_length|char_length|check|clob|close|collate|collation|column|commit|connect|" +
@@ -25,17 +25,17 @@ export class PartiQLHighlightRules extends ace.acequire(
       "translation|trim|tuple|txid|undrop|union|unique|unknown|unpivot|update|upper|usage|user|using|" +
       "utcnow|value|values|varying|view|when|whenever|where|with|work|write|year|zone|history";
 
-    var builtinConstants = "true|false";
+    const builtinConstants = "true|false";
 
-    var builtinFunctions =
+    const builtinFunctions =
       "avg|count|first|last|max|min|sum|" +
       "coalesce|ifnull|isnull|nvl|absolute|add|all|allocate";
 
-    var dataTypes =
+    const dataTypes =
       "int|numeric|decimal|date|varchar|char|float|double|bit|set|timestamp|" +
       "real|blob|bool|boolean|integer|character";
 
-    var keywordMapper = this.createKeywordMapper(
+    const keywordMapper = this.createKeywordMapper(
       {
         "support.function": builtinFunctions,
         keyword: keywords,

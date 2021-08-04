@@ -5,7 +5,7 @@ import { ThemeContext } from "../../core/ThemeProvider";
 import { Logo } from "./Logo";
 import { RegionSelector } from "./RegionSelector";
 
-export function Topbar() {
+export function Topbar(): JSX.Element {
   const [theme] = useContext(ThemeContext);
 
   return (

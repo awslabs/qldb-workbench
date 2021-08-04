@@ -29,7 +29,7 @@ const executeStatement = (driver: QldbDriver) => {
 };
 
 export function openLedger(ledgerName: string) {
-  const maxConcurrentTransactions: number = 10;
+  const maxConcurrentTransactions = 10;
   const agentForQldb: Agent = new Agent({
     keepAlive: true,
     maxSockets: maxConcurrentTransactions,
@@ -44,7 +44,7 @@ export function openLedger(ledgerName: string) {
         }
       : { httpOptions: { agent: agentForQldb } };
 
-  const retryLimit: number = 4;
+  const retryLimit = 4;
   // Use driver's default backoff function for this example (no second parameter provided to RetryConfig)
   const retryConfig: RetryConfig = new RetryConfig(retryLimit);
   const driver = new QldbDriver(

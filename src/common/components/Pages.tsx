@@ -8,9 +8,14 @@ interface Props {
 
 export const PageContext = React.createContext<
   [PageName, Dispatch<SetStateAction<PageName>>]
->(["editor", () => {}]);
+>([
+  "editor",
+  () => {
+    throw new Error();
+  },
+]);
 
-export function Pages(props: PropsWithChildren<Props>) {
+export function Pages(props: PropsWithChildren<Props>): JSX.Element {
   const { defaultPage, children } = props;
   const pageState = usePage(defaultPage);
 
