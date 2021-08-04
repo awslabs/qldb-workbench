@@ -1,7 +1,12 @@
 import * as React from "react";
 
 import "./styles.scss";
-import { Container, Header, Button } from "@awsui/components-react";
+import {
+  Container,
+  Header,
+  Button,
+  ContainerProps,
+} from "@awsui/components-react";
 import { PropsWithChildren } from "react";
 import {
   Direction,
@@ -13,10 +18,11 @@ import { useToggle } from "../hooks/useToggle";
 interface Props {
   header?: React.ReactElement | string;
   handle: { position: Position; direction: Direction };
+  containerProps?: ContainerProps;
 }
 
 export function FlexContainer(props: PropsWithChildren<Props>): JSX.Element {
-  const { header, handle, children } = props;
+  const { header, handle, containerProps, children } = props;
   const [open, toggleOpen] = useToggle(true);
   const [dragState, resizableEl, handleComponent] = useDraggableHandle(
     handle.direction,
@@ -57,6 +63,7 @@ export function FlexContainer(props: PropsWithChildren<Props>): JSX.Element {
             </div>
           </Header>
         }
+        {...containerProps}
       >
         <div
           ref={resizableEl}
@@ -69,8 +76,8 @@ export function FlexContainer(props: PropsWithChildren<Props>): JSX.Element {
         >
           {children}
         </div>
+        {open && handle.position === "end" && handleComponent}
       </Container>
-      {open && handle.position === "end" && handleComponent}
     </div>
   );
 }

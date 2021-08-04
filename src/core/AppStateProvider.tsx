@@ -9,6 +9,7 @@ interface Props {
 
 interface AppState {
   credentials: { accessKeyId?: string; secretAccessKey?: string };
+  ledger?: string;
   region: string;
   drivers: { [ledger: string]: QldbDriver };
 }
@@ -37,7 +38,7 @@ export default function AppStateProvider(
   const [state, setState] = usePersistedState<AppState>(
     APP_STATE_STORAGE_KEY,
     initialState,
-    ["credentials", "region"]
+    ["credentials", "region", "ledger"]
   );
 
   return (
