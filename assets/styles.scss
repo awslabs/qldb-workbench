@@ -84,53 +84,6 @@ nav {
   }
 }
 
-.editor-container {
-  display: flex;
-  height: 100%;
-
-  .main-section {
-    display: flex;
-    flex-direction: column;
-
-    flex-basis: auto;
-    flex-grow: 1;
-
-    .editor {
-      flex-grow: 1;
-    }
-
-    .editor-tabs {
-      // Decrease padding of header
-      button {
-        padding: 4px 0px !important;
-
-        button {
-          padding: 0px 0px !important;
-        }
-      }
-
-      // Hide tabs content
-      > div:last-child {
-        display: none;
-      }
-
-      .new-tab-button {
-        border: none !important;
-      }
-    }
-
-    .close {
-      background-color: awsui.$color-background-layout-main;
-      color: awsui.$color-text-body-default;
-      cursor: pointer;
-
-      &:hover {
-        background-color: awsui.$color-border-divider-default;
-      }
-    }
-  }
-}
-
 .action-bar {
   display: inline-flex;
   padding: 5px 15px;

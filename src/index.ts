@@ -3,6 +3,7 @@ import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from "electron-devtools-installer";
 import * as electronIsDev from "electron-is-dev";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
 
 if (electronIsDev.valueOf()) {
@@ -37,6 +38,7 @@ function createWindow() {
     height: 1050,
     webPreferences: {
       preload: path.join(__dirname, "electron-preload.js"),
+      webSecurity: false,
     },
   });
 

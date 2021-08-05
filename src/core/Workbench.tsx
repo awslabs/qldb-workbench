@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Topbar } from "../features/topbar/Topbar";
-import ThemeProvider from "./ThemeProvider";
 import { Navigation } from "../features/navigation/Navigation";
 import { Editor } from "../features/editor/Editor";
 
@@ -12,6 +11,7 @@ import { useShortcuts } from "../common/hooks/useShortcuts";
 import { Page } from "../common/components/Page";
 import { Pages } from "../common/components/Pages";
 import { PageNotFound } from "../features/page-not-found/PageNotFound";
+import AppStateProvider from "./AppStateProvider";
 
 function Workbench() {
   useShortcuts();
@@ -48,8 +48,8 @@ function Workbench() {
 
 export default function ThemedWorkbench(): React.ReactElement {
   return (
-    <ThemeProvider className="root">
+    <AppStateProvider className="root">
       <Workbench />
-    </ThemeProvider>
+    </AppStateProvider>
   );
 }

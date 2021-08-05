@@ -3,7 +3,7 @@ import { useEffect } from "react";
 export function useKeyboard(
   filter: (e: KeyboardEvent) => boolean,
   effect: (e: KeyboardEvent) => void
-) {
+): void {
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) => {
       if (filter(e)) {

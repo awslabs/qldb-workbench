@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import "./styles.scss";
-import { Container, Header, Button, Icon } from "@awsui/components-react";
+import { Container, Header, Button } from "@awsui/components-react";
 import { PropsWithChildren } from "react";
 import {
   Direction,
@@ -15,7 +15,7 @@ interface Props {
   handle: { position: Position; direction: Direction };
 }
 
-export function FlexContainer(props: PropsWithChildren<Props>) {
+export function FlexContainer(props: PropsWithChildren<Props>): JSX.Element {
   const { header, handle, children } = props;
   const [open, toggleOpen] = useToggle(true);
   const [dragState, resizableEl, handleComponent] = useDraggableHandle(

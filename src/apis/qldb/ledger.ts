@@ -88,14 +88,14 @@ export async function listLedgers(
 
 export async function createLedger(
   name: string,
-  deletionProtection: boolean = false,
+  deletionProtection = false,
   tags: { [key: string]: string },
   enqueueSnackbar: (
     message: SnackbarMessage,
     options?: OptionsObject
   ) => SnackbarKey
 ) {
-  let request: CreateLedgerRequest = {
+  const request: CreateLedgerRequest = {
     Name: name,
     DeletionProtection: deletionProtection,
     PermissionsMode: "ALLOW_ALL",

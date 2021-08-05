@@ -1,0 +1,65 @@
+// Use Polaris design tokens for consistent colors
+@use '@awsui/design-tokens/index.scss' as awsui;
+
+.editor-container {
+  display: flex;
+  height: 100%;
+
+  .main-section {
+    display: flex;
+    flex-direction: column;
+
+    flex-basis: auto;
+    flex-grow: 1;
+
+    .editor {
+      flex-grow: 1;
+    }
+
+    .editor-tabs {
+      // Decrease padding of header
+      button {
+        padding: 4px 0px !important;
+
+        .close-btn {
+          padding: 5px 8px;
+          margin-right: -10px;
+
+          &:hover {
+            background-color: awsui.$color-background-dropdown-item-hover;
+            border-radius: 100%;
+          }
+        }
+      }
+
+      // Hide tabs content
+      > div:last-child {
+        display: none;
+      }
+
+      .new-tab-button {
+        border: none !important;
+      }
+    }
+
+    .close {
+      background-color: awsui.$color-background-layout-main;
+      color: awsui.$color-text-body-default;
+      cursor: pointer;
+
+      &:hover {
+        background-color: awsui.$color-border-divider-default;
+      }
+    }
+  }
+
+  .editor-actions {
+    padding: 6px 0px 6px 20px;
+    background-color: awsui.$color-background-container-header;
+    border-top: 1px solid awsui.$color-border-divider-default;
+
+    button {
+      margin: 0px 10px;
+    }
+  }
+}
