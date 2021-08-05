@@ -1,9 +1,7 @@
 import { QldbDriver } from "amazon-qldb-driver-js/dist/src/QldbDriver";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useState } from "react";
 
-import QLDBSession = require("aws-sdk/clients/qldbsession");
-import { ClientConfiguration } from "aws-sdk/clients/qldbsession";
-import { AppStateContext } from "../../core/AppStateProvider";
+import { useDriver } from "./useDriver";
 
 interface QLDBResult<T> {
   results: T[];
@@ -17,14 +15,8 @@ export function useQLDB<T>(
   lambda: (driver: QldbDriver) => Promise<T[]>
 ): QLDBResult<T> {
   const [results, setResults] = useState<T[]>([]);
-  const [error, setError] = useState<Error | undefined>();
-
-  const [
-    {
-      credentials: { accessKeyId, secretAccessKey },
-      region,
-    },
-  ] = useContext(AppStateContext);
+  const { error: driverError, getDriver } = useDriver();
+  const [error, setError] = useState();
 
   const clear = useCallback(() => {
     setResults([]);
@@ -32,21 +24,9 @@ export function useQLDB<T>(
   }, []);
 
   const executeQuery = useCallback(async () => {
-    if (!accessKeyId || !secretAccessKey) {
-      setError(new Error("Missing credentials"));
-      return;
-    }
+    const driver = getDriver(ledger);
 
-    const driver = new QldbDriver(
-      ledger,
-      {
-        region,
-        credentials: { accessKeyId, secretAccessKey },
-      },
-      undefined,
-      undefined,
-      (options: ClientConfiguration) => new QLDBSession(options)
-    );
+    if (!driver || driverError) return;
 
     try {
       const result = await lambda(driver);
@@ -57,7 +37,7 @@ export function useQLDB<T>(
       clear();
       setError(e);
     }
-  }, [accessKeyId, secretAccessKey, ledger, region, lambda, clear]);
+  }, [getDriver, ledger, driverError, lambda, clear]);
 
-  return { results, error, query: executeQuery, clear };
+  return { results, error: driverError || error, query: executeQuery, clear };
 }
