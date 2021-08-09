@@ -1,43 +1,34 @@
 import { QldbDriver } from "amazon-qldb-driver-js/dist/src/QldbDriver";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 import { useDriver } from "./useDriver";
 
-interface QLDBResult<T> {
-  results: T[];
-  error?: Error;
-  query: () => Promise<void>;
-  clear: () => void;
+interface QLDBResult {
+  error: Error | undefined;
+  query: <T>(
+    lambda: (driver: QldbDriver) => Promise<T[]>
+  ) => Promise<{ results: T[]; error?: Error }>;
 }
 
-export function useQLDB<T>(
-  ledger: string,
-  lambda: (driver: QldbDriver) => Promise<T[]>
-): QLDBResult<T> {
-  const [results, setResults] = useState<T[]>([]);
+export function useQLDB(ledger: string): QLDBResult {
   const { error: driverError, getDriver } = useDriver();
-  const [error, setError] = useState();
 
-  const clear = useCallback(() => {
-    setResults([]);
-    setError(undefined);
-  }, []);
+  const executeQuery = useCallback(
+    async <T>(lambda: (driver: QldbDriver) => Promise<T[]>) => {
+      const driver = getDriver(ledger);
 
-  const executeQuery = useCallback(async () => {
-    const driver = getDriver(ledger);
+      if (!driver || driverError) return { results: [], error: driverError };
 
-    if (!driver || driverError) return;
+      try {
+        const results = await lambda(driver);
 
-    try {
-      const result = await lambda(driver);
+        return { results };
+      } catch (error) {
+        return { results: [], error };
+      }
+    },
+    [getDriver, ledger, driverError]
+  );
 
-      setResults(result);
-      setError(undefined);
-    } catch (e) {
-      clear();
-      setError(e);
-    }
-  }, [getDriver, ledger, driverError, lambda, clear]);
-
-  return { results, error: driverError || error, query: executeQuery, clear };
+  return { error: driverError, query: executeQuery };
 }

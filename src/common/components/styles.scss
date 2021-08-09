@@ -6,6 +6,30 @@
 
   &.vertical {
     flex-direction: row;
+
+    .tool {
+      overflow: scroll;
+      // Content
+      > div:last-child {
+        display: flex !important;
+        flex-grow: 1;
+      }
+
+      .tool-body {
+        display: flex;
+        flex-direction: column;
+
+        > div:first-child {
+          flex-grow: 1;
+        }
+      }
+    }
+
+    &.collapsed {
+      .tool-body {
+        display: none;
+      }
+    }
   }
 
   &.horizontal {
@@ -22,6 +46,7 @@
     }
 
     &.vertical .tool {
+      // Header
       > div:first-child {
         padding: 0px 5px !important;
 
@@ -35,9 +60,10 @@
 }
 
 .tool {
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   flex-grow: 0;
+  justify-content: space-between;
   height: 100%;
 
   > div:first-child {
@@ -50,6 +76,7 @@
     overflow: hidden;
   }
   .tool-body {
+    display: flex;
     height: 100%;
     flex-grow: 1;
     flex-basis: auto;

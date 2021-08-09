@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 import { ThemeContext } from "../../core/ThemeProvider";
 import { Results } from "./results/Results";
 import AceEditor from "react-ace";
@@ -13,21 +13,37 @@ import { Actions as EditorActions } from "./Actions";
 
 import "./styles.scss";
 import { useQLDB } from "../../common/hooks/useQLDB";
+import { AppStateContext } from "../../core/AppStateProvider";
 import { TransactionExecutor } from "amazon-qldb-driver-js/dist/src/TransactionExecutor";
-import { dom } from "ion-js";
 
 export function Editor(): JSX.Element {
   const [theme] = useContext(ThemeContext);
   const [tabs, content, setTabContent] = useTabs();
-  const { results, error, query, clear } = useQLDB<dom.Value>(
-    "TestLedger",
-    (driver) =>
+  const [{ ledger }] = useContext(AppStateContext);
+  const [results, setResults] = useState<unknown[]>([]);
+  const [error, setError] = useState<Error>();
+  const { error: driverError, query } = useQLDB(ledger ?? "");
+
+  const handleRun = useCallback(async () => {
+    setError(undefined);
+    const result = await query((driver) =>
       driver.executeLambda(async (txn: TransactionExecutor) => {
         const result = await txn.execute(content);
 
-        return result.getResultList().map((r) => JSON.parse(JSON.stringify(r)));
+        return result
+          .getResultList()
+          .map((r) => JSON.parse(JSON.stringify(r)) as unknown);
       })
-  );
+    );
+
+    if (result.error) {
+      setResults([]);
+      setError(result.error);
+      return;
+    }
+
+    setResults(result.results);
+  }, [content, query]);
 
   return (
     <div className="editor-container">
@@ -47,16 +63,16 @@ export function Editor(): JSX.Element {
           />
         </div>
         <EditorActions
-          onRun={query}
+          onRun={handleRun}
           onSave={() => {
             throw new Error("Not implemented yet");
           }}
           onClear={() => {
             setTabContent("");
-            clear();
+            setResults([]);
           }}
         />
-        <Results error={error} results={results} />
+        <Results error={driverError || error} results={results} />
       </section>
     </div>
   );

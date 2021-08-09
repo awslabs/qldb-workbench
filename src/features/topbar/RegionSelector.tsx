@@ -26,6 +26,7 @@ export function RegionSelector(): JSX.Element {
       ({ detail }) => {
         setAppState((state) => ({
           ...state,
+          ledger: undefined,
           region: detail.selectedOption.value as Region,
         }));
       },

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Button } from "@awsui/components-react";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useContext } from "react";
+import { AppStateContext } from "../../core/AppStateProvider";
 
 interface Props {
   onRun: () => Promise<void>;
@@ -11,6 +12,7 @@ interface Props {
 export function Actions(props: Props): JSX.Element {
   const { onRun, onSave, onClear } = props;
   const [loading, setLoading] = useState(false);
+  const [{ ledger }] = useContext(AppStateContext);
 
   const handleRun = useCallback(async () => {
     setLoading(true);
@@ -25,6 +27,7 @@ export function Actions(props: Props): JSX.Element {
     <div className="editor-actions">
       <Button
         loading={loading}
+        disabled={!ledger}
         variant="primary"
         iconName="caret-right-filled"
         onClick={handleRun}

@@ -1,4 +1,3 @@
-import { ColumnLayout } from "@awsui/components-react";
 import Alert from "@awsui/components-react/alert";
 import * as React from "react";
 import { useContext } from "react";
@@ -30,14 +29,14 @@ export function Results(props: Props): JSX.Element {
       handle={{ direction: "horizontal", position: "start" }}
     >
       <div>
-        {error && (
+        {error ? (
           <Alert type="error" header={error.name}>
             {error.message}
           </Alert>
-        )}
-        {!error && results.length === 0 && <EmptyResults />}
-        <ColumnLayout columns={4} borders="all">
-          {results.map((result, i) => (
+        ) : results.length === 0 ? (
+          <EmptyResults />
+        ) : (
+          results.map((result, i) => (
             <JSONTree
               key={`results-json-${i}`}
               keyPath={[i]}
@@ -45,8 +44,8 @@ export function Results(props: Props): JSX.Element {
               theme="tomorrow"
               invertTheme={theme === "light"}
             />
-          ))}
-        </ColumnLayout>
+          ))
+        )}
       </div>
     </FlexContainer>
   );
