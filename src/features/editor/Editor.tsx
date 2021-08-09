@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useCallback, useContext, useState } from "react";
 import { ThemeContext } from "../../core/ThemeProvider";
-import { Results } from "./results/Results";
+import { Results, ResultsData } from "./results/Results";
 import AceEditor from "react-ace";
 import "ace-builds/src-min-noconflict/mode-sql";
 import "ace-builds/src-min-noconflict/theme-tomorrow_night_bright";
@@ -20,19 +20,27 @@ export function Editor(): JSX.Element {
   const [theme] = useContext(ThemeContext);
   const [tabs, content, setTabContent] = useTabs();
   const [{ ledger }] = useContext(AppStateContext);
-  const [results, setResults] = useState<unknown[]>([]);
+  const [results, setResults] = useState<ResultsData>([]);
   const [error, setError] = useState<Error>();
   const { error: driverError, query } = useQLDB(ledger ?? "");
+  const queries = content.split(";").filter((q) => q.trim());
 
   const handleRun = useCallback(async () => {
     setError(undefined);
     const result = await query((driver) =>
       driver.executeLambda(async (txn: TransactionExecutor) => {
-        const result = await txn.execute(content);
+        const results = await Promise.all(
+          queries.map(async (query) => ({
+            query,
+            result: await txn.execute(query),
+          }))
+        );
 
-        return result
-          .getResultList()
-          .map((r) => JSON.parse(JSON.stringify(r)) as unknown);
+        return results.map(({ query, result }) => ({
+          [query]: result
+            .getResultList()
+            .map((r) => JSON.parse(JSON.stringify(r)) as unknown),
+        }));
       })
     );
 
@@ -43,7 +51,7 @@ export function Editor(): JSX.Element {
     }
 
     setResults(result.results);
-  }, [content, query]);
+  }, [queries, query]);
 
   return (
     <div className="editor-container">
