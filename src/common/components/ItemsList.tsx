@@ -1,7 +1,6 @@
 import {
   Box,
   Header,
-  Link,
   Pagination,
   Table,
   TextFilter,
@@ -12,40 +11,57 @@ import { capitalizeFirstLetter } from "../utils/stringUtils";
 
 import "./styles.scss";
 
-interface Props<T> {
+export interface ColumnRendererProps {
+  value: string;
+}
+
+type SimpleColumn<T> = keyof T;
+type ComplexColumn<T> = {
+  fieldName: keyof T;
+  header?: string;
+  renderer?: React.FC<ColumnRendererProps>;
+};
+type Column<T> = SimpleColumn<T> | ComplexColumn<T>;
+
+interface Props<T, I extends T | T[]> {
   header?: string;
   headerPlural?: string;
   loading: boolean;
   items: T[];
-  selectedItem?: T;
+  selectedItem?: I;
   /**
    * Columns can be either an array of string, where the string represents the
    * fields of the object to be displayed as a column;
-   * Or an array of pairs, where the left side of the pair is the name of the
-   * object's property and the right side is a string to be shown as the header of that field
+   * Or an array of ComplexColumn object containing different values for
+   * the fieldName, header and a renderer component used to render the value of
+   * the column.
    */
-  columns: (keyof T | [keyof T, string])[];
-  selectItem?: (item?: T) => void;
-  onClick?: (item: T) => void;
+  columns: Column<T>[];
+  selectItem?: (item?: I) => void;
 }
 
 /**
- * @param col A column definition in the format of a string representing both
- * the name of the property and the header of the column, or a pair representing
- * the name of the property and a different string header to be displayed
- * @returns A pair of [propertyName, header] - if a pair was not passed in, then
- * one will be created where the left is the property name and the right is the
- * property name with first letter capitalized
+ * @param col A column definition in the format of a string (SimpleColumn) where
+ * the value of the string represents both the name of the field and the header
+ * of the column.
+ * Or a ComplexColumn object with header and renderer optinal.
+ * @returns A ComplexColumn with all fields guaranteed to be not undefined.
  */
-function toColumnPair<T>(col: keyof T | [keyof T, string]): [keyof T, string] {
-  if (typeof col !== "object") {
-    return [col, capitalizeFirstLetter(String(col))];
-  }
-  return col;
+function toComplexColumn<T>(col: Column<T>): Required<ComplexColumn<T>> {
+  return {
+    fieldName: typeof col !== "object" ? col : col.fieldName,
+    header: capitalizeFirstLetter(
+      String(typeof col !== "object" ? col : col.fieldName)
+    ),
+    renderer: function Column({ value }: ColumnRendererProps) {
+      return <>{value}</>;
+    },
+    ...(typeof col !== "object" ? {} : col),
+  };
 }
 
-export function ItemsList<T extends Record<keyof T, string>>(
-  props: Props<T>
+export function ItemsList<T extends Record<keyof T, string>, I extends T | T[]>(
+  props: Props<T, I>
 ): JSX.Element {
   const {
     header,
@@ -54,43 +70,46 @@ export function ItemsList<T extends Record<keyof T, string>>(
     selectedItem,
     items,
     selectItem,
-    onClick,
   } = props;
   const [filter, setFilter] = useState("");
   const filteredItems = items.filter((item) =>
-    JSON.stringify(item).toLowerCase().includes(filter.toLowerCase())
+    Object.values(item).some((field: string) =>
+      field.toLowerCase().includes(filter.toLowerCase())
+    )
   );
   const capitalizedHeader = capitalizeFirstLetter(header);
-  const columns = props.columns.map(toColumnPair);
+  const columns = props.columns.map(toComplexColumn);
 
   return (
     <Table
-      trackBy={String(columns[0][0])}
+      trackBy={String(columns[0].fieldName)}
       ariaLabels={{
         selectionGroupLabel: `${capitalizedHeader} selection`,
         itemSelectionLabel: ({ selectedItems }, item) => {
-          const isItemSelected = selectedItems[0] === item;
+          const isItemSelected = selectedItems.includes(item);
 
           return `${item} is ${isItemSelected ? "" : "not"} selected`;
         },
       }}
-      columnDefinitions={columns.map((col, i) => ({
-        id: String(col[0]),
-        header: String(col[1]),
-        // eslint-disable-next-line react/display-name
-        cell: (item: T) =>
-          onClick && i === 0 ? (
-            <Link onFollow={() => onClick(item)}>{item[col[0]]}</Link>
-          ) : (
-            item[col[0]]
-          ),
-        sortingField: String(col[0]),
+      columnDefinitions={columns.map((col) => ({
+        id: String(col.fieldName),
+        header: col.header,
+        cell: function Cell(item: T) {
+          return <col.renderer value={item[col.fieldName]} />;
+        },
+        sortingField: String(col.fieldName),
       }))}
       items={filteredItems}
       loading={loading}
       loadingText={`Loading ${headerPlural}`}
-      selectedItems={selectedItem && [selectedItem]}
-      selectionType={selectItem && "single"}
+      selectedItems={
+        Array.isArray(selectedItem)
+          ? selectedItem
+          : selectedItem && [selectedItem]
+      }
+      selectionType={
+        selectedItem && Array.isArray(selectedItem) ? "multi" : "single"
+      }
       empty={
         <Box textAlign="center" color="inherit">
           <b>No {headerPlural}</b>
@@ -120,7 +139,13 @@ export function ItemsList<T extends Record<keyof T, string>>(
           }}
         />
       }
-      onSelectionChange={({ detail }) => selectItem?.(detail.selectedItems[0])}
+      onSelectionChange={({ detail }) =>
+        selectItem?.(
+          Array.isArray(selectedItem)
+            ? (detail.selectedItems as T[])
+            : detail.selectedItems[0]
+        )
+      }
     />
   );
 }

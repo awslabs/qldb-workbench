@@ -6,15 +6,17 @@ import { PageContext } from "./Pages";
 
 interface Props {
   name: PageName;
+  persistent?: boolean;
 }
 
 export function Page(props: PropsWithChildren<Props>): JSX.Element {
-  const { name, children } = props;
+  const { name, persistent, children } = props;
   const [currentPage] = useContext(PageContext);
+  const isActive = currentPage === name;
 
   return (
-    <div style={{ display: currentPage === name ? "initial" : "none" }}>
-      {children}
+    <div style={{ display: isActive ? "initial" : "none" }}>
+      {(persistent || isActive) && children}
     </div>
   );
 }

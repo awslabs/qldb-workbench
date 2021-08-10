@@ -1,6 +1,10 @@
+import { Link } from "@awsui/components-react";
 import * as React from "react";
 import { useCallback } from "react";
-import { ItemsList } from "../../../common/components/ItemsList";
+import {
+  ColumnRendererProps,
+  ItemsList,
+} from "../../../common/components/ItemsList";
 import { useLedgers } from "../../../common/hooks/useLedgers";
 import { LedgerDetails } from "./LedgerDetails";
 
@@ -22,6 +26,12 @@ export function LedgersList(props: Props): JSX.Element {
     },
     [onClick, selectLedger]
   );
+  const NameColumn = useCallback(
+    ({ value }: ColumnRendererProps) => (
+      <Link onFollow={() => handleClick(value)}>{value}</Link>
+    ),
+    [handleClick]
+  );
 
   return (
     <>
@@ -29,10 +39,14 @@ export function LedgersList(props: Props): JSX.Element {
         header="ledger"
         loading={loading}
         items={ledgers.map((l) => ({ name: l }))}
-        columns={["name"]}
+        columns={[
+          {
+            fieldName: "name",
+            renderer: NameColumn,
+          },
+        ]}
         selectedItem={{ name: selectedLedger?.Name ?? "" }}
         selectItem={(item) => selectLedger(item?.name ?? "")}
-        onClick={(item) => handleClick(item.name)}
       />
       {(selectedLedger || loadingDetails) && (
         <LedgerDetails

@@ -82,8 +82,8 @@ export function TableDetails(props: Props): JSX.Element {
           loading={loading}
           items={details?.indexes ?? []}
           columns={[
-            ["expr", "Field name"],
-            ["indexId", "ID"],
+            { fieldName: "expr", header: "Field name" },
+            { fieldName: "indexId", header: "ID" },
           ]}
         />
       </div>
