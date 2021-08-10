@@ -5,8 +5,11 @@ import JSONTree from "react-json-tree";
 import { FlexContainer } from "../../../common/components/FlexContainer";
 import { ThemeContext } from "../../../core/ThemeProvider";
 
+export type ResultsData = {
+  [query: string]: unknown[];
+}[];
 interface Props {
-  results: unknown[];
+  results: ResultsData;
   error?: Error;
 }
 
@@ -22,6 +25,7 @@ function EmptyResults() {
 export function Results(props: Props): JSX.Element {
   const { results, error } = props;
   const [theme] = useContext(ThemeContext);
+  const multiStatement = results.length > 1;
 
   return (
     <FlexContainer
@@ -38,9 +42,11 @@ export function Results(props: Props): JSX.Element {
         ) : (
           results.map((result, i) => (
             <JSONTree
+              hideRoot
+              shouldExpandNode={(_a, _b, level) => level < 2}
               key={`results-json-${i}`}
               keyPath={[i]}
-              data={result}
+              data={multiStatement ? result : Object.values(result)[0]}
               theme="tomorrow"
               invertTheme={theme === "light"}
             />
