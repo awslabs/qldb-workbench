@@ -3,9 +3,11 @@ import * as React from "react";
 import "./styles.scss";
 import { ItemsList } from "../../common/components/ItemsList";
 import { StatusIcon } from "../../common/components/StatusIcon";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AppStateContext } from "../../core/AppStateProvider";
+import { useRecentQueries } from "../../common/hooks/useRecentQueries";
 
-interface RecentQuery {
+export interface RecentQuery {
   query: string;
   status: string;
   ledger: string;
@@ -13,29 +15,15 @@ interface RecentQuery {
 }
 
 export function Recent(): JSX.Element {
-  const recents: RecentQuery[] = [
-    {
-      query: "Select * from Cars;",
-      status: "SUCCESS",
-      ledger: "TestLedger",
-      createdAt: new Date().toDateString(),
-    },
-    {
-      query: "Select * from Person;",
-      status: "SUCCESS",
-      ledger: "TestLedger",
-      createdAt: new Date().toDateString(),
-    },
-  ];
+  const { recentQueries } = useRecentQueries();
   const [selected, setSelected] = useState<RecentQuery[]>([]);
 
   return (
     <div className="recent-container">
       <ItemsList
-        header="recent"
-        headerPlural="recent"
+        header="recent queries"
         loading={false}
-        items={recents}
+        items={recentQueries}
         selectedItem={selected}
         selectItem={(items) => setSelected(items ?? [])}
         columns={[

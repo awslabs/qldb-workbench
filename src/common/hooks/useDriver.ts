@@ -2,7 +2,7 @@ import { QldbDriver } from "amazon-qldb-driver-js/dist/src/QldbDriver";
 import { ClientConfiguration } from "aws-sdk/clients/qldbsession";
 import { useContext, useCallback, useState } from "react";
 import { AppStateContext } from "../../core/AppStateProvider";
-import QLDBSession = require("aws-sdk/clients/qldbsession");
+import QLDBSession from "aws-sdk/clients/qldbsession";
 
 function getDriverKey(region: string, ledger: string): string {
   return `${region}:${ledger}`;

@@ -15,17 +15,21 @@ import "./styles.scss";
 import { useQLDB } from "../../common/hooks/useQLDB";
 import { AppStateContext } from "../../core/AppStateProvider";
 import { TransactionExecutor } from "amazon-qldb-driver-js/dist/src/TransactionExecutor";
+import { useRecentQueries } from "../../common/hooks/useRecentQueries";
 
 export function Editor(): JSX.Element {
   const [theme] = useContext(ThemeContext);
   const [tabs, content, setTabContent] = useTabs();
   const [{ ledger }] = useContext(AppStateContext);
+  const { addRecentQuery } = useRecentQueries();
   const [results, setResults] = useState<ResultsData>([]);
   const [error, setError] = useState<Error>();
   const { error: driverError, query } = useQLDB(ledger ?? "");
   const queries = content.split(";").filter((q) => q.trim());
 
   const handleRun = useCallback(async () => {
+    if (!ledger) return;
+
     setError(undefined);
     const result = await query((driver) =>
       driver.executeLambda(async (txn: TransactionExecutor) => {
@@ -50,8 +54,14 @@ export function Editor(): JSX.Element {
       return;
     }
 
+    addRecentQuery({
+      query: content,
+      status: "SUCCESS",
+      createdAt: new Date().toDateString(),
+      ledger,
+    });
     setResults(result.results);
-  }, [queries, query]);
+  }, [addRecentQuery, content, ledger, queries, query]);
 
   return (
     <div className="editor-container">

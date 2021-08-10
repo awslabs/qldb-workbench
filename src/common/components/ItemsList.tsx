@@ -24,8 +24,7 @@ type ComplexColumn<T> = {
 type Column<T> = SimpleColumn<T> | ComplexColumn<T>;
 
 interface Props<T, I extends T | T[]> {
-  header?: string;
-  headerPlural?: string;
+  header: string;
   loading: boolean;
   items: T[];
   selectedItem?: I;
@@ -64,8 +63,7 @@ export function ItemsList<T extends Record<keyof T, string>, I extends T | T[]>(
   props: Props<T, I>
 ): JSX.Element {
   const {
-    header,
-    headerPlural = `${header}s`,
+    header: headerPlural,
     loading,
     selectedItem,
     items,
@@ -77,7 +75,7 @@ export function ItemsList<T extends Record<keyof T, string>, I extends T | T[]>(
       field.toLowerCase().includes(filter.toLowerCase())
     )
   );
-  const capitalizedHeader = capitalizeFirstLetter(header);
+  const capitalizedHeader = capitalizeFirstLetter(headerPlural);
   const columns = props.columns.map(toComplexColumn);
 
   return (

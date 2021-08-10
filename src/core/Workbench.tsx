@@ -23,7 +23,7 @@ function Workbench() {
       <Pages defaultPage="editor">
         <Navigation />
         <main>
-          <Page name="editor">
+          <Page name="editor" persistent>
             <Editor />
           </Page>
           <Page name="recent">

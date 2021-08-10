@@ -36,7 +36,7 @@ export function LedgersList(props: Props): JSX.Element {
   return (
     <>
       <ItemsList
-        header="ledger"
+        header="ledgers"
         loading={loading}
         items={ledgers.map((l) => ({ name: l }))}
         columns={[
