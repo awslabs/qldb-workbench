@@ -50,7 +50,11 @@ export function Results(props: Props): JSX.Element {
               shouldExpandNode={(_a, _b, level) => level < 2}
               key={`results-json-${i}`}
               keyPath={[i]}
-              data={multiStatement ? result : Object.values(result)[0]}
+              data={
+                multiStatement || totalResults === 0
+                  ? result
+                  : Object.values(result)[0]
+              }
               theme="tomorrow"
               invertTheme={theme === "light"}
             />

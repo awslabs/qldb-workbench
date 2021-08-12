@@ -1,10 +1,7 @@
 import * as React from "react";
 
 import "./styles.scss";
-import {
-  ColumnRendererProps,
-  ItemsList,
-} from "../../common/components/ItemsList";
+import { ItemsList } from "../../common/components/ItemsList";
 import { StatusIcon } from "../../common/components/StatusIcon";
 import { useCallback, useContext, useState } from "react";
 import { useRecentQueries } from "../../common/hooks/useRecentQueries";
@@ -19,10 +16,6 @@ export interface RecentQuery {
   ledger: string;
   createdAt: string;
 }
-
-const QueryColumn: React.FC<ColumnRendererProps> = ({
-  value,
-}: ColumnRendererProps) => <>{value.split("\n")[0].slice(0, 50)}</>;
 
 export function Recent(): JSX.Element {
   const { recentQueries, removeRecentQueries } = useRecentQueries();
@@ -50,8 +43,9 @@ export function Recent(): JSX.Element {
         selectedItem={selected}
         selectItem={(items) => setSelected(items ?? [])}
         trackBy="id"
+        resizableColumns
         columns={[
-          { fieldName: "query", renderer: QueryColumn },
+          "query",
           { fieldName: "status", renderer: StatusIcon },
           "ledger",
           { fieldName: "createdAt", header: "Creation Time" },

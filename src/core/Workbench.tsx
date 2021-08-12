@@ -12,6 +12,7 @@ import { Page } from "../common/components/Page";
 import { PageNotFound } from "../features/page-not-found/PageNotFound";
 import AppStateProvider from "./AppStateProvider";
 import { Recent } from "../features/recent/Recent";
+import { Saved } from "../features/saved/Saved";
 
 function Workbench() {
   useShortcuts();
@@ -28,7 +29,7 @@ function Workbench() {
           <Recent />
         </Page>
         <Page name="saved">
-          <PageNotFound />
+          <Saved />
         </Page>
         <Page name="verification">
           <PageNotFound />

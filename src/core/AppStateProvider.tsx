@@ -4,6 +4,7 @@ import { PageName } from "../common/hooks/usePage";
 import { usePersistedState } from "../common/hooks/usePersistedState";
 import { TabState } from "../common/hooks/useTabs";
 import { RecentQuery } from "../features/recent/Recent";
+import { SavedQuery } from "../features/saved/Saved";
 import ThemeProvider from "./ThemeProvider";
 
 interface Props {
@@ -19,7 +20,7 @@ interface AppState {
   currentPage: PageName;
   queries: {
     recent: RecentQuery[];
-    saved: RecentQuery[];
+    saved: SavedQuery[];
   };
 }
 

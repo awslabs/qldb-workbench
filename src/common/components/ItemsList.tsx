@@ -11,7 +11,8 @@ import { capitalizeFirstLetter } from "../utils/stringUtils";
 
 import "./styles.scss";
 
-export interface ColumnRendererProps {
+export interface ColumnRendererProps<T = never> {
+  item: T;
   value: string;
 }
 
@@ -19,7 +20,7 @@ type SimpleColumn<T> = keyof T;
 type ComplexColumn<T> = {
   fieldName: keyof T;
   header?: string;
-  renderer?: React.FC<ColumnRendererProps>;
+  renderer?: React.FC<ColumnRendererProps<T>>;
 };
 type Column<T> = SimpleColumn<T> | ComplexColumn<T>;
 
@@ -29,6 +30,7 @@ interface Props<T, I extends T | T[]> {
   items: T[];
   selectedItem?: I;
   trackBy?: keyof T;
+  resizableColumns?: boolean;
   /**
    * Columns can be either an array of string, where the string represents the
    * fields of the object to be displayed as a column;
@@ -54,18 +56,27 @@ function toComplexColumn<T>(col: Column<T>): Required<ComplexColumn<T>> {
     header: capitalizeFirstLetter(
       String(typeof col !== "object" ? col : col.fieldName)
     ),
-    renderer: function Column({ value }: ColumnRendererProps) {
+    renderer: function Column({ value }: ColumnRendererProps<T>) {
       return <>{value}</>;
     },
     ...(typeof col !== "object" ? {} : col),
   };
 }
 
-export function ItemsList<T extends Record<keyof T, string>, I extends T | T[]>(
-  props: Props<T, I>
-): JSX.Element {
-  const { header, loading, selectedItem, items, actions, trackBy, selectItem } =
-    props;
+export function ItemsList<
+  T extends Record<keyof T, string | undefined>,
+  I extends T | T[]
+>(props: Props<T, I>): JSX.Element {
+  const {
+    header,
+    loading,
+    selectedItem,
+    items,
+    actions,
+    trackBy,
+    selectItem,
+    resizableColumns,
+  } = props;
   const [filter, setFilter] = useState("");
   const filteredItems = items.filter((item) =>
     Object.values(item).some((field: string) =>
@@ -90,7 +101,7 @@ export function ItemsList<T extends Record<keyof T, string>, I extends T | T[]>(
         id: String(col.fieldName),
         header: col.header,
         cell: function Cell(item: T) {
-          return <col.renderer value={item[col.fieldName]} />;
+          return <col.renderer item={item} value={item[col.fieldName] ?? ""} />;
         },
         sortingField: String(col.fieldName),
       }))}
@@ -144,6 +155,7 @@ export function ItemsList<T extends Record<keyof T, string>, I extends T | T[]>(
             : detail.selectedItems[0]
         )
       }
+      resizableColumns={resizableColumns}
     />
   );
 }
