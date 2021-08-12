@@ -5,7 +5,7 @@ import { AppStateContext } from "../../core/AppStateProvider";
 
 interface Props {
   onRun: () => Promise<void>;
-  onSave: () => void;
+  onSave?: () => void;
   onClear: () => void;
 }
 
@@ -34,7 +34,7 @@ export function Actions(props: Props): JSX.Element {
       >
         Run
       </Button>
-      <Button variant="normal" onClick={onSave}>
+      <Button disabled={!onSave} variant="normal" onClick={onSave}>
         Save
       </Button>
       <Button variant="normal" onClick={onClear}>

@@ -26,10 +26,14 @@ export function Results(props: Props): JSX.Element {
   const { results, error } = props;
   const [theme] = useContext(ThemeContext);
   const multiStatement = results.length > 1;
+  const totalResults = results.reduce(
+    (all, res) => all + Object.values(res).flat().length,
+    0
+  );
 
   return (
     <FlexContainer
-      header={`Results${results.length > 0 ? ` (${results.length})` : ""}`}
+      header={`Results${results.length > 0 ? ` (${totalResults})` : ""}`}
       handle={{ direction: "horizontal", position: "start" }}
     >
       <div>
@@ -46,7 +50,11 @@ export function Results(props: Props): JSX.Element {
               shouldExpandNode={(_a, _b, level) => level < 2}
               key={`results-json-${i}`}
               keyPath={[i]}
-              data={multiStatement ? result : Object.values(result)[0]}
+              data={
+                multiStatement || totalResults === 0
+                  ? result
+                  : Object.values(result)[0]
+              }
               theme="tomorrow"
               invertTheme={theme === "light"}
             />

@@ -1,11 +1,12 @@
 import { Icon, Tabs } from "@awsui/components-react";
 import * as React from "react";
-import { ReactNode, useCallback, useState } from "react";
+import { ReactNode, useCallback, useContext } from "react";
+import { AppStateContext } from "../../core/AppStateProvider";
 
 interface Tab {
   id: string;
   label: ReactNode;
-  value?: string;
+  content?: string;
   closed?: boolean;
 }
 
@@ -13,52 +14,100 @@ interface Tabs {
   [id: string]: Tab;
 }
 
-export function useTabs(): [ReactNode, string, (content: string) => void] {
-  const [activeTab, setActiveTab] = useState("query1");
-  const [tabs, setTabs] = useState<Tabs>({
-    query1: {
-      id: "query1",
-      label: "Query 1",
+export interface TabState {
+  activeTab: string;
+  allTabs: Tabs;
+}
+
+export function useTabs(): {
+  tabsComponent: JSX.Element;
+  content: string;
+  changeTabContent: (content: string) => void;
+  createNewTab: (tab?: Partial<Tab> | undefined) => void;
+} {
+  const [
+    {
+      tabs: { activeTab, allTabs },
     },
-  });
+    setAppState,
+  ] = useContext(AppStateContext);
+
+  const setTabs = useCallback(
+    (setTabs: (tabs: TabState) => TabState) => {
+      setAppState((state) => ({ ...state, tabs: setTabs(state.tabs) }));
+    },
+    [setAppState]
+  );
+
+  const createNewTab = useCallback(
+    (tab?: Partial<Tab>) =>
+      setTabs(({ allTabs }) => {
+        const tabNumber = Object.keys(allTabs).length + 1;
+        const newTab: Tab = {
+          id: `query${tabNumber}`,
+          label: `Query ${tabNumber}`,
+          ...tab,
+        };
+
+        return {
+          activeTab: newTab.id,
+          allTabs: { ...allTabs, [newTab.id]: newTab },
+        };
+      }),
+    [setTabs]
+  );
 
   const handleTabChange = useCallback(
     (e) => {
-      if (e.detail.activeTabId !== "new") {
-        setActiveTab(e.detail.activeTabId);
+      const tabId = e.detail.activeTabId;
+
+      if (tabId !== "new") {
+        setTabs((tabs) => ({
+          ...tabs,
+          activeTab: tabs.allTabs[tabId].closed ? tabs.activeTab : tabId,
+        }));
         return;
       }
 
       e.preventDefault();
 
-      setTabs((tabs) => {
-        const newTab = {
-          label: `Query ${Object.keys(tabs).length + 1}`,
-          id: `query${Object.keys(tabs).length + 1}`,
-        };
-
-        setActiveTab(newTab.id);
-
-        return {
-          ...tabs,
-          [newTab.id]: newTab,
-        };
-      });
+      createNewTab();
     },
-    [setTabs, setActiveTab]
+    [createNewTab, setTabs]
   );
 
   const changeTabContent = useCallback(
     (content: string) => {
       setTabs((tabs) => ({
         ...tabs,
-        [activeTab]: {
-          ...tabs[activeTab],
-          value: content,
+        allTabs: {
+          ...tabs.allTabs,
+          [tabs.activeTab]: {
+            ...tabs.allTabs[tabs.activeTab],
+            content: content,
+          },
         },
       }));
     },
-    [activeTab]
+    [setTabs]
+  );
+
+  const handleCloseTab = useCallback(
+    (tab: Tab) => () => {
+      setTabs(({ activeTab, allTabs }) => ({
+        activeTab:
+          activeTab === tab.id
+            ? Object.values(allTabs)
+                .reverse()
+                .find((t) => !t.closed && t.id !== tab.id)?.id ?? ""
+            : activeTab,
+        allTabs: {
+          ...allTabs,
+          [tab.id]: { ...allTabs[tab.id], closed: true },
+        },
+      }));
+    },
+    [setTabs]
   );
 
   const decorateWithCloseButton = useCallback(
@@ -68,24 +117,7 @@ export function useTabs(): [ReactNode, string, (content: string) => void] {
           <div>
             <span>{tab.label}</span>{" "}
             {tabs.filter((t) => !t.closed).length > 1 && (
-              <span
-                className="close-btn"
-                onClick={() =>
-                  setTabs((tabs) => {
-                    const updatedTabs = {
-                      ...tabs,
-                      [tab.id]: { ...tabs[tab.id], closed: true },
-                    };
-                    setActiveTab(
-                      Object.values(updatedTabs)
-                        .reverse()
-                        .find((t) => !t.closed)?.id ?? ""
-                    );
-
-                    return updatedTabs;
-                  })
-                }
-              >
+              <span className="close-btn" onClick={handleCloseTab(tab)}>
                 <Icon name="close" />
               </span>
             )}
@@ -97,7 +129,7 @@ export function useTabs(): [ReactNode, string, (content: string) => void] {
 
       return tabs.filter((tab) => !tab.closed).map(tabWithCloseButton);
     },
-    [setTabs, setActiveTab]
+    [handleCloseTab]
   );
 
   const tabsComponent = (
@@ -106,7 +138,7 @@ export function useTabs(): [ReactNode, string, (content: string) => void] {
       activeTabId={activeTab}
       onChange={handleTabChange}
       tabs={[
-        ...decorateWithCloseButton(Object.values(tabs)),
+        ...decorateWithCloseButton(Object.values(allTabs)),
         {
           id: "new",
           label: <Icon className="new-tab-button" name="add-plus" />,
@@ -116,5 +148,10 @@ export function useTabs(): [ReactNode, string, (content: string) => void] {
     />
   );
 
-  return [tabsComponent, tabs[activeTab]?.value ?? "", changeTabContent];
+  return {
+    tabsComponent,
+    content: allTabs[activeTab]?.content ?? "",
+    changeTabContent,
+    createNewTab,
+  };
 }

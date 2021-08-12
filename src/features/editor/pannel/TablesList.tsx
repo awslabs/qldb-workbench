@@ -35,7 +35,7 @@ export function TablesList(): JSX.Element {
   return (
     <>
       <ItemsList
-        header="table"
+        header="tables"
         selectedItem={{ name: selectedTable ?? "" }}
         loading={loading}
         items={tables.map((t) => ({ name: t }))}

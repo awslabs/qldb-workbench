@@ -77,13 +77,12 @@ export function TableDetails(props: Props): JSX.Element {
           </SpaceBetween>
         </Container>
         <ItemsList
-          header="index"
-          headerPlural="indexes"
+          header="indexes"
           loading={loading}
           items={details?.indexes ?? []}
           columns={[
-            ["expr", "Field name"],
-            ["indexId", "ID"],
+            { fieldName: "expr", header: "Field name" },
+            { fieldName: "indexId", header: "ID" },
           ]}
         />
       </div>

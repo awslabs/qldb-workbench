@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect, useCallback, useMemo } from "react";
 import { AppStateContext } from "../../core/AppStateProvider";
-import QLDB = require("aws-sdk/clients/qldb");
+import QLDB from "aws-sdk/clients/qldb";
 
 export function useLedgers(): {
   loading: boolean;
