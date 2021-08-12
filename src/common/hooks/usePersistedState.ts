@@ -23,7 +23,7 @@ export function usePersistedState<T>(
       return;
     }
 
-    const objToPersist = {};
+    const objToPersist: { [key: string]: any } = {};
 
     for (const key in value) {
       if (!persistKeys || persistKeys.includes(key as keyof T)) {

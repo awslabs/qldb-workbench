@@ -111,7 +111,7 @@ export function useDraggableHandle(
   }, [dragState.dragging]);
 
   useEffect(() => {
-    const handler = (e) => dispatch(e as DragActions);
+    const handler = (e: any) => dispatch(e as DragActions);
 
     document.addEventListener("mousemove", handler);
     document.addEventListener("mouseup", handler);
