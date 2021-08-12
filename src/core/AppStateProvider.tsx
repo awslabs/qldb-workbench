@@ -1,7 +1,10 @@
 import { QldbDriver } from "amazon-qldb-driver-js";
 import * as React from "react";
+import { PageName } from "../common/hooks/usePage";
 import { usePersistedState } from "../common/hooks/usePersistedState";
+import { TabState } from "../common/hooks/useTabs";
 import { RecentQuery } from "../features/recent/Recent";
+import { SavedQuery } from "../features/saved/Saved";
 import ThemeProvider from "./ThemeProvider";
 
 interface Props {
@@ -13,9 +16,11 @@ interface AppState {
   ledger?: string;
   region: string;
   drivers: { [ledger: string]: QldbDriver };
+  tabs: TabState;
+  currentPage: PageName;
   queries: {
     recent: RecentQuery[];
-    saved: RecentQuery[];
+    saved: SavedQuery[];
   };
 }
 
@@ -23,6 +28,16 @@ const initialState: AppState = {
   credentials: {},
   region: "us-east-1",
   drivers: {},
+  tabs: {
+    activeTab: "query1",
+    allTabs: {
+      query1: {
+        id: "query1",
+        label: "Query 1",
+      },
+    },
+  },
+  currentPage: "editor",
   queries: {
     recent: [],
     saved: [],
@@ -47,7 +62,7 @@ export default function AppStateProvider(
   const [state, setState] = usePersistedState<AppState>(
     APP_STATE_STORAGE_KEY,
     initialState,
-    ["credentials", "region", "ledger", "queries"]
+    ["credentials", "region", "ledger", "tabs", "queries"]
   );
 
   return (

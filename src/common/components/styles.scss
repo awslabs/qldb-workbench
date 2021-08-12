@@ -128,3 +128,12 @@
     }
   }
 }
+
+.split-2 {
+  display: flex;
+  justify-content: space-between;
+
+  > :nth-child(2) {
+    flex-shrink: 0;
+  }
+}

@@ -1,17 +1,19 @@
 import {
   Box,
+  Button,
   Header,
   Pagination,
   Table,
   TextFilter,
 } from "@awsui/components-react";
+import { useCollection } from "@awsui/collection-hooks";
 import * as React from "react";
-import { useState } from "react";
 import { capitalizeFirstLetter } from "../utils/stringUtils";
 
 import "./styles.scss";
 
-export interface ColumnRendererProps {
+export interface ColumnRendererProps<T = never> {
+  item: T;
   value: string;
 }
 
@@ -19,7 +21,7 @@ type SimpleColumn<T> = keyof T;
 type ComplexColumn<T> = {
   fieldName: keyof T;
   header?: string;
-  renderer?: React.FC<ColumnRendererProps>;
+  renderer?: React.FC<ColumnRendererProps<T>>;
 };
 type Column<T> = SimpleColumn<T> | ComplexColumn<T>;
 
@@ -28,6 +30,8 @@ interface Props<T, I extends T | T[]> {
   loading: boolean;
   items: T[];
   selectedItem?: I;
+  trackBy?: keyof T;
+  resizableColumns?: boolean;
   /**
    * Columns can be either an array of string, where the string represents the
    * fields of the object to be displayed as a column;
@@ -36,6 +40,7 @@ interface Props<T, I extends T | T[]> {
    * the column.
    */
   columns: Column<T>[];
+  actions?: React.ReactElement;
   selectItem?: (item?: I) => void;
 }
 
@@ -43,7 +48,7 @@ interface Props<T, I extends T | T[]> {
  * @param col A column definition in the format of a string (SimpleColumn) where
  * the value of the string represents both the name of the field and the header
  * of the column.
- * Or a ComplexColumn object with header and renderer optinal.
+ * Or a ComplexColumn object with header and renderer optional.
  * @returns A ComplexColumn with all fields guaranteed to be not undefined.
  */
 function toComplexColumn<T>(col: Column<T>): Required<ComplexColumn<T>> {
@@ -52,35 +57,86 @@ function toComplexColumn<T>(col: Column<T>): Required<ComplexColumn<T>> {
     header: capitalizeFirstLetter(
       String(typeof col !== "object" ? col : col.fieldName)
     ),
-    renderer: function Column({ value }: ColumnRendererProps) {
+    renderer: function Column({ value }: ColumnRendererProps<T>) {
       return <>{value}</>;
     },
     ...(typeof col !== "object" ? {} : col),
   };
 }
 
-export function ItemsList<T extends Record<keyof T, string>, I extends T | T[]>(
-  props: Props<T, I>
-): JSX.Element {
+interface EmptyStateProps {
+  title: string;
+  subtitle: string;
+  action: React.ReactNode;
+}
+
+function EmptyState({ title, subtitle, action }: EmptyStateProps) {
+  return (
+    <Box textAlign="center" color="inherit">
+      <Box variant="strong" textAlign="center" color="inherit">
+        {title}
+      </Box>
+      <Box variant="p" padding={{ bottom: "s" }} color="inherit">
+        {subtitle}
+      </Box>
+      {action}
+    </Box>
+  );
+}
+
+export function ItemsList<
+  T extends Record<keyof T, string | undefined>,
+  I extends T | T[]
+>(props: Props<T, I>): JSX.Element {
   const {
-    header: headerPlural,
+    header,
     loading,
     selectedItem,
-    items,
+    items: allItems,
+    actions,
+    trackBy,
     selectItem,
+    resizableColumns,
   } = props;
-  const [filter, setFilter] = useState("");
-  const filteredItems = items.filter((item) =>
-    Object.values(item).some((field: string) =>
-      field.toLowerCase().includes(filter.toLowerCase())
-    )
-  );
-  const capitalizedHeader = capitalizeFirstLetter(headerPlural);
+
+  const {
+    items,
+    actions: collectionActions,
+    collectionProps,
+    filterProps,
+    paginationProps,
+  } = useCollection(allItems, {
+    filtering: {
+      empty: (
+        <EmptyState
+          title="No instances"
+          subtitle="No instances to display."
+          action={<Button>Create instance</Button>}
+        />
+      ),
+      noMatch: (
+        <EmptyState
+          title="No matches"
+          subtitle="We can’t find a match."
+          action={
+            <Button onClick={() => collectionActions.setFiltering("")}>
+              Clear filter
+            </Button>
+          }
+        />
+      ),
+    },
+    pagination: { pageSize: 25 },
+    sorting: {},
+    selection: {},
+  });
+  const capitalizedHeader = capitalizeFirstLetter(header);
   const columns = props.columns.map(toComplexColumn);
 
   return (
     <Table
-      trackBy={String(columns[0].fieldName)}
+      {...collectionProps}
+      trackBy={String(trackBy ?? columns[0].fieldName)}
       ariaLabels={{
         selectionGroupLabel: `${capitalizedHeader} selection`,
         itemSelectionLabel: ({ selectedItems }, item) => {
@@ -93,13 +149,13 @@ export function ItemsList<T extends Record<keyof T, string>, I extends T | T[]>(
         id: String(col.fieldName),
         header: col.header,
         cell: function Cell(item: T) {
-          return <col.renderer value={item[col.fieldName]} />;
+          return <col.renderer item={item} value={item[col.fieldName] ?? ""} />;
         },
         sortingField: String(col.fieldName),
       }))}
-      items={filteredItems}
+      items={items}
       loading={loading}
-      loadingText={`Loading ${headerPlural}`}
+      loadingText={`Loading ${header}`}
       selectedItems={
         Array.isArray(selectedItem)
           ? selectedItem
@@ -110,26 +166,24 @@ export function ItemsList<T extends Record<keyof T, string>, I extends T | T[]>(
       }
       empty={
         <Box textAlign="center" color="inherit">
-          <b>No {headerPlural}</b>
+          <b>No {header}</b>
           <Box padding={{ bottom: "s" }} variant="p" color="inherit">
-            No {headerPlural} to display.
+            No {header} to display.
           </Box>
         </Box>
       }
       filter={
-        <TextFilter
-          filteringText={filter}
-          onChange={({ detail }) => setFilter(detail.filteringText)}
-          filteringPlaceholder={`Find ${headerPlural}`}
-        />
+        <TextFilter {...filterProps} filteringPlaceholder={`Find ${header}`} />
       }
       header={
-        <Header counter={`(${items.length})`}>{capitalizedHeader}</Header>
+        <div className="split-2">
+          <Header counter={`(${items.length})`}>{capitalizedHeader}</Header>
+          {actions}
+        </div>
       }
       pagination={
         <Pagination
-          currentPageIndex={1}
-          pagesCount={1}
+          {...paginationProps}
           ariaLabels={{
             nextPageLabel: "Next page",
             previousPageLabel: "Previous page",
@@ -144,6 +198,7 @@ export function ItemsList<T extends Record<keyof T, string>, I extends T | T[]>(
             : detail.selectedItems[0]
         )
       }
+      resizableColumns={resizableColumns}
     />
   );
 }

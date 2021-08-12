@@ -16,14 +16,18 @@ import { useQLDB } from "../../common/hooks/useQLDB";
 import { AppStateContext } from "../../core/AppStateProvider";
 import { TransactionExecutor } from "amazon-qldb-driver-js/dist/src/TransactionExecutor";
 import { useRecentQueries } from "../../common/hooks/useRecentQueries";
+import { useSavedQueries } from "../../common/hooks/useSavedQueries";
+import { useEffect } from "react";
 
 export function Editor(): JSX.Element {
   const [theme] = useContext(ThemeContext);
-  const [tabs, content, setTabContent] = useTabs();
-  const [{ ledger }] = useContext(AppStateContext);
+  const [{ ledger }, setAppState] = useContext(AppStateContext);
+  const { tabsComponent: tabs, content, changeTabContent } = useTabs();
   const { addRecentQuery } = useRecentQueries();
+  const { addSavedQuery } = useSavedQueries();
   const [results, setResults] = useState<ResultsData>([]);
   const [error, setError] = useState<Error>();
+  const [saved, setSaved] = useState(false);
   const { error: driverError, query } = useQLDB(ledger ?? "");
   const queries = content.split(";").filter((q) => q.trim());
 
@@ -48,20 +52,42 @@ export function Editor(): JSX.Element {
       })
     );
 
+    addRecentQuery({
+      query: content,
+      status: result.error ? "ERROR" : "SUCCESS",
+      createdAt: new Date().toDateString(),
+      ledger,
+    });
+
     if (result.error) {
       setResults([]);
       setError(result.error);
       return;
     }
 
-    addRecentQuery({
-      query: content,
-      status: "SUCCESS",
-      createdAt: new Date().toDateString(),
-      ledger,
-    });
     setResults(result.results);
   }, [addRecentQuery, content, ledger, queries, query]);
+
+  const handleSave = useCallback(() => {
+    if (!ledger) return;
+
+    setSaved(true);
+    addSavedQuery({
+      query: content,
+      createdAt: new Date().toDateString(),
+      ledger,
+      description: undefined,
+    });
+    setAppState((state) => ({ ...state, currentPage: "saved" }));
+  }, [addSavedQuery, content, ledger, setAppState]);
+
+  const handleContentChange = useCallback(
+    (content: string) => {
+      changeTabContent(content);
+    },
+    [changeTabContent]
+  );
+  useEffect(() => setSaved(false), [content]);
 
   return (
     <div className="editor-container">
@@ -73,7 +99,7 @@ export function Editor(): JSX.Element {
             enableLiveAutocompletion
             setOptions={{ scrollPastEnd: true }}
             value={content}
-            onChange={setTabContent}
+            onChange={handleContentChange}
             theme={theme === "dark" ? "tomorrow_night_bright" : "dawn"}
             mode={"sql"}
             width="100%"
@@ -82,11 +108,9 @@ export function Editor(): JSX.Element {
         </div>
         <EditorActions
           onRun={handleRun}
-          onSave={() => {
-            throw new Error("Not implemented yet");
-          }}
+          onSave={saved ? undefined : handleSave}
           onClear={() => {
-            setTabContent("");
+            changeTabContent("");
             setResults([]);
           }}
         />
