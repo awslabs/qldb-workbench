@@ -19,7 +19,7 @@ import { useRecentQueries } from "../../common/hooks/useRecentQueries";
 
 export function Editor(): JSX.Element {
   const [theme] = useContext(ThemeContext);
-  const [tabs, content, setTabContent] = useTabs();
+  const { tabsComponent: tabs, content, changeTabContent } = useTabs();
   const [{ ledger }] = useContext(AppStateContext);
   const { addRecentQuery } = useRecentQueries();
   const [results, setResults] = useState<ResultsData>([]);
@@ -48,18 +48,19 @@ export function Editor(): JSX.Element {
       })
     );
 
+    addRecentQuery({
+      query: content,
+      status: result.error ? "ERROR" : "SUCCESS",
+      createdAt: new Date().toDateString(),
+      ledger,
+    });
+
     if (result.error) {
       setResults([]);
       setError(result.error);
       return;
     }
 
-    addRecentQuery({
-      query: content,
-      status: "SUCCESS",
-      createdAt: new Date().toDateString(),
-      ledger,
-    });
     setResults(result.results);
   }, [addRecentQuery, content, ledger, queries, query]);
 
@@ -73,7 +74,7 @@ export function Editor(): JSX.Element {
             enableLiveAutocompletion
             setOptions={{ scrollPastEnd: true }}
             value={content}
-            onChange={setTabContent}
+            onChange={changeTabContent}
             theme={theme === "dark" ? "tomorrow_night_bright" : "dawn"}
             mode={"sql"}
             width="100%"
@@ -86,7 +87,7 @@ export function Editor(): JSX.Element {
             throw new Error("Not implemented yet");
           }}
           onClear={() => {
-            setTabContent("");
+            changeTabContent("");
             setResults([]);
           }}
         />

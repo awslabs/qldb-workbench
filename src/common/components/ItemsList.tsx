@@ -28,6 +28,7 @@ interface Props<T, I extends T | T[]> {
   loading: boolean;
   items: T[];
   selectedItem?: I;
+  trackBy?: keyof T;
   /**
    * Columns can be either an array of string, where the string represents the
    * fields of the object to be displayed as a column;
@@ -36,6 +37,7 @@ interface Props<T, I extends T | T[]> {
    * the column.
    */
   columns: Column<T>[];
+  actions?: React.ReactElement;
   selectItem?: (item?: I) => void;
 }
 
@@ -43,7 +45,7 @@ interface Props<T, I extends T | T[]> {
  * @param col A column definition in the format of a string (SimpleColumn) where
  * the value of the string represents both the name of the field and the header
  * of the column.
- * Or a ComplexColumn object with header and renderer optinal.
+ * Or a ComplexColumn object with header and renderer optional.
  * @returns A ComplexColumn with all fields guaranteed to be not undefined.
  */
 function toComplexColumn<T>(col: Column<T>): Required<ComplexColumn<T>> {
@@ -62,25 +64,20 @@ function toComplexColumn<T>(col: Column<T>): Required<ComplexColumn<T>> {
 export function ItemsList<T extends Record<keyof T, string>, I extends T | T[]>(
   props: Props<T, I>
 ): JSX.Element {
-  const {
-    header: headerPlural,
-    loading,
-    selectedItem,
-    items,
-    selectItem,
-  } = props;
+  const { header, loading, selectedItem, items, actions, trackBy, selectItem } =
+    props;
   const [filter, setFilter] = useState("");
   const filteredItems = items.filter((item) =>
     Object.values(item).some((field: string) =>
       field.toLowerCase().includes(filter.toLowerCase())
     )
   );
-  const capitalizedHeader = capitalizeFirstLetter(headerPlural);
+  const capitalizedHeader = capitalizeFirstLetter(header);
   const columns = props.columns.map(toComplexColumn);
 
   return (
     <Table
-      trackBy={String(columns[0].fieldName)}
+      trackBy={String(trackBy ?? columns[0].fieldName)}
       ariaLabels={{
         selectionGroupLabel: `${capitalizedHeader} selection`,
         itemSelectionLabel: ({ selectedItems }, item) => {
@@ -99,7 +96,7 @@ export function ItemsList<T extends Record<keyof T, string>, I extends T | T[]>(
       }))}
       items={filteredItems}
       loading={loading}
-      loadingText={`Loading ${headerPlural}`}
+      loadingText={`Loading ${header}`}
       selectedItems={
         Array.isArray(selectedItem)
           ? selectedItem
@@ -110,9 +107,9 @@ export function ItemsList<T extends Record<keyof T, string>, I extends T | T[]>(
       }
       empty={
         <Box textAlign="center" color="inherit">
-          <b>No {headerPlural}</b>
+          <b>No {header}</b>
           <Box padding={{ bottom: "s" }} variant="p" color="inherit">
-            No {headerPlural} to display.
+            No {header} to display.
           </Box>
         </Box>
       }
@@ -120,11 +117,14 @@ export function ItemsList<T extends Record<keyof T, string>, I extends T | T[]>(
         <TextFilter
           filteringText={filter}
           onChange={({ detail }) => setFilter(detail.filteringText)}
-          filteringPlaceholder={`Find ${headerPlural}`}
+          filteringPlaceholder={`Find ${header}`}
         />
       }
       header={
-        <Header counter={`(${items.length})`}>{capitalizedHeader}</Header>
+        <div className="split-2">
+          <Header counter={`(${items.length})`}>{capitalizedHeader}</Header>
+          {actions}
+        </div>
       }
       pagination={
         <Pagination

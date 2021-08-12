@@ -9,7 +9,6 @@ import "@awsui/global-styles/index.css";
 import { Settings } from "../features/settings-page/Settings";
 import { useShortcuts } from "../common/hooks/useShortcuts";
 import { Page } from "../common/components/Page";
-import { Pages } from "../common/components/Pages";
 import { PageNotFound } from "../features/page-not-found/PageNotFound";
 import AppStateProvider from "./AppStateProvider";
 import { Recent } from "../features/recent/Recent";
@@ -20,29 +19,27 @@ function Workbench() {
   return (
     <>
       <Topbar />
-      <Pages defaultPage="editor">
-        <Navigation />
-        <main>
-          <Page name="editor" persistent>
-            <Editor />
-          </Page>
-          <Page name="recent">
-            <Recent />
-          </Page>
-          <Page name="saved">
-            <PageNotFound />
-          </Page>
-          <Page name="verification">
-            <PageNotFound />
-          </Page>
-          <Page name="settings" persistent>
-            <Settings />
-          </Page>
-          <Page name="feedback">
-            <PageNotFound />
-          </Page>
-        </main>
-      </Pages>
+      <Navigation />
+      <main>
+        <Page name="editor" persistent>
+          <Editor />
+        </Page>
+        <Page name="recent">
+          <Recent />
+        </Page>
+        <Page name="saved">
+          <PageNotFound />
+        </Page>
+        <Page name="verification">
+          <PageNotFound />
+        </Page>
+        <Page name="settings" persistent>
+          <Settings />
+        </Page>
+        <Page name="feedback">
+          <PageNotFound />
+        </Page>
+      </main>
     </>
   );
 }

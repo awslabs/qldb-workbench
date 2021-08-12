@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useContext } from "react";
 import { PropsWithChildren } from "react";
+import { AppStateContext } from "../../core/AppStateProvider";
 import { PageName } from "../hooks/usePage";
-import { PageContext } from "./Pages";
 
 interface Props {
   name: PageName;
@@ -11,7 +11,7 @@ interface Props {
 
 export function Page(props: PropsWithChildren<Props>): JSX.Element {
   const { name, persistent, children } = props;
-  const [currentPage] = useContext(PageContext);
+  const [{ currentPage }] = useContext(AppStateContext);
   const isActive = currentPage === name;
 
   return (
