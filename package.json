@@ -39,6 +39,7 @@
   "dependencies": {
     "@aws-sdk/client-cognito-identity": "^3.24.0",
     "@aws-sdk/credential-provider-cognito-identity": "^3.24.0",
+    "@awsui/collection-hooks": "^1.0.18",
     "@awsui/components-react": "^3.0.200",
     "@awsui/design-tokens": "^3.0.11",
     "@awsui/global-styles": "^1.0.8",

@@ -1,12 +1,13 @@
 import {
   Box,
+  Button,
   Header,
   Pagination,
   Table,
   TextFilter,
 } from "@awsui/components-react";
+import { useCollection } from "@awsui/collection-hooks";
 import * as React from "react";
-import { useState } from "react";
 import { capitalizeFirstLetter } from "../utils/stringUtils";
 
 import "./styles.scss";
@@ -63,6 +64,26 @@ function toComplexColumn<T>(col: Column<T>): Required<ComplexColumn<T>> {
   };
 }
 
+interface EmptyStateProps {
+  title: string;
+  subtitle: string;
+  action: React.ReactNode;
+}
+
+function EmptyState({ title, subtitle, action }: EmptyStateProps) {
+  return (
+    <Box textAlign="center" color="inherit">
+      <Box variant="strong" textAlign="center" color="inherit">
+        {title}
+      </Box>
+      <Box variant="p" padding={{ bottom: "s" }} color="inherit">
+        {subtitle}
+      </Box>
+      {action}
+    </Box>
+  );
+}
+
 export function ItemsList<
   T extends Record<keyof T, string | undefined>,
   I extends T | T[]
@@ -71,23 +92,50 @@ export function ItemsList<
     header,
     loading,
     selectedItem,
-    items,
+    items: allItems,
     actions,
     trackBy,
     selectItem,
     resizableColumns,
   } = props;
-  const [filter, setFilter] = useState("");
-  const filteredItems = items.filter((item) =>
-    Object.values(item).some((field: string) =>
-      field.toLowerCase().includes(filter.toLowerCase())
-    )
-  );
+
+  const {
+    items,
+    actions: collectionActions,
+    collectionProps,
+    filterProps,
+    paginationProps,
+  } = useCollection(allItems, {
+    filtering: {
+      empty: (
+        <EmptyState
+          title="No instances"
+          subtitle="No instances to display."
+          action={<Button>Create instance</Button>}
+        />
+      ),
+      noMatch: (
+        <EmptyState
+          title="No matches"
+          subtitle="We can’t find a match."
+          action={
+            <Button onClick={() => collectionActions.setFiltering("")}>
+              Clear filter
+            </Button>
+          }
+        />
+      ),
+    },
+    pagination: { pageSize: 25 },
+    sorting: {},
+    selection: {},
+  });
   const capitalizedHeader = capitalizeFirstLetter(header);
   const columns = props.columns.map(toComplexColumn);
 
   return (
     <Table
+      {...collectionProps}
       trackBy={String(trackBy ?? columns[0].fieldName)}
       ariaLabels={{
         selectionGroupLabel: `${capitalizedHeader} selection`,
@@ -105,7 +153,7 @@ export function ItemsList<
         },
         sortingField: String(col.fieldName),
       }))}
-      items={filteredItems}
+      items={items}
       loading={loading}
       loadingText={`Loading ${header}`}
       selectedItems={
@@ -125,11 +173,7 @@ export function ItemsList<
         </Box>
       }
       filter={
-        <TextFilter
-          filteringText={filter}
-          onChange={({ detail }) => setFilter(detail.filteringText)}
-          filteringPlaceholder={`Find ${header}`}
-        />
+        <TextFilter {...filterProps} filteringPlaceholder={`Find ${header}`} />
       }
       header={
         <div className="split-2">
@@ -139,8 +183,7 @@ export function ItemsList<
       }
       pagination={
         <Pagination
-          currentPageIndex={1}
-          pagesCount={1}
+          {...paginationProps}
           ariaLabels={{
             nextPageLabel: "Next page",
             previousPageLabel: "Previous page",
