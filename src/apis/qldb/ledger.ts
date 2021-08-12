@@ -1,18 +1,31 @@
 import { AWSError, QLDB } from "aws-sdk";
 import {
   CreateLedgerRequest,
-  LedgerList,
   LedgerSummary,
   ListLedgersResponse,
 } from "aws-sdk/clients/qldb";
 import { dom } from "ion-js";
 import { openLedger, sessionEndpointValue } from "./session";
 import { ClientConfiguration } from "aws-sdk/clients/acm";
-import { qldbRegions } from "./AppBar";
 import { OptionsObject, SnackbarKey, SnackbarMessage } from "notistack";
 import { PromiseResult } from "aws-sdk/lib/request";
 
 export let frontendEndpointValue: string | undefined = undefined;
+
+type Region = { name: string; region: string };
+
+const qldbRegions: Region[] = [
+  { name: "US East (N. Virginia)", region: "us-east-1" },
+  { name: "US East (Ohio)", region: "us-east-2" },
+  { name: "US West (Oregon)", region: "us-west-2" },
+  { name: "Asia Pacific (Seoul)", region: "ap-northeast-2" },
+  { name: "Asia Pacific (Singapore)", region: "ap-southeast-1" },
+  { name: "Asia Pacific (Sydney)", region: "ap-southeast-2" },
+  { name: "Asia Pacific (Tokyo)", region: "ap-northeast-1" },
+  { name: "Europe (Frankfurt)", region: "eu-central-1" },
+  { name: "Europe (Ireland)", region: "eu-west-1" },
+  { name: "Europe (London)", region: "eu-west-2" },
+];
 
 function determineRegion(endpoint: string) {
   const regions = qldbRegions.filter((region) =>
@@ -75,14 +88,14 @@ export async function listLedgers(
 
 export async function createLedger(
   name: string,
-  deletionProtection: boolean = false,
+  deletionProtection = false,
   tags: { [key: string]: string },
   enqueueSnackbar: (
     message: SnackbarMessage,
     options?: OptionsObject
   ) => SnackbarKey
 ) {
-  let request: CreateLedgerRequest = {
+  const request: CreateLedgerRequest = {
     Name: name,
     DeletionProtection: deletionProtection,
     PermissionsMode: "ALLOW_ALL",

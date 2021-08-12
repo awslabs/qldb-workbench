@@ -1,0 +1,139 @@
+// Use Polaris design tokens for consistent colors
+@use '@awsui/design-tokens/index.scss' as awsui;
+
+.tool-container {
+  display: flex;
+
+  &.vertical {
+    flex-direction: row;
+
+    .tool {
+      overflow: scroll;
+      // Content
+      > div:last-child {
+        display: flex !important;
+        flex-grow: 1;
+      }
+
+      .tool-body {
+        display: flex;
+        flex-direction: column;
+
+        > div:first-child {
+          flex-grow: 1;
+        }
+      }
+    }
+
+    &.collapsed {
+      .tool-body {
+        display: none;
+      }
+    }
+  }
+
+  &.horizontal {
+    flex-direction: column;
+  }
+
+  &.collapsed {
+    .tool {
+      background-color: awsui.$color-background-container-header !important;
+
+      > div:first-child {
+        border-bottom: none !important;
+      }
+    }
+
+    &.vertical .tool {
+      // Header
+      > div:first-child {
+        padding: 0px 5px !important;
+
+        // Hide the title
+        div:first-child > div:first-child {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+.tool {
+  display: flex !important;
+  flex-direction: column;
+  flex-grow: 0;
+  justify-content: space-between;
+  height: 100%;
+
+  > div:first-child {
+    padding: 0px 20px !important;
+  }
+
+  .tool-header {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .tool-body {
+    display: flex;
+    height: 100%;
+    flex-grow: 1;
+    flex-basis: auto;
+    overflow: scroll;
+  }
+}
+
+.handle {
+  background-color: awsui.$color-border-control-default !important;
+  opacity: 0.2;
+  z-index: 100;
+  box-sizing: border-box;
+  background-clip: padding-box;
+  cursor: col-resize;
+
+  .collapsed {
+    display: none;
+  }
+
+  &:hover,
+  &.dragging {
+    border: 3px solid awsui.$color-text-accent !important;
+    background-color: awsui.$color-text-accent;
+  }
+
+  &.horizontal {
+    background-color: awsui.$color-border-divider-default;
+    height: 11px;
+    margin: -5px 0;
+    border-top: 5px solid rgba(255, 255, 255, 0);
+    border-bottom: 5px solid rgba(255, 255, 255, 0);
+    cursor: row-resize;
+    width: 100%;
+  }
+
+  &.vertical {
+    width: 11px;
+    margin: 0 -5px;
+    border-left: 5px solid rgba(255, 255, 255, 0);
+    border-right: 5px solid rgba(255, 255, 255, 0);
+    cursor: col-resize;
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+
+    &:hover {
+      border-color: transparent;
+    }
+  }
+}
+
+.split-2 {
+  display: flex;
+  justify-content: space-between;
+
+  > :nth-child(2) {
+    flex-shrink: 0;
+  }
+}

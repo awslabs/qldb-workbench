@@ -1,0 +1,54 @@
+import * as React from "react";
+
+import { Topbar } from "../features/topbar/Topbar";
+import { Navigation } from "../features/navigation/Navigation";
+import { Editor } from "../features/editor/Editor";
+
+import "../../assets/styles.scss";
+import "@awsui/global-styles/index.css";
+import { Settings } from "../features/settings-page/Settings";
+import { useShortcuts } from "../common/hooks/useShortcuts";
+import { Page } from "../common/components/Page";
+import { PageNotFound } from "../features/page-not-found/PageNotFound";
+import AppStateProvider from "./AppStateProvider";
+import { Recent } from "../features/recent/Recent";
+import { Saved } from "../features/saved/Saved";
+
+function Workbench() {
+  useShortcuts();
+
+  return (
+    <>
+      <Topbar />
+      <Navigation />
+      <main>
+        <Page name="editor" persistent>
+          <Editor />
+        </Page>
+        <Page name="recent">
+          <Recent />
+        </Page>
+        <Page name="saved">
+          <Saved />
+        </Page>
+        <Page name="verification">
+          <PageNotFound />
+        </Page>
+        <Page name="settings" persistent>
+          <Settings />
+        </Page>
+        <Page name="feedback">
+          <PageNotFound />
+        </Page>
+      </main>
+    </>
+  );
+}
+
+export default function ThemedWorkbench(): React.ReactElement {
+  return (
+    <AppStateProvider className="root">
+      <Workbench />
+    </AppStateProvider>
+  );
+}
