@@ -11,7 +11,7 @@
     "allowSyntheticDefaultImports": true,
     "strictNullChecks": true,
     "target": "es5",
-    "lib": ["esNext", "es2017", "es6", "es5", "es2015", "dom", "scripthost"]
+    "lib": ["esNext", "es2019", "es2017", "es6", "es5", "es2015", "dom", "scripthost"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]
